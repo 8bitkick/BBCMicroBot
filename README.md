@@ -2,7 +2,7 @@
 
 ![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. See more background on BBC Micro Bot[here](https://www.dompajak.com/bbcmicrobot.html).
+A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. See more background on BBC Micro Bot [here](https://www.dompajak.com/bbcmicrobot.html).
 
 ### Try it now!
 
