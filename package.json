@@ -1,0 +1,25 @@
+{
+  "name": "bbcmicrobot",
+  "version": "0.3.0",
+  "description": "Runs your tweet on an 8-bit computer emulator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server & node client",
+    "test": "node server test & node client test",
+    "install": "sh ./install.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bad-words": "^3.0.3",
+    "base2048": "^1.0.1",
+    "console-stamp": "^0.2.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsbeeb": "mattgodbolt/jsbeeb#master",
+    "request": "^2.88.2",
+    "requirejs": "^2.3.6",
+    "shelljs": "^0.8.4",
+    "twitter": "^1.7.1"
+  }
+}
