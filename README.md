@@ -2,9 +2,7 @@
 
 ![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A twitter bot that looks for mentions, runs tweets on an 8-bit computer emulator.
-
-The bot runs on nodejs and integrates Matt Godbolt's awesome [JSbeeb](https://bbc.godbolt.org) BBC Micro emulator. It runs any tweet that mentions it and responds with a 3 second, 50fps mp4 after 30 seconds of emulated execution time. [Detailed background on BBC Micro Bot](https://www.dompajak.com/bbcmicrobot.html).
+A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. See more background on BBC Micro Bot[here](https://www.dompajak.com/bbcmicrobot.html).
 
 ### Try it now!
 
@@ -72,12 +70,12 @@ Please refer to the https://developer.twitter.com if you are unfamiliar with the
 BBCMicroBot was a side project that got unexpectedly successul. There are definitely some areas that can be improved and enhancement to be added which I have not had time for. I'm hoping the talent of the bot users can be focussed there! If you have suggestions please go for it. Let's keep discussion around code issues on github rather than on the bot account as much as possible.
 
 ### Architecture
-The bot uses Twitter mentions timeline polling and hardcoded delays instead of using webhooks or querying the rate limit APIs. There are more elegant ways of doing this but it works! Some advantages of this approach is it only needs the free tier Twitter Dev account and doesn't require any open incoming ports on the host machine (definitely a bonus if you run it a home). 
+The bot uses Twitter mentions timeline polling and hardcoded delays instead of using webhooks or querying the rate limit APIs. There are more elegant ways of doing this but it's worked solidly for months! Some advantages of this approach is it only needs the free tier Twitter Dev account and doesn't require any open incoming ports on the host machine (definitely a bonus if you run it a home). 
 
 ### Security
-The purpose of the bot is to allow remote execution of arbitrary code (albeit BASIC) submitted by strangers on the Internet - this is in general not a good idea. The fact that user input is sanitized by first passing through Twitter, and is run on a BBC Micro 'VM' is a big plus, but security is certainly a risk. There is more that can and should be done to sandbox the emulator for example.
+The purpose of the bot is to allow remote execution of arbitrary code (albeit BASIC) submitted by strangers on the Internet - this is in general not a good idea. The fact that user input is sanitized by first passing through Twitter, and is run on a BBC Micro 'VM' is a big plus, but security is certainly a concern. There is more that can and should be done to sandbox the emulator for example.
 
 ### Thanks
-Thanks to all the @bbcmicrobot users for their support I hope this source code is interesting or useful. 
+Thanks to Matt Godbolt for the JSBeeb emulator that made this project possible and to all the @bbcmicrobot users for their support - I hope this source code is interesting or useful. 
 
 
