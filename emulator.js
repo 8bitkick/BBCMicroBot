@@ -1,3 +1,6 @@
+
+// This code calls JSBeeb emulator functions directly
+
 define(['6502', 'video', 'soundchip', 'models', 'ddnoise', 'cmos', 'utils','fdc','basic-tokenise'],
 function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser) {
 
@@ -41,12 +44,11 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
         await processor.initialise();
     
-    
-/*      // Tokenizer input method
+        /* Tokenizer input method
         var t         = await tokeniser.create();
         var tokenised = await t.tokenise(input);
 
-await runUntilInput();
+        await runUntilInput();
           var page = processor.readmem(0x18) << 8;
           for (var i = 0; i < tokenised.length; ++i) {
             processor.writemem(page + i, tokenised.charCodeAt(i));
@@ -60,7 +62,8 @@ await runUntilInput();
           processor.writemem(0x12, endLow);
           processor.writemem(0x13, endHigh);
 
-        input="RUN\r";*/
+        input="RUN\r";
+        */
     
         await runUntilInput();
         await pasteToBuffer(input);
