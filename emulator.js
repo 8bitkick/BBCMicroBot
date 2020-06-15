@@ -1,18 +1,15 @@
 define(['6502', 'video', 'soundchip', 'models', 'ddnoise', 'cmos', 'utils','fdc','basic-tokenise'],
 function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser) {
 
-  const fs           = require('fs');
+  const fs = require('fs');
 
   var video, path, processor, cycles;
   var thisEmulator = null;
   var MaxCyclesPerIter = 100 * 1000;
   var hexword = utils.hexword;
 
-
-  //console.log = function() {}
   var model = models.findModel('B');
   model.os.push('gxr.rom'); // Add GXR ROM
-
 
   var keyboardBuffer = 0x0300; // BBC Micro OS 1.20
   var IBP = 0x02E1; // input pointer
@@ -21,7 +18,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
   async function emulate(input,path,duration,capture_start) {
 
     var frameBuffer32 = new Uint32Array(1024 * 625);
-    var soundBuffer = new Float32Array(44100 * duration).fill(0); // TODO length
+    var soundBuffer = new Float32Array(44100 * duration).fill(0); 
     var soundPoint = 0;
     var frame = 0;
     var soundChip = new SoundChip.SoundChip(44100);
@@ -33,7 +30,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
     // Set up video and sound capture
     video = new Video.Video(false, frameBuffer32, function paint(minx, miny, maxx, maxy) {
       if (frame > capture_start){
-        soundChip.render(soundBuffer, soundPoint, 882);
+        soundChip.render(soundBuffer, soundPoint, 882); // 44100Hz / 50fps = 882
         soundPoint= soundPoint + 882;
 
         fs.writeFileSync( path+'frame'+(frame-capture_start)+'.rgba', frameBuffer32,(err) => {
@@ -43,13 +40,13 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         // Set up our BBC Micro emulator
         processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
         await processor.initialise();
-/*
-        var t           = await tokeniser.create();
+    
+    
+/*      // Tokenizer input method
+        var t         = await tokeniser.create();
         var tokenised = await t.tokenise(input);
 
-
-
-        await runUntilInput();
+await runUntilInput();
           var page = processor.readmem(0x18) << 8;
           for (var i = 0; i < tokenised.length; ++i) {
             processor.writemem(page + i, tokenised.charCodeAt(i));
@@ -64,6 +61,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
           processor.writemem(0x13, endHigh);
 
         input="RUN\r";*/
+    
         await runUntilInput();
         await pasteToBuffer(input);
         await runFor((2000000*duration)-15000*(input.length));
@@ -73,7 +71,6 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         });
 
         return frame-capture_start;
-
       }
 
 
