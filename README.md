@@ -12,7 +12,7 @@ You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitte
 
 For development and testing you can run your own instance of the bot on a Linux machine. I've been running it on:
 
-* AWS Arm-based instances (Amazon Linux AMI)
+* Arm-based AWS instances (Amazon Linux AMI)
 * Raspberry Pi 4 (Raspbian and Raspberry Pi OS)
 * Apple Mac OS X
 
