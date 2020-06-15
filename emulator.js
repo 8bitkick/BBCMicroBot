@@ -77,6 +77,28 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
       }
 
 
+      function writeToKeyboardBuffer(text) {
+        var inputBufferPointer = processor.readmem(IBP);
+        for (var a = 0; a<text.length;a++){
+          processor.writemem(keyboardBuffer+inputBufferPointer, text.charCodeAt(a));
+          inputBufferPointer++;
+          if (inputBufferPointer>0xff) {inputBufferPointer=0xE0;}
+        }
+        processor.writemem(IBP,inputBufferPointer);
+        return processor.execute(text.length*15000); // Wait until Buffer empty
+      }
+
+      function pasteToBuffer(textIn) {
+        var regex = new RegExp(/(.|[\r\n]){1,31}/g);
+        var fragments = textIn.match(regex);
+        if (fragments==null) return;
+        for (const fragment of fragments) {
+          writeToKeyboardBuffer(fragment);
+        }
+        return;
+      }
+  
+      // The following is from https://github.com/mattgodbolt/jsbeeb/blob/master/tests/test.js
       function runFor(cycles) {
         var left = cycles;
         var stopped = false;
@@ -97,6 +119,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         });
       }
 
+  
       function runUntilInput() {
         var idleAddr = processor.model.isMaster ? 0xe7e6 : 0xe581;
         var hit = false;
@@ -111,27 +134,6 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
           runFor(1);
           return hit;
         });
-      }
-
-      function writeToKeyboardBuffer(text) {
-        var inputBufferPointer = processor.readmem(IBP);
-        for (var a = 0; a<text.length;a++){
-          processor.writemem(keyboardBuffer+inputBufferPointer, text.charCodeAt(a));
-          inputBufferPointer++;
-          if (inputBufferPointer>0xff) {inputBufferPointer=0xE0;}
-        }
-        processor.writemem(IBP,inputBufferPointer);
-        return processor.execute(text.length*15000); // Wait until Buffer empty
-      }
-
-      function pasteToBuffer(textIn) {
-        var regex = new RegExp(/(.|[\r\n]){1,31}/g);
-        var fragments = textIn.match(regex);
-        if (fragments==null) return;
-        for (const fragment of fragments) {
-          writeToKeyboardBuffer(fragment);
-        }
-        return;
       }
 
 
