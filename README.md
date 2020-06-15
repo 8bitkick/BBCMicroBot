@@ -53,6 +53,16 @@ In the `tmp` folder you should also see the test output files:
 ![image](https://github.com/8bitkick/BBCMicroBot/blob/master/images/BASE2048.png)
 
 
+## Interactive testing
+
+The `try` subcommand allows you to run a BASIC program from a file.  If the bot would have posted a replied it instead runs `xdg-open` with the video or image output filename as an argument, which should open it in a suitable viewer:
+
+`node client try someprogram.bas`
+
+For a one-liner, you can specify `/dev/stdin` as the file, for example:
+
+`echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try /dev/stdin`
+
 ## Connecting to a Twitter account
 
 ### Set-up

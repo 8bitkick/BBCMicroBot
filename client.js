@@ -226,7 +226,30 @@ if (cluster.isMaster && MP == 'true') {
             });
           }
 
-          requestTweet();
+          var try_arg = process.argv.indexOf("try");
+          if (try_arg > -1) {
+            var tweet = {
+              text: fs.readFileSync(process.argv[try_arg + 1], 'utf8'),
+              id_str: '42',
+              user: { screen_name: 'try' },
+              entities: {}
+            };
+            console.log(typeof tweet.text);
+            // Set up twtr object to mock the 'tweet' methods that we use.
+            twtr = {};
+            twtr.videoReply = function(filename,mediaType,replyTo,text) {
+              console.log("Generated " + mediaType);
+              exec("xdg-open "+filename);
+              process.exit();
+            };
+            twtr.post = function(endpoint, params) {
+              console.log("Failed: " + endpoint);
+              process.exit();
+            };
+            run(tweet);
+          } else {
+            requestTweet();
+          }
         }
       );
     }
