@@ -37,11 +37,9 @@
   	})
   }
 
-  async function videoReply(videoFilename,replyTo,text){
-    const pathToMovie = videoFilename;
-    const mediaType   = 'video/mp4';
-    const mediaData   = require('fs').readFileSync(pathToMovie);
-    const mediaSize   = require('fs').statSync(pathToMovie).size;
+  async function videoReply(filename,mediaType,replyTo,text){
+    const mediaData   = require('fs').readFileSync(filename);
+    const mediaSize   = require('fs').statSync(filename).size;
 
     try {
     var data = await post('media/upload', {command:'INIT',total_bytes: mediaSize,media_type : mediaType});
@@ -49,11 +47,11 @@
     await post('media/upload',    {command:'FINALIZE', media_id:data.media_id_string});
     await post('statuses/update', {status:text, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
     await post('favorites/create',{id: replyTo});
-    console.log("Video post DONE");
+    console.log("Media post DONE");
     }
 
     catch(e) {
-      console.log("Video post FAILED");
+      console.log("Media post FAILED");
       console.log(e);
     }
 }
