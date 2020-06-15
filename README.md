@@ -61,7 +61,7 @@ To run the bot on a Twitter account you need to apply for a Twitter developer ac
 
 You can then run the bot with
 
-`npm run`
+`npm start`
 
 Please refer to the https://developer.twitter.com if you are unfamiliar with these processes.
 
