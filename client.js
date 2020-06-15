@@ -104,7 +104,7 @@ if (cluster.isMaster && MP == 'true') {
         return str.slice(0, index) + str.slice(index + searchstr.length);}
 
         var namesMentioned = [];
-        if (typeof tweet.entities.user_mentions != undefined ){
+        if (typeof tweet.entities.user_mentions != 'undefined' ){
           tweet.entities.user_mentions.forEach(function(m) {
             namesMentioned.push(m.screen_name);
           });
