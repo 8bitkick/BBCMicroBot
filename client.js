@@ -8,8 +8,8 @@ var   POLL_DELAY  = process.env.POLL_DELAY || 5000
 const TEST = (process.argv.indexOf("test") > -1)
 POLL_DELAY = TEST ? 0 : POLL_DELAY ;
 
-const emulationDuration   = 33;//TEST ? 5 : 33; // seconds
-const startFrame          = 1587;//TEST ? 335 : 1587; // frames (50fps when vsync active)
+const emulationDuration   = 33; // seconds
+const startFrame          = 1587; // frames (50fps when vsync active)
 
 const fs           = require('fs');
 const requirejs    = require('requirejs'); // for jsbeeb compatibility
