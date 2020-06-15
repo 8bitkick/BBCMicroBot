@@ -15,13 +15,13 @@ const fs           = require('fs');
 const requirejs    = require('requirejs'); // for jsbeeb compatibility
 const https        = require('https');
 const base2048     = require('base2048');
-const cert_path    = "./certs/"; // TODO ENV
+const cert_path    = "./certs/"; 
 
 const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
 
-if (!TEST) {require('./tweet');}
+if (!TEST) {var twtr = require('./tweet');}
 
 var tweetServer = {
   hostname: HOST,
@@ -157,12 +157,14 @@ if (cluster.isMaster && MP == 'true') {
         // STATIC IMAGE -> PNG SCREENSHOT
         if (uniqueFrames==1){
           var mediaFilename = path+'.png';
+          var mediaType = 'image/png';
           var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format rgba -video_size 1024x625  -i '+path+'frame'+(frames-1)+'.rgba -vf "crop=640:512:200:64,scale=1280:1024" '+mediaFilename
         }
 
         // ANIMATION -> MP4 VIDEO
         if (uniqueFrames>1){
           var mediaFilename = path+'.mp4';
+          var mediaType = 'video/mp4';
           var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic -f f32le  -ar 44100 -ac 1 -i '+path+'audiotrack.raw  -y -f image2 -r 50 -s 1024x625 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "crop=640:512:200:64,scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
@@ -189,7 +191,7 @@ if (cluster.isMaster && MP == 'true') {
             } else
             {
               if (frames != 0){
-                twtr.videoReply(mediaFilename,tweet.id_str,"@"+tweet.user.screen_name);}
+                twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name);}
               }
             }
 
