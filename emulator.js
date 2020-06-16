@@ -53,7 +53,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
           for (var i = 0; i < tokenised.length; ++i) {
             processor.writemem(page + i, tokenised.charCodeAt(i));
           }
-          // Set VARTOP (0x12/3) and TOP(0x02/3)
+          // Set VARTOP (0x02/3) and TOP(0x12/3)
           var end = page + tokenised.length;
           var endLow = end & 0xff;
           var endHigh = (end >>> 8) & 0xff;
