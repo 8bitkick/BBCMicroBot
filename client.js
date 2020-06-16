@@ -44,6 +44,15 @@ function exec(cmd) {
   });
 }
 
+function exec_ignore_rc(cmd) {
+  const exec = require('child_process').exec;
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      resolve(stdout? stdout.trim() : stderr);
+    });
+  });
+}
+
 function log(l){console.log(l);}
 
 var clientID = "Cli0";
@@ -151,21 +160,27 @@ if (cluster.isMaster && MP == 'true') {
 
         start = new Date()
 
-        // NO VIDEO -> NOTHING
-        if (frames == 0) {var ffmpegCmd = "";console.warn("NO VIDEO CAPTURED");}
+        // Check if the .raw file has any non-zero bytes.
+        var hasAudio = !(await exec_ignore_rc("cmp "+path+"audiotrack.raw /dev/zero")).startsWith("cmp: EOF on ");
 
-        // STATIC IMAGE -> PNG SCREENSHOT
-        if (uniqueFrames==1){
+        if (frames == 0) {
+          // NO VIDEO -> NOTHING
+          var ffmpegCmd = "";
+          console.warn("NO VIDEO CAPTURED");
+        } else if (uniqueFrames==1 && !hasAudio) {
+          // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
           var mediaFilename = path+'.png';
           var mediaType = 'image/png';
           var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format rgba -video_size 1024x625  -i '+path+'frame'+(frames-1)+'.rgba -vf "crop=640:512:200:64,scale=1280:1024" '+mediaFilename
-        }
-
-        // ANIMATION -> MP4 VIDEO
-        if (uniqueFrames>1){
+        } else {
+          // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
           var mediaFilename = path+'.mp4';
           var mediaType = 'video/mp4';
-          var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic -f f32le  -ar 44100 -ac 1 -i '+path+'audiotrack.raw  -y -f image2 -r 50 -s 1024x625 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "crop=640:512:200:64,scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
+          var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic ';
+          if (hasAudio) {
+            ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+path+'audiotrack.raw ';
+          }
+          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 1024x625 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "crop=640:512:200:64,scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
         await exec(ffmpegCmd);
@@ -178,12 +193,26 @@ if (cluster.isMaster && MP == 'true') {
         if (TEST){
           console.log("checksum: "+checksum)
           if (tweet.bbcmicrobot_checksum != checksum) {
-            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')} else
-            {
-              console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+          }
+          console.log("mediaType: "+mediaType)
+          if (tweet.bbcmicrobot_media_type != mediaType) {
+            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+          }
+          console.log("hasAudio: "+hasAudio.toString())
+          if (tweet.bbcmicrobot_has_audio != hasAudio) {
+            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+          }
+          if (mediaType == 'video/mp4') {
+            var videoHasAudio = (await exec_ignore_rc('ffmpeg -i '+path+'.mp4 -f ffmetadata 2>&1|grep "Stream.*Audio:"') != '');
+            console.log("videoHasAudio: "+videoHasAudio.toString());
+            if (hasAudio != videoHasAudio) {
+              throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
             }
           }
-          else // THIS IS NOT A TEST
+          console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+        }
+        else // THIS IS NOT A TEST
           {
             if (customFilter.clean(input) != input) {
               console.warn("BLOCKED @"+tweet.user.screen_name)
