@@ -199,13 +199,13 @@ if (cluster.isMaster && MP == 'true') {
           if (tweet.bbcmicrobot_media_type != mediaType) {
             throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
           }
-          console.log("hasAudio: "+hasAudio.toString())
+          console.log("hasAudio: "+hasAudio)
           if (tweet.bbcmicrobot_has_audio != hasAudio) {
             throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
           }
           if (mediaType == 'video/mp4') {
             var videoHasAudio = (await exec_ignore_rc('ffmpeg -i '+path+'.mp4 -f ffmetadata 2>&1|grep "Stream.*Audio:"') != '');
-            console.log("videoHasAudio: "+videoHasAudio.toString());
+            console.log("videoHasAudio: "+videoHasAudio);
             if (hasAudio != videoHasAudio) {
               throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
             }
