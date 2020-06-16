@@ -128,9 +128,9 @@ if (cluster.isMaster && MP == 'true') {
         i = i.replace(/[\n]/g,'\r');
         i = i.replace(/[“]/g,'"');
         i = i.replace(/[”]/g,'"');
-        i = i.replace(/&amp;/g,'&');
         i = i.replace(/&lt;/g,'<');
         i = i.replace(/&gt;/g,'>');
+        i = i.replace(/&amp;/g,'&');
         if (!i.includes("RUN\r")) {i=i+"\rRUN\r";}
         return i;
       }
