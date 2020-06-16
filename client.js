@@ -125,13 +125,11 @@ if (cluster.isMaster && MP == 'true') {
 
         i = b2048decode(i.trim());
 
-        i = i.replace(/[\n]/g,'\r');
         i = i.replace(/[“]/g,'"');
         i = i.replace(/[”]/g,'"');
         i = i.replace(/&amp;/g,'&');
         i = i.replace(/&lt;/g,'<');
         i = i.replace(/&gt;/g,'>');
-        if (!i.includes("RUN\r")) {i=i+"\rRUN\r";}
         return i;
       }
 
