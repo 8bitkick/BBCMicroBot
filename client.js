@@ -185,7 +185,7 @@ if (cluster.isMaster && MP == 'true') {
 
         await exec(ffmpegCmd);
         var checksum = await exec('shasum '+path+'frame'+(frames-1)+'.rgba'+" | awk '{print $1}'");
-        exec('rm '+path+'*.rgba && rm '+path+'*.raw');
+        exec('rm '+path+'*.rgba '+path+'*.raw');
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
