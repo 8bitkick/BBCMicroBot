@@ -263,7 +263,6 @@ if (cluster.isMaster && MP == 'true') {
               user: { screen_name: 'try' },
               entities: {}
             };
-            console.log(typeof tweet.text);
             // Set up twtr object to mock the 'tweet' methods that we use.
             twtr = {};
             twtr.videoReply = function(filename,mediaType,replyTo,text) {
