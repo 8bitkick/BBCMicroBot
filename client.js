@@ -185,7 +185,7 @@ if (cluster.isMaster && MP == 'true') {
 
         await exec(ffmpegCmd);
         var checksum = await exec('shasum '+path+'frame'+(frames-1)+'.rgba'+" | awk '{print $1}'");
-        exec('rm '+path+'*.rgba && rm '+path+'*.raw');
+        exec('rm '+path+'*.rgba '+path+'*.raw');
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
@@ -199,13 +199,13 @@ if (cluster.isMaster && MP == 'true') {
           if (tweet.bbcmicrobot_media_type != mediaType) {
             throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
           }
-          console.log("hasAudio: "+hasAudio.toString())
+          console.log("hasAudio: "+hasAudio)
           if (tweet.bbcmicrobot_has_audio != hasAudio) {
             throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
           }
           if (mediaType == 'video/mp4') {
             var videoHasAudio = (await exec_ignore_rc('ffmpeg -i '+path+'.mp4 -f ffmetadata 2>&1|grep "Stream.*Audio:"') != '');
-            console.log("videoHasAudio: "+videoHasAudio.toString());
+            console.log("videoHasAudio: "+videoHasAudio);
             if (hasAudio != videoHasAudio) {
               throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
             }
@@ -263,7 +263,6 @@ if (cluster.isMaster && MP == 'true') {
               user: { screen_name: 'try' },
               entities: {}
             };
-            console.log(typeof tweet.text);
             // Set up twtr object to mock the 'tweet' methods that we use.
             twtr = {};
             twtr.videoReply = function(filename,mediaType,replyTo,text) {
