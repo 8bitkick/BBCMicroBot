@@ -10,7 +10,7 @@ You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitte
 
 The [@bbcmicrobot](https://twitter.com/bbcmicrobot) gained fans like comedian Dara Ó Briain, science writer Ben Goldacre, and Raspberry Pi founder Eben Upton. The concept is simple - make a retrocomputer accessible over social media. The bot runs any tweet written in BBC BASIC (1982) a programming language developed by Sophie Wilson who later went on to create the ARM architecture.
 
-The Twitter community rose to the challenge with some seriously creative and clever code gold within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
+The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
 
 If you're interested there is also the start of a [Commodore 64 version](https://github.com/8bitkick/c64bot) as well as other bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart).
 
