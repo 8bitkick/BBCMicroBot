@@ -17,9 +17,9 @@ function Tests(since_id){
     },
     {
       name: "CHARACTERS",
-      text: "0 CLS\n10 PRINT\“&gt;&amp;&lt;\”\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
+      text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
-      checksum: "aedb0240c4152ad77500a4fffd6f36c7edab4ce5"
+      checksum: "75eda4b511c0f56907630fceb8d66a1b6fe00130"
     },
     {
       name: "BASE2048", // Test code HT @kweepa
@@ -33,6 +33,30 @@ function Tests(since_id){
       mediaType: "video/mp4",
       hasAudio: true,
       checksum: "4fa24019565b3e162cd4d1da8922334fbf3fde58"
+    },
+    {
+      name: "RUNCHECK", // Regression test for program that didn't used to get run
+      text: '0REM THIS SHOULD GET RUN\n1MO.6:P."MODE6":V.19;4;0;19,1,6;0;279;0;0;0;0',
+      mediaType: "image/png",
+      checksum: "5d96ea07c117288e3e8925ab57880275f7562811"
+    },
+    {
+      name: "YOUONLYRUNONCE", // Check that an explicit RUN suppresses an implicit one.
+      text: '1PRINT"HELLO":!-512=&B000B\nRUN',
+      mediaType: "image/png",
+      checksum: "e00b2e22c977d1385f7793ced7afd767e2f78847"
+    },
+    {
+      name: "NOLINENOS", // Test no line numbers -> tokeniser.
+      text: "P.\"HELLO\";\nV.279;0;0;0;0;32\nP.\"WORLD\"",
+      mediaType: "image/png",
+      checksum: "3b396a65e410fbac9c9f6b56e9c774b63deedb7d"
+    },
+    {
+      name: "TOKENS", // Test tokens -> tokeniser.
+      text: "\xf1~\u0190\n\xef279;0;0;0;0;\n",
+      mediaType: "image/png",
+      checksum: "e7cad12b3d471989ed1fa361c9554b8f1e61590a"
     },
       {name: null, text: null}
   ]
