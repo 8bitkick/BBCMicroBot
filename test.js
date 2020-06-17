@@ -17,9 +17,9 @@ function Tests(since_id){
     },
     {
       name: "CHARACTERS",
-      text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
+      text: "0 CLS\n10 PRINT\“&gt;&amp;&lt;\”\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
-      checksum: "75eda4b511c0f56907630fceb8d66a1b6fe00130"
+      checksum: "aedb0240c4152ad77500a4fffd6f36c7edab4ce5"
     },
     {
       name: "BASE2048", // Test code HT @kweepa

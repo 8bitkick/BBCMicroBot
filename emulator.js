@@ -43,29 +43,35 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         // Set up our BBC Micro emulator
         processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
         await processor.initialise();
-    
-        /* Tokenizer input method
-        var t         = await tokeniser.create();
-        var tokenised = await t.tokenise(input);
-
         await runUntilInput();
+
+        if (!input.includes("\nRUN\n")) {
+          /* Tokenizer input method */
+          var t         = await tokeniser.create();
+          var tokenised = await t.tokenise(input);
+
           var page = processor.readmem(0x18) << 8;
           for (var i = 0; i < tokenised.length; ++i) {
             processor.writemem(page + i, tokenised.charCodeAt(i));
           }
-          // Set VARTOP (0x12/3) and TOP(0x02/3)
+          // Set VARTOP (0x02/3) and TOP(0x12/3)
           var end = page + tokenised.length;
           var endLow = end & 0xff;
           var endHigh = (end >>> 8) & 0xff;
+          // FIXME: Set LOMEM too?
+          //processor.writemem(0x00, endLow);
+          //processor.writemem(0x01, endHigh);
           processor.writemem(0x02, endLow);
           processor.writemem(0x03, endHigh);
           processor.writemem(0x12, endLow);
           processor.writemem(0x13, endHigh);
 
-        input="RUN\r";
-        */
-    
-        await runUntilInput();
+          input="RUN\r";
+        } else {
+          // FIXME: This fallback doesn't seem to actually work properly...
+          input=input.replace(/[\n]/g,'\r');
+        }
+
         await pasteToBuffer(input);
         await runFor((2000000*duration)-15000*(input.length));
 
