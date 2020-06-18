@@ -45,8 +45,10 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         await processor.initialise();
         await runUntilInput();
 
-        if (!input.includes("\nRUN\n")) {
-          /* Tokenizer input method */
+        // Use the tokeniser if the program contains non-ASCII characters or if
+        // it doesn't have any line numbers.
+        if (/[^\0-\x7e]/.test(input) || !/^ *[0-9]/m.test(input)) {
+          /* Tokeniser input method */
           var t         = await tokeniser.create();
           var tokenised = await t.tokenise(input);
 
@@ -54,22 +56,28 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
           for (var i = 0; i < tokenised.length; ++i) {
             processor.writemem(page + i, tokenised.charCodeAt(i));
           }
-          // Set VARTOP (0x02/3) and TOP(0x12/3)
           var end = page + tokenised.length;
           var endLow = end & 0xff;
           var endHigh = (end >>> 8) & 0xff;
-          // FIXME: Set LOMEM too?
-          //processor.writemem(0x00, endLow);
-          //processor.writemem(0x01, endHigh);
+          // Set LOMEM.
+          processor.writemem(0x00, endLow);
+          processor.writemem(0x01, endHigh);
+          // Set VARTOP.
           processor.writemem(0x02, endLow);
           processor.writemem(0x03, endHigh);
+          // Set TOP.
           processor.writemem(0x12, endLow);
           processor.writemem(0x13, endHigh);
 
           input="RUN\r";
         } else {
-          // FIXME: This fallback doesn't seem to actually work properly...
           input=input.replace(/[\n]/g,'\r');
+          if (!input.endsWith('\r')) {
+            input=input+'\r';
+          }
+          if (!/\r\s*RUN\s*\r/.test(input)) {
+            input=input+"RUN\r";
+          }
         }
 
         await pasteToBuffer(input);
