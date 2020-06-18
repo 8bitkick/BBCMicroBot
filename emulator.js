@@ -69,9 +69,12 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         await pasteToBuffer(input);
         await runFor((2000000*duration)-15000*(input.length));
 
-        await fs.writeFileSync( path+'audiotrack.raw', soundBuffer.slice(0, soundPoint),(err) => {
-          if (err) throw err;
-        });
+        // Check if the soundBuffer has any non-zero values.
+        if (soundBuffer.some(function(elt, idx, a) { return elt != 0; })) {
+          await fs.writeFileSync( path+'audiotrack.raw', soundBuffer.slice(0, soundPoint),(err) => {
+            if (err) throw err;
+          });
+        }
 
         return frame-capture_start;
       }

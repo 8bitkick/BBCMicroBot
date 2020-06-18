@@ -160,8 +160,7 @@ if (cluster.isMaster && MP == 'true') {
 
         start = new Date()
 
-        // Check if the .raw file has any non-zero bytes.
-        var hasAudio = !(await exec_ignore_rc("cmp "+path+"audiotrack.raw /dev/zero")).startsWith("cmp: EOF on ");
+        var hasAudio = fs.existsSync(path+"audiotrack.raw");
 
         if (frames == 0) {
           // NO VIDEO -> NOTHING
@@ -185,7 +184,7 @@ if (cluster.isMaster && MP == 'true') {
 
         await exec(ffmpegCmd);
         var checksum = await exec('shasum '+path+'frame'+(frames-1)+'.rgba'+" | awk '{print $1}'");
-        exec('rm '+path+'*.rgba '+path+'*.raw');
+        exec('rm -f '+path+'*.rgba '+path+'*.raw');
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
