@@ -63,4 +63,53 @@ function Tests(since_id){
     return tweet;
   }
 
-  module.exports = Tests;
+  function exec(cmd) {
+    const exec = require('child_process').exec;
+    return new Promise((resolve, reject) => {
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+          throw error;
+        }
+        resolve(stdout? stdout.trim() : stderr);
+      });
+    });
+  }
+
+  async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio){
+    console.log("checksum: "+checksum)
+    if (tweet.bbcmicrobot_checksum != checksum) {
+      throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
+    }
+    console.log("mediaType: "+mediaType)
+    if (tweet.bbcmicrobot_media_type != mediaType) {
+      throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
+    }
+    console.log("hasAudio: "+hasAudio)
+    if (tweet.bbcmicrobot_has_audio != hasAudio) {
+      throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
+    }
+    if (mediaType == 'video/mp4') {
+      var audioInfo = await exec('ffprobe -v 0 -select_streams a -show_streams '+filename);
+      var videoHasAudio = (audoInfo.length > 0);
+      console.log("videoHasAudio: "+videoHasAudio);
+      if (hasAudio != videoHasAudio) {
+        throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
+      }
+    }
+    console.log(replyTo+' TEST - \u001b[32mOK\u001b[0m')
+  }
+
+  function noOutput(tweet) {
+    throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+  }
+
+  function block(tweet) {
+    throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+  }
+
+  module.exports = {
+    Feed: Tests,
+    videoReply: videoReply,
+    noOutput: noOutput,
+    block: block
+  };
