@@ -7,7 +7,7 @@ const TEST = (process.argv.indexOf("test") > -1)
 const express   = require('express');
 const https     = require("https");
 const fs        = require("fs");
-const Feed      = TEST ? require("./test") : require('./mentions');
+const Feed      = TEST ? require("./test").Feed : require('./mentions');
 const cert_path = "./certs/";
 
 // add timestamps in front of log messages

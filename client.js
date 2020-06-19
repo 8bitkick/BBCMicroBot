@@ -21,7 +21,7 @@ const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
 
-if (!TEST) {var twtr = require('./tweet');}
+var twtr = require(TEST ? './test' : './tweet');
 
 var tweetServer = {
   hostname: HOST,
@@ -39,15 +39,6 @@ function exec(cmd) {
       if (error) {
         throw error;
       }
-      resolve(stdout? stdout.trim() : stderr);
-    });
-  });
-}
-
-function exec_ignore_rc(cmd) {
-  const exec = require('child_process').exec;
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
       resolve(stdout? stdout.trim() : stderr);
     });
   });
@@ -144,8 +135,11 @@ if (cluster.isMaster && MP == 'true') {
         var input = processInput(tweet);
         var path = "./tmp/"+tweet.id_str;
 
-        // Tweet ID will be used in tmp filename passed into shell exec... let's double check it's just a number
-        if (!/^\d+$/.test(tweet.id_str) && !TEST) {console.error("id_str contains non-digits");process.exit();} // something bad happened
+        // Tweet ID will be used in tmp filename passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
+        if (/\W/.test(tweet.id_str)) {
+          console.error("id_str contained unexpected character");
+          process.exit();
+        }
 
         // Run tweet on emulator
         var start   = new Date()
@@ -189,43 +183,17 @@ if (cluster.isMaster && MP == 'true') {
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
 
-        if (TEST){
-          console.log("checksum: "+checksum)
-          if (tweet.bbcmicrobot_checksum != checksum) {
-            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
-          }
-          console.log("mediaType: "+mediaType)
-          if (tweet.bbcmicrobot_media_type != mediaType) {
-            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
-          }
-          console.log("hasAudio: "+hasAudio)
-          if (tweet.bbcmicrobot_has_audio != hasAudio) {
-            throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
-          }
-          if (mediaType == 'video/mp4') {
-            var videoHasAudio = (await exec_ignore_rc('ffmpeg -i '+path+'.mp4 -f ffmetadata 2>&1|grep "Stream.*Audio:"') != '');
-            console.log("videoHasAudio: "+videoHasAudio);
-            if (hasAudio != videoHasAudio) {
-              throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
-            }
-          }
-          console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+        if (customFilter.clean(input) != input) {
+          console.warn("BLOCKED @"+tweet.user.screen_name)
+          twtr.block(tweet);
+        } else if (frames == 0) {
+          twtr.noOutput(tweet);
+        } else {
+          twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio);
         }
-        else // THIS IS NOT A TEST
-          {
-            if (customFilter.clean(input) != input) {
-              console.warn("BLOCKED @"+tweet.user.screen_name)
-              twtr.post('blocks/create',{screen_name: tweet.user.screen_name});
-            } else
-            {
-              if (frames != 0){
-                twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name);}
-              }
-            }
 
-            setTimeout(requestTweet, POLL_DELAY);
-          };
-
+        setTimeout(requestTweet, POLL_DELAY);
+      };
 
           function requestTweet() {
             tweetServer.path="/pop";
@@ -258,19 +226,23 @@ if (cluster.isMaster && MP == 'true') {
           if (try_arg > -1) {
             var tweet = {
               text: fs.readFileSync(process.argv[try_arg + 1], 'utf8'),
-              id_str: '42',
+              id_str: 'try',
               user: { screen_name: 'try' },
               entities: {}
             };
             // Set up twtr object to mock the 'tweet' methods that we use.
             twtr = {};
-            twtr.videoReply = function(filename,mediaType,replyTo,text) {
+            twtr.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
               console.log("Generated " + mediaType);
               exec("xdg-open "+filename);
               process.exit();
             };
-            twtr.post = function(endpoint, params) {
-              console.log("Failed: " + endpoint);
+            twtr.block = function(tweet) {
+              console.log("Failed: Tweet blocked because of badwords");
+              process.exit();
+            };
+            twtr.noOutput = function(tweet) {
+              console.log("Failed: No output captured");
               process.exit();
             };
             run(tweet);
