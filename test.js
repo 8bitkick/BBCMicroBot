@@ -34,6 +34,13 @@ function Tests(since_id){
       hasAudio: true,
       checksum: "4fa24019565b3e162cd4d1da8922334fbf3fde58"
     },
+    {
+      name: "AUDIOVISUAL", // Video with sound
+      text: '1MO.2:V.5:ENV.1,1,-26,-36,-45,255,255,255,127,0,0,0,126,0:SO.1,1,1,1\n2GC.0,RND(7):PL.85,RND(1280),1023A.RND:G.2\n',
+      mediaType: "video/mp4",
+      hasAudio: true,
+      checksum: "a6a6b7c26a94cbc3a0dd3ed253e1dd52cbc6765f"
+    },
       {name: null, text: null}
   ]
 }
