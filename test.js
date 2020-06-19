@@ -90,7 +90,7 @@ function Tests(since_id){
     }
     if (mediaType == 'video/mp4') {
       var audioInfo = await exec('ffprobe -v 0 -select_streams a -show_streams '+filename);
-      var videoHasAudio = (audoInfo.length > 0);
+      var videoHasAudio = (audioInfo.length > 0);
       console.log("videoHasAudio: "+videoHasAudio);
       if (hasAudio != videoHasAudio) {
         throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
