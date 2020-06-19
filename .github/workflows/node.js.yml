@@ -27,4 +27,4 @@ jobs:
     - run: sudo apt-get install -y ffmpeg
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm test --unhandled-rejections=strict
