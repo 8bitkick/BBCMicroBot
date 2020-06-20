@@ -82,7 +82,7 @@ function Tests(since_id){
     });
   }
 
-  async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio){
+  function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio){
     console.log("checksum: "+checksum)
     if (tweet.bbcmicrobot_checksum != checksum) {
       throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
@@ -96,12 +96,14 @@ function Tests(since_id){
       throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
     }
     if (mediaType == 'video/mp4') {
-      var audioInfo = await exec('ffprobe -v 0 -select_streams a -show_streams '+filename);
-      var videoHasAudio = (audioInfo.length > 0);
-      console.log("videoHasAudio: "+videoHasAudio);
-      if (hasAudio != videoHasAudio) {
-        throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
-      }
+      exec('ffprobe -v 0 -select_streams a -show_streams '+filename).then(
+        function(audioInfo) {
+          var videoHasAudio = (audioInfo.length > 0);
+          console.log("videoHasAudio: "+videoHasAudio);
+          if (hasAudio != videoHasAudio) {
+            throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
+          }
+        });
     }
     console.log(replyTo+' TEST - \u001b[32mOK\u001b[0m')
   }
