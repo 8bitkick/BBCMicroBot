@@ -222,10 +222,11 @@ if (cluster.isMaster && MP == 'true') {
             });
           }
 
-          var try_arg = process.argv.indexOf("try");
-          if (try_arg > -1) {
+          var try_arg = process.argv.indexOf("try") + 1;
+          if (try_arg > 0) {
+            var try_file = (try_arg == process.argv.length) ? "/dev/stdin" : process.argv[try_arg];
             var tweet = {
-              text: fs.readFileSync(process.argv[try_arg + 1], 'utf8'),
+              text: fs.readFileSync(try_file, 'utf8'),
               id_str: 'try',
               user: { screen_name: 'try' },
               entities: {}
