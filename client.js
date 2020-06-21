@@ -164,7 +164,7 @@ if (cluster.isMaster && MP == 'true') {
           // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
           var mediaFilename = path+'.png';
           var mediaType = 'image/png';
-          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format rgba -video_size 1024x625  -i '+path+'frame'+(frames-1)+'.rgba -vf "crop=640:512:200:64,scale=1280:1024" '+mediaFilename
+          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format rgba -video_size 640x512  -i '+path+'frame'+(frames-1)+'.rgba -vf "scale=1280:1024" '+mediaFilename
         } else {
           // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
           var mediaFilename = path+'.mp4';
@@ -173,7 +173,7 @@ if (cluster.isMaster && MP == 'true') {
           if (hasAudio) {
             ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+path+'audiotrack.raw ';
           }
-          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 1024x625 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "crop=640:512:200:64,scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
+          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
         await exec(ffmpegCmd);
