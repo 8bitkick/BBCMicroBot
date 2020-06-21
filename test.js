@@ -13,33 +13,33 @@ function Tests(since_id){
             "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
             "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
       mediaType: "video/mp4",
-      checksum: "054f4e9024bc9f6f33886b68a591f94195b550de"
+      checksum: "16fcadcb6bb3b10db6f196683b6ed9129187d692"
     },
     {
       name: "CHARACTERS",
-      text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
+      text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
-      checksum: "75eda4b511c0f56907630fceb8d66a1b6fe00130"
+      checksum: "8054997db79c6860f43c81a73a291a3ddd59850f"
     },
     {
       name: "BASE2048", // Test code HT @kweepa
       text: '🗜Еۇಲڕਯॾ൷ԘϽѤटҪߧϙߟڒԡQԈࢤOʮߟญԁǤथطऽঋՒฤѮफՋࡢࠉƻਏಘДߡ೧շमৰٹԖϼՕՑصړͲథłҷߣƋԬնɚతࠒеदƗڵͶɢଙಇХਙࢻڕݠॶঔಘЭబƓٱUȤ೦ÐҿறԳࢤసɊঔઅЦŧԱٱߜɢडjҏƿƻঢշਢϮοեԘबঢеઉƿԛԂԜझॻȻΧҮԗՃȝ४ࢦɆςJદӘʪശऍݡબϯಜՋଦചॺږʟϮĦխҶէঐȼΧnԙҰȠछਢΑਐػϗזƄɒࠀնઉʢτԪƆമࠀནʟɄฮҸ෬խஙǷm೧౼Պ๑ɂ৮бʦடಣӷദഌࢷฐʃɟಞҏࢧȸॹ੩ɒೡΝӺݏࢪࢷฐʃЛઘԻТथطਬওՒ๑ѮࢡԪߩตʃסಅХਗഴןࠁνଛΡϗࢠसصశʃסಈϦथҺڶӊਦɣಛѮണאֆȷʏCઐײڿࢼ',
       mediaType: "image/png",
-      checksum: "80f830477fc1632c3f8a65702825f33b3d6c069e"
+      checksum: "50d22d7e91cfd11635a193fe41922617de3b7eaa"
     },
     {
       name: "STATICAUDIO", // Test static image with audio gives a video
       text: '0V.279;0;0;0;0;12:P."BEEP":REP.V.7:U.NOTINKEY50',
       mediaType: "video/mp4",
       hasAudio: true,
-      checksum: "4fa24019565b3e162cd4d1da8922334fbf3fde58"
+      checksum: "c28811f08350a0fd116ff103671e05de6f6731a5"
     },
     {
       name: "AUDIOVISUAL", // Video with sound
       text: '1MO.2:V.5:ENV.1,1,-26,-36,-45,255,255,255,127,0,0,0,126,0:SO.1,1,1,1\n2GC.0,RND(7):PL.85,RND(1280),1023A.RND:G.2\n',
       mediaType: "video/mp4",
       hasAudio: true,
-      checksum: "a6a6b7c26a94cbc3a0dd3ed253e1dd52cbc6765f"
+      checksum: "ddc2194259220d5b629f993d7988e2e01f470b01"
     },
       {name: null, text: null}
   ]
