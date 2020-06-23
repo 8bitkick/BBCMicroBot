@@ -176,8 +176,12 @@ if (cluster.isMaster && MP == 'true') {
           ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt rgba -vcodec rawvideo -i '+path+'frame%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
-        await exec(ffmpegCmd);
-        var checksum = await exec('shasum '+path+'frame'+(frames-1)+'.rgba'+" | awk '{print $1}'");
+        if (frames > 0) {
+          await exec(ffmpegCmd);
+          var checksum = await exec('shasum '+path+'frame'+(frames-1)+'.rgba'+" | awk '{print $1}'");
+        } else {
+          var checksum = '';
+        }
         exec('rm -f '+path+'*.rgba '+path+'*.raw');
 
         var end = new Date() - start
