@@ -41,6 +41,13 @@ function Tests(since_id){
       hasAudio: true,
       checksum: "ddc2194259220d5b629f993d7988e2e01f470b01"
     },
+    {
+      name: "NOVSYNC", // Test handling of no frames captured
+      text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
+      mediaType: "text/plain",
+      hasAudio: false,
+      checksum: ""
+    },
       {name: null, text: null}
   ]
 }
@@ -109,7 +116,12 @@ function Tests(since_id){
   }
 
   function noOutput(tweet) {
-    throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+    // If the checksum is empty then we expect no output.
+    if (tweet.bbcmicrobot_checksum == '') {
+      console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+    } else {
+      throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+    }
   }
 
   function block(tweet) {

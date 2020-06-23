@@ -98,7 +98,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
           });
         }
 
-        return frame-capture_start;
+        return frame < capture_start ? 0 : frame-capture_start;
       }
 
 
