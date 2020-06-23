@@ -159,7 +159,6 @@ if (cluster.isMaster && MP == 'true') {
         if (frames == 0) {
           // NO VIDEO -> NOTHING
           var ffmpegCmd = "";
-          console.warn("NO VIDEO CAPTURED");
         } else if (uniqueFrames==1 && !hasAudio) {
           // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
           var mediaFilename = path+'.png';

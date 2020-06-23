@@ -57,6 +57,7 @@
 }
 
 function noOutput(tweet) {
+  console.warn("NO VIDEO CAPTURED");
   try {
     post('statuses/update', {status: "@"+tweet.user.screen_name+" Sorry, no output captured from that program", in_reply_to_status_id: tweet.id_str});
   }
