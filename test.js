@@ -43,7 +43,7 @@ function Tests(since_id){
     },
     {
       name: "NOVSYNC", // Test handling of no frames captured
-      text: '1MO.2:!-512=&B0308:REP.P."HELLO WORLD":U.0',
+      text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
       mediaType: "text/plain",
       hasAudio: false,
       checksum: ""
