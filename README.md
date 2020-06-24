@@ -18,7 +18,7 @@ If you're interested there is also the start of a [Commodore 64 version](https:/
 
 For development and testing you can run your own instance of the bot on a Linux machine. I've been running it on:
 
-* Arm-based AWS instances
+* Arm-based AWS instances (Ubuntu)
 * Raspberry Pi 4 (Raspbian and Raspberry Pi OS)
 * Apple Mac OS X
 
