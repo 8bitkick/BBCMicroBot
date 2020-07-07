@@ -67,7 +67,7 @@ The `try` subcommand allows you to run a BASIC program from a file.  If the bot 
 
 If you omit the filename, it defaults to reading from `stdin` which is handy for one-liners:
 
-`echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try
+`echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try`
 
 ## Connecting to a Twitter account
 
