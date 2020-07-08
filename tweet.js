@@ -1,3 +1,9 @@
+  /* Set to false to avoid potentially tweeting repetitive messages - we don't
+   * want the bot to be shadow-banned by twitter as happened to a previous
+   * incarnation which responded with text instead of images or videos.
+   */
+  const ENABLE_TEXT_REPLY = false;
+
   require('dotenv').config();
   const Twitter          = require('twitter');
   const API_KEYS         = {
@@ -58,6 +64,7 @@
 
 function noOutput(tweet) {
   console.warn("NO VIDEO CAPTURED");
+  if (!ENABLE_TEXT_REPLY) return;
   try {
     post('statuses/update', {status: "@"+tweet.user.screen_name+" Sorry, no output captured from that program", in_reply_to_status_id: tweet.id_str});
   }
