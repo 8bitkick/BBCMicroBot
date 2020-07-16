@@ -48,6 +48,12 @@ function Tests(since_id){
       hasAudio: false,
       checksum: ""
     },
+    {
+      name: "MODE6", // Test stripes aren't transparent in PNG
+      text: '1MO.6:?&D0=2:F.L=0TO999:V.32+L MOD95:N.:V.19;4;0;279;0;0;0;0;',
+      mediaType: "image/png",
+      checksum: "9b1fcaefd928558fd03862188e2ab509c92c9a0e"
+    },
       {name: null, text: null}
   ]
 }

@@ -48,13 +48,31 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         // In modes 3,6,7 the screen is a little shorter, but we just crop to the
         // tallest height it can be since this works better when there's a mode
         // switch mid-video.
-        //
-        // MODE       topleft  bottomright
-        // 0,1,2,4,5  262944   2358556
-        // 3,6        262944   2293020
-        // 7          263008   2309468
-        var off = (mode == 7) ? 263008 : 262944;
+
+        // Top-left of screen.
+        var off = 262944;
+        // Bottom-right of screen.
+        var end = 2358556;
+        switch (mode) {
+          case 3: case 6:
+            // This includes the "stripe" below the bottom line of the screen.
+            end = 2309468; break;
+          case 7:
+            off = 263008; end = 2309468; break;
+        }
         while (off <= 2358556) {
+          if ((mode == 3 || mode == 6) && off < end) {
+            // The "stripes" have alpha = 0, but we want to make them
+            // non-transparent so that an image output looks better on
+            // a non-black background.
+            var start = off / 4;
+
+            for (var i = 0; i != 1024; ++i) {
+                if (frameBuffer32[start + i] != 0)
+                    break;
+                frameBuffer32[start + i] = 0xff000000;
+            }
+          }
           fs.writeSync(fd, frameBuffer32, off, 2560);
           off += 4096;
         }
