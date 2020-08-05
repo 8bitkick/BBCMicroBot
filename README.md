@@ -2,17 +2,23 @@
 
 ![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. See more background on BBC Micro Bot [here](https://www.dompajak.com/bbcmicrobot.html).
+A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. 
 
 ### Try it now!
 
 You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitter.com/bbcmicrobot)
 
+The [@bbcmicrobot](https://twitter.com/bbcmicrobot) gained fans like comedian Dara Ó Briain, science writer Ben Goldacre, and Raspberry Pi founder Eben Upton. The concept is simple - make a retrocomputer accessible over social media. The bot runs any tweet written in BBC BASIC (1982) a programming language developed by Sophie Wilson who later went on to create the ARM architecture.
+
+The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
+
+If you're interested there is also the start of a [Commodore 64 version](https://github.com/8bitkick/c64bot) as well as other bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart).
+
 ## Running your own bot instance
 
 For development and testing you can run your own instance of the bot on a Linux machine. I've been running it on:
 
-* Arm-based AWS instances
+* Arm-based AWS instances (Ubuntu)
 * Raspberry Pi 4 (Raspbian and Raspberry Pi OS)
 * Apple Mac OS X
 
@@ -59,9 +65,9 @@ The `try` subcommand allows you to run a BASIC program from a file.  If the bot 
 
 `node client try someprogram.bas`
 
-For a one-liner, you can specify `/dev/stdin` as the file, for example:
+If you omit the filename, it defaults to reading from `stdin` which is handy for one-liners:
 
-`echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try /dev/stdin`
+`echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try`
 
 ## Connecting to a Twitter account
 

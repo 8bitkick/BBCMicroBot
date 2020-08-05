@@ -18,6 +18,8 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
   var IBP = 0x02E1; // input pointer
   var OBP = 0x02D8; // output pointer
 
+  var screenMode = 0x0355; // Current screen mode.
+
   async function emulate(input,path,duration,capture_start) {
 
     var frameBuffer32 = new Uint32Array(1024 * 625);
@@ -34,11 +36,49 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
     video = new Video.Video(false, frameBuffer32, function paint(minx, miny, maxx, maxy) {
       if (frame > capture_start){
         soundChip.render(soundBuffer, soundPoint, 882); // 44100Hz / 50fps = 882
-        soundPoint= soundPoint + 882;
+        soundPoint = soundPoint + 882;
 
-        fs.writeFileSync( path+'frame'+(frame-capture_start)+'.rgba', frameBuffer32,(err) => {
-          if (err) throw err;
-        });} frame++;});
+        var mode = processor.readmem(screenMode);
+        var fd = fs.openSync(path+'frame'+(frame-capture_start)+'.rgba', 'w');
+        // frameBuffer32 includes the frame border.  The area where the image is
+        // varies a little by screen mode - it's always 640 pixels wide (i.e. 2560
+        // bytes since each pixel is 4 bytes) but in mode 7 it is offset to the
+        // right by 16 pixels (64 bytes), which we compensate for below.
+        //
+        // In modes 3,6,7 the screen is a little shorter, but we just crop to the
+        // tallest height it can be since this works better when there's a mode
+        // switch mid-video.
+
+        // Top-left of screen.
+        var off = 262944;
+        // Bottom-right of screen.
+        var end = 2358556;
+        switch (mode) {
+          case 3: case 6:
+            // This includes the "stripe" below the bottom line of the screen.
+            end = 2309468; break;
+          case 7:
+            off = 263008; end = 2309468; break;
+        }
+        while (off <= 2358556) {
+          if ((mode == 3 || mode == 6) && off < end) {
+            // The "stripes" have alpha = 0, but we want to make them
+            // non-transparent so that an image output looks better on
+            // a non-black background.
+            var start = off / 4;
+
+            for (var i = 0; i != 1024; ++i) {
+                if (frameBuffer32[start + i] != 0)
+                    break;
+                frameBuffer32[start + i] = 0xff000000;
+            }
+          }
+          fs.writeSync(fd, frameBuffer32, off, 2560);
+          off += 4096;
+        }
+        fs.closeSync(fd);
+      }
+      frame++;});
 
         // Set up our BBC Micro emulator
         processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
@@ -83,11 +123,14 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         await pasteToBuffer(input);
         await runFor((2000000*duration)-15000*(input.length));
 
-        await fs.writeFileSync( path+'audiotrack.raw', soundBuffer.slice(0, soundPoint),(err) => {
-          if (err) throw err;
-        });
+        // Check if the soundBuffer has any non-zero values.
+        if (soundBuffer.some(function(elt, idx, a) { return elt != 0; })) {
+          await fs.writeFileSync( path+'audiotrack.raw', soundBuffer.slice(0, soundPoint),(err) => {
+            if (err) throw err;
+          });
+        }
 
-        return frame-capture_start;
+        return frame < capture_start ? 0 : frame-capture_start;
       }
 
 
