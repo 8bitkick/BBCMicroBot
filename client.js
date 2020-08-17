@@ -60,6 +60,10 @@ function (emulator) {
   "use strict";
 
     async function run(tweet){
+      if (TEST && tweet.text=="TESTS_END"){
+         process.exit();
+      }
+
       console.log("");
       console.log("Running "+tweet.id_str+" from @"+tweet.user.screen_name);
 

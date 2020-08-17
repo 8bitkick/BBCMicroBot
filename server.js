@@ -28,7 +28,6 @@ app.get('/pop', (req, res) => {
   if (req.client.authorized) {
     var tweet = getTweet();
     res.send(tweet);
-    if (TEST && tweet.text == null) {process.exit()};
   }
 })
 
@@ -92,7 +91,8 @@ function processInput(tweet) {
   }
 
 function getTweet(){
-  var tweet = processInput(tweetFeed.pop());
+  var tweet = tweetFeed.pop();
+  tweet = processInput(tweet);
   if (tweet.text != null && customFilter.clean(tweet.text) != tweet.text) {
     console.warn("BLOCKED @"+tweet.user.screen_name)
     twtr.block(tweet);
