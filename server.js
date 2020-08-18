@@ -5,7 +5,8 @@ const PORT = process.env.PORT || 6502
 const TEST = (process.argv.indexOf("test") > -1)
 
 const express   = require('express');
-const https     = require("https");
+const bodyParser= require('body-parser')
+const https     = require("https")
 const fs        = require("fs");
 const Feed      = TEST ? require("./test").Feed : require('./mentions');
 const cert_path = "./certs/";
@@ -21,14 +22,19 @@ require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" 
 function log(l){console.log(l)}
 
 var app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// parse application/json
+app.use(bodyParser.json())
 var emulators = 0;
 var served = 0;
 
 app.get('/pop', (req, res) => {
-  if (req.client.authorized) {
-    var tweet = getTweet();
+if (req.client.authorized) {
+    var tweet = JSON.stringify(getTweet());
     res.send(tweet);
-  }
+}
 })
 
 app.get('/quit', (req, res) => {
@@ -36,6 +42,14 @@ app.get('/quit', (req, res) => {
     process.exit();
   }
 })
+
+app.post('/video',(req, res) => {
+
+  if (req.client.authorized) {
+    console.log(req.body);
+   res.sendStatus(200);
+ }
+});
 
 var options = {
   key: fs.readFileSync(cert_path+'server_key.pem'),
