@@ -5,7 +5,6 @@ const PORT = process.env.PORT || 6502
 const TEST = (process.argv.indexOf("test") > -1)
 
 const express   = require('express');
-const bodyParser= require('body-parser')
 const https     = require("https")
 const fs        = require("fs");
 const multer    = require('multer');
@@ -24,11 +23,6 @@ require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" 
 function log(l){console.log(l)}
 
 var app = express();
-// parse application/json
-//app.use(bodyParser.json({limit: '50mb'}))
-// parse application/x-www-form-urlencoded
-//app.use(bodyParser.urlencoded({limit: '50mb', extended: true }))
-
 var emulators = 0;
 var served = 0;
 
