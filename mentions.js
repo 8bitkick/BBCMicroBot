@@ -146,7 +146,8 @@ async function extendTruncated(timeline){
 	function isBASIC(bas){ // TODO convert to regex
 		bas = bas.replace(/@\w+/g, "").trim(); // get rid of tags and white space
 		var basic = (bas.match(/^\d/) != null) || // code must start with digit
-		bas.includes("=") || (bas.match("\uD83D\uDDDC")!=null); // Clamp emoji for compressed
+		bas.includes("=") ||
+		(bas.match("[^\0-\x7e]")!=null); // Tokens and/or clamp emoji for compressed
 		return basic;
 	}
 
