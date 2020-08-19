@@ -8,6 +8,8 @@ const express   = require('express');
 const bodyParser= require('body-parser')
 const https     = require("https")
 const fs        = require("fs");
+const multer    = require('multer');
+const upload    = multer();
 const Feed      = TEST ? require("./test").Feed : require('./mentions');
 const cert_path = "./certs/";
 const base2048     = require('base2048');
@@ -22,19 +24,19 @@ require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" 
 function log(l){console.log(l)}
 
 var app = express();
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }))
-
 // parse application/json
-app.use(bodyParser.json())
+//app.use(bodyParser.json({limit: '50mb'}))
+// parse application/x-www-form-urlencoded
+//app.use(bodyParser.urlencoded({limit: '50mb', extended: true }))
+
 var emulators = 0;
 var served = 0;
 
 app.get('/pop', (req, res) => {
-if (req.client.authorized) {
+  if (req.client.authorized) {
     var tweet = JSON.stringify(getTweet());
     res.send(tweet);
-}
+  }
 })
 
 app.get('/quit', (req, res) => {
@@ -43,12 +45,17 @@ app.get('/quit', (req, res) => {
   }
 })
 
-app.post('/video',(req, res) => {
-
+app.post('/video',upload.single('file'),(req, res) => {
   if (req.client.authorized) {
-    console.log(req.body);
-   res.sendStatus(200);
- }
+    console.log(req.file);
+
+    // DEBUG - save uploaded file to disk
+    fs.writeFile("ul"+req.file.originalname, req.file.buffer, function(err) {
+      if(err) return console.error(err);
+    });
+
+    res.sendStatus(200);
+  }
 });
 
 var options = {
@@ -104,19 +111,19 @@ function processInput(tweet) {
     return tweet;
   }
 
-function getTweet(){
-  var tweet = tweetFeed.pop();
-  tweet = processInput(tweet);
-  if (tweet.text != null && customFilter.clean(tweet.text) != tweet.text) {
-    console.warn("BLOCKED @"+tweet.user.screen_name)
-    twtr.block(tweet);
-    return getTweet();
-  } else {
-    return tweet;
+  function getTweet(){
+    var tweet = tweetFeed.pop();
+    tweet = processInput(tweet);
+    if (tweet.text != null && customFilter.clean(tweet.text) != tweet.text) {
+      console.warn("BLOCKED @"+tweet.user.screen_name)
+      twtr.block(tweet);
+      return getTweet();
+    } else {
+      return tweet;
+    }
   }
-}
 
-// Poll the twitter mentions
-var tweetFeed = new Feed('1260761572890165254');
-tweetFeed.update();
-setInterval(function(){ tweetFeed.update(); }, 12500);
+  // Poll the twitter mentions
+  var tweetFeed = new Feed('1260761572890165254');
+  tweetFeed.update();
+  setInterval(function(){ tweetFeed.update(); }, 12500);
