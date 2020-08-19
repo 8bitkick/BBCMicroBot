@@ -126,7 +126,7 @@ function (emulator) {
       //  twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio);
     }
 
-    await sendVideo();
+    sendMedia(mediaFilename);
 
     setTimeout(requestTweet, 5000);
   };
@@ -158,20 +158,13 @@ function (emulator) {
     })
   }
 
-  async function sendVideo() {
-    var post_data = JSON.stringify({ data: 'somedata' })
+  function sendMedia(mediaFilename) {
     var options = botServer;
     options.method="POST";
     options.path="/video/";
     options.uri="https://"+HOST+":"+PORT+"/video";
-    options.timeout=3000;
-    options.body=post_data;
-    options.headers= {
-      'Content-Type': 'application/json',
-      'Content-Length': post_data.length
-    };
-
-    request.post(options, post_data,
+    options.formData = {file: fs.createReadStream(mediaFilename)};
+    request.post(options,
       function(err,httpResponse,body){
         if (err) {
           return console.error('upload failed:', err);
