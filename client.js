@@ -106,9 +106,11 @@ if (cluster.isMaster && MP == 'true') {
         var userMentions = [];
         if (typeof tweet.entities.user_mentions != 'undefined' ){
           tweet.entities.user_mentions.forEach(function(m) {
-            // Use unshift to get the last indices first so we can change the
-            // string there without invalidating indices we've yet to process.
-            userMentions.unshift(m.indices);
+            if (typeof m.indices != 'undefined') {
+              // Use unshift to get the last indices first so we can change the
+              // string there without invalidating indices we've yet to process.
+              userMentions.unshift(m.indices);
+            }
           });
         }
 
