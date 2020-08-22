@@ -103,15 +103,17 @@ if (cluster.isMaster && MP == 'true') {
         var index = str.indexOf(searchstr); if (index === -1) {return str;}
         return str.slice(0, index) + str.slice(index + searchstr.length);}
 
-        var namesMentioned = [];
+        var userMentions = [];
         if (typeof tweet.entities.user_mentions != 'undefined' ){
           tweet.entities.user_mentions.forEach(function(m) {
-            namesMentioned.push(m.screen_name);
+            // Use unshift to get the last indices first so we can change the
+            // string there without invalidating indices we've yet to process.
+            userMentions.unshift(m.indices);
           });
         }
 
-        namesMentioned.forEach(function(m) {
-          i = remove_first_occurrence(i,"@"+m);
+        userMentions.forEach(function(m) {
+          i = i.slice(0, m[0]) + i.slice(m[1]);
         });
 
         i = b2048decode(i.trim());
