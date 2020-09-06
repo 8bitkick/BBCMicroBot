@@ -78,6 +78,16 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "a7bffbe345411afb00e58f032df1800a8f02d663"
     },
+    {
+      name: "MENTIONS", // Test mention removal
+      text: "@BBCMicroBot @RhEolisM 1V.279;0;0;0;0;12:PRINTCHR$141\"Hello\"'CHR$141\"Hello\"CHR$21\n",
+      user_mentions: [
+        { screen_name: "bbcmicrobot", indices: [0, 12] },
+        { screen_name: "rheolism", indices: [13, 22] }
+      ],
+      mediaType: "image/png",
+      checksum: "ff26b135a00313cfce0ee0a6fcc995cc80426589"
+    },
       {name: null, text: null}
   ]
 }
@@ -89,6 +99,8 @@ function Tests(since_id){
   Tests.prototype.pop = function (timeline) {
 
     var test = this.tests.shift();
+    var user_mentions = test.user_mentions;
+    if (user_mentions === null) {user_mentions = ['bbcmicrobot'];}
     var tweet = {
       'created_at'                : null,
       'user'                      : {'screen_name':"<TEST SERVER>"},
@@ -97,8 +109,7 @@ function Tests(since_id){
       'in_reply_to_status_id_str' : "1",
       'truncated'                 : false,
       'favorited'                 : false,
-      'user_mentions'             : ['bbcmicrobot'],
-      'entities'                  : {user_mentions: ["test"]},
+      'entities'                  : {'user_mentions': user_mentions},
       'bbcmicrobot_has_audio'     : (test.hasAudio == true),
       'bbcmicrobot_checksum'      : test.checksum,
       'bbcmicrobot_media_type'    : test.mediaType
