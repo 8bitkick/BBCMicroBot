@@ -102,7 +102,8 @@ function filterTimeline(timeline){
 	if (TOP_TWEETS){
 
 	} else {
-		timeline = timeline.filter(tweet => (isBASIC(tweet.text)));
+
+		timeline = timeline.filter(tweet => (isBASIC(tweet.text) || typeof tweet.entities.media != 'undefined' && tweet.entities.media[0].media_url.split(".").pop() == "png"));
 		timeline = timeline.filter(tweet => (tweet.favorited==false));
 		timeline = timeline.filter(tweet => (tweet.user.screen_name!="bbcmicrobot"));
 	}

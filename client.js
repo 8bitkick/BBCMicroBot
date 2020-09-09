@@ -15,7 +15,8 @@ const fs           = require('fs');
 const requirejs    = require('requirejs'); // for jsbeeb compatibility
 const https        = require('https');
 const base2048     = require('base2048');
-const cert_path    = "./certs/"; 
+const tweetdisk    = require('./tweetdisk');
+const cert_path    = "./certs/";
 
 const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
@@ -125,7 +126,7 @@ if (cluster.isMaster && MP == 'true') {
         i = i.replace(/&lt;/g,'<');
         i = i.replace(/&gt;/g,'>');
         i = i.replace(/&amp;/g,'&');
- 
+
         return i;
       }
 
@@ -144,9 +145,17 @@ if (cluster.isMaster && MP == 'true') {
           process.exit();
         }
 
+        // Check for tweetdisk image
+        var disk = null;
+        if ((typeof tweet.entities.media != 'undefined' ) && tweet.entities.media[0].media_url.split(".").pop() == "png") {
+          var imageURL = tweet.entities.media[0].media_url;
+          console.log(imageURL);
+          disk = await tweetdisk.get(imageURL);
+        }
+
         // Run tweet on emulator
         var start   = new Date()
-        var frames  = await emulator.emulate(input,path,emulationDuration,startFrame);
+        var frames  = await emulator.emulate(input,path,emulationDuration,startFrame,disk);
         var end     = new Date() - start
         console.log("JSbeeb DONE in %ds ",end/1000);
 
