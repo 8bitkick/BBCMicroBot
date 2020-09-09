@@ -10,9 +10,8 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
   var thisEmulator = null;
   var MaxCyclesPerIter = 100 * 1000;
   var hexword = utils.hexword;
-  var modelB = models.findModel('B');
-  var modelB_gxr = models.findModel('B');
-  modelB_gxr.os.push('gxr.rom'); // Add GXR ROM
+  var model = models.findModel('B');
+  model.os.push('gxr.rom'); // Add GXR ROM
 
   var keyboardBuffer = 0x0300; // BBC Micro OS 1.20
   var IBP = 0x02E1; // input pointer
@@ -83,22 +82,23 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
       // Set up our BBC Micro emulator default
       if (tweetdisk==null){
 
-        processor = new Cpu6502(modelB, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
+        processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
         await processor.initialise();
+            await runUntilInput();
         var runcmd = "RUN\r";
       }
       else {
         // Tweetdisk
-        processor = new Cpu6502(modelB_gxr, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
+        processor = new Cpu6502(model, dbgr, video, soundChip, new DdNoise.FakeDdNoise(), new Cmos());
         await processor.initialise();
         await processor.fdc.loadDisc(0, fdc.discFor(processor.fdc, "tweetdisk", tweetdisk.data));
         processor.sysvia.keyDown(16); // shift boot
-        await runFor(2000000);
+          await runFor(2000000);
         processor.sysvia.keyUp(16); //
         var runcmd = "";
         var input ="";
       }
-      await runUntilInput();
+
 
       // Use the tokeniser if the program contains non-ASCII characters or if
       // it doesn't have any line number. Skip if this is a tweetdisk
