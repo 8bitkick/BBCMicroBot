@@ -99,10 +99,6 @@ if (cluster.isMaster && MP == 'true') {
         return text;
       }
 
-      function remove_first_occurrence(str, searchstr)       {
-        var index = str.indexOf(searchstr); if (index === -1) {return str;}
-        return str.slice(0, index) + str.slice(index + searchstr.length);}
-
         var userMentions = [];
         if (typeof tweet.entities.user_mentions != 'undefined' ){
           tweet.entities.user_mentions.forEach(function(m) {
