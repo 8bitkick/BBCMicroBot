@@ -88,6 +88,12 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "ff26b135a00313cfce0ee0a6fcc995cc80426589"
     },
+    {
+      name: "OVERLONG", // Test overlong line doesn't crash the bot
+      text: "REM " + ("BBC".repeat(88)),
+      mediaType: "text/plain",
+      checksum: ""
+    },
       {name: null, text: null}
   ]
 }

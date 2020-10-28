@@ -90,7 +90,15 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         if (/[^\0-\x7e]/.test(input) || !/^ *[0-9]/m.test(input)) {
           /* Tokeniser input method */
           var t         = await tokeniser.create();
-          var tokenised = await t.tokenise(input);
+          var tokenised;
+          try {
+            tokenised = await t.tokenise(input);
+          }
+          catch (e) {
+            console.log("Tokenisation FAILED");
+            console.log(e);
+            return 0;
+          }
 
           var page = processor.readmem(0x18) << 8;
           for (var i = 0; i < tokenised.length; ++i) {
