@@ -1,0 +1,487 @@
+#!/usr/bin/perl -CSAD
+use strict;
+use warnings;
+
+# Path to base2048 repo.
+# FIXME: Need to sort out not to need custom code in there for this to work
+# outside my machine!
+my ($base2048dir) = ($0 =~ m,(.*/),);
+$base2048dir //= '';
+$base2048dir .= '../base2048';
+
+# To twitter these inclusive ranges count as 1 character (everything else as 2):
+# U+0000-U+10FF
+# U+2000-U+200D # various spaces
+# U+2010-U+201F # various punctuation
+# U+2032-U+2037 # various prime marks
+my %token = (
+  'AND'		=> "\x{580}",
+  'DIV'		=> "\x{281}",
+  'EOR'		=> "\x{E82}",
+  'MOD'		=> "\x{583}",
+  'OR'		=> "\x{184}",
+  'ERROR'	=> "\x{F85}",
+  'LINE'	=> "\x{186}",
+  'OFF'		=> "\x{287}",
+  'STEP'	=> "\x{388}",
+  'SPC'		=> "\x{F89}",
+  'TAB('	=> "\x{38A}",
+  'ELSE'	=> "\x{18B}",
+  'THEN'	=> "\x{18C}",
+  # 8D encodes a line number in GOTO/GOSUB
+  'OPENIN'	=> "\x{18E}",
+  #'PTR'		=> "\x8F" # (right form)
+
+  'PAGE'	=> "\x{490}",
+  '?PAGE='	=> "?\x{490}=",
+  '!PAGE='	=> "!\x{490}=",
+  '$PAGE='	=> "\$\x{490}=",
+  'TIME'	=> "\x{191}",
+  '?TIME='	=> "?\x{191}=",
+  '!TIME='	=> "!\x{191}=",
+  '$TIME='	=> "\$\x{191}=",
+  'LOMEM'	=> "\x{1092}",
+  '?LOMEM='	=> "?\x{1092}=",
+  '!LOMEM='	=> "!\x{1092}=",
+  '$LOMEM='	=> "\$\x{1092}=",
+  'HIMEM'	=> "\x{493}",
+  '?HIMEM='	=> "?\x{493}=", # E.g. ?HIMEM=32 or P%?HIMEM=32
+  '!HIMEM='	=> "!\x{493}=", # E.g. !HIMEM=32 or P%!HIMEM=32
+  '$HIMEM='	=> "\$\x{493}=", # E.g. $HIMEM="HELLO"
+  'ABS'		=> "\x{294}",
+  'ACS'		=> "\x{195}",
+  'ADVAL'	=> "\x{196}",
+  'ASC'		=> "\x{297}",
+  'ASN'		=> "\x{298}",
+  'ATN'		=> "\x{199}",
+  'BGET'	=> "\x{19A}",
+  'COS'		=> "\x{19B}",
+  'COUNT'	=> "\x{19C}",
+  'DEG'		=> "\x{19D}",
+  'ERL'		=> "\x{19E}",
+  'ERR'		=> "\x{19F}",
+
+  'EVAL'	=> "\x{3A0}",
+  'EXP'		=> "\xA1",
+  'EXT'		=> "\xA2",
+  'FALSE'	=> "\x{1A3}",
+  'FN'		=> "\xA4",
+  'GET'		=> "\xA5",
+  'INKEY'	=> "\xA6",
+  'INSTR('	=> "\xA7",
+  'INT'		=> "\xA8",
+  'LEN'		=> "\xA9",
+  'LN'		=> "\xAA",
+  'LOG'		=> "\xAB",
+  'NOT'		=> "\xAC",
+  'OPENUP'	=> "\xAD",
+  'OPENOUT'	=> "\xAE",
+  'PI'		=> "\xAF",
+
+  'POINT('	=> "\xB0", 
+  'POS'		=> "\xB1",
+  'RAD'		=> "\xB2",
+  'RND'		=> "\xB3",
+  'SGN'		=> "\xB4",
+  'SIN'		=> "\xB5",
+  'SQR'		=> "\xB6",
+  'TAN'		=> "\xB7",
+  'TO'		=> "\xB8", 
+  'TRUE'	=> "\xB9",
+  'USR'		=> "\xBA",
+  'VAL'		=> "\xBB",
+  'VPOS'	=> "\xBC",
+  'CHR$'	=> "\xBD",
+  'GET$'	=> "\xBE",
+  'INKEY$'	=> "\xBF",
+
+  'LEFT$('	=> "\xC0",
+  'MID$('	=> "\xC1",
+  'RIGHT$('	=> "\xC2",
+  'STR$'	=> "\xC3",
+  'STRING$('	=> "\xC4",
+  'EOF'		=> "\xC5",
+  'AUTO'	=> "\xC6",
+  'DELETE'	=> "\xC7",
+  'LOAD'	=> "\xC8",
+  'LIST'	=> "\xC9",
+  'NEW'		=> "\xCA",
+  'OLD'		=> "\xCB",
+  'RENUMBER'	=> "\xCC",
+  'SAVE'	=> "\xCD",
+  # CE unused by BASIC II (EDIT in later versions)
+  #'PTR'		=> "\xCF" # (left form)
+
+  'PAGE='	=> "\xD0=",
+  'PA.='	=> "\xD0=",
+  'TIME='	=> "\xD1=",
+  'TI.='	=> "\xD1=",
+  'LOMEM='	=> "\xD2=",
+  'HIMEM='	=> "\xD3=",
+  'H.='		=> "\xD3=",
+  'SOUND'	=> "\xD4",
+  'BPUT'	=> "\xD5",
+  'CALL'	=> "\xD6",
+  'CHAIN'	=> "\xD7",
+  'CLEAR'	=> "\xD8",
+  'CLOSE'	=> "\xD9",
+  'CLG'		=> "\x{3DA}",
+  'CLS'		=> "\xDB",
+  'DATA'	=> "\xDC",
+  'DEF'		=> "\xDD",
+  'DIM'		=> "\xDE",
+  'DRAW'	=> "\xDF",
+
+  'END'		=> "\xE0",
+  'ENDPROC'	=> "\xE1",
+  'ENVELOPE'	=> "\xE2",
+  'FOR'		=> "\x{1E3}",
+  'GOSUB'	=> "\x{1E4}",
+  'GOTO'	=> "\x{1E5}",
+  'GCOL'	=> "\x{1E6}",
+  'IF'		=> "\x{2E7}",
+  'INPUT'	=> "\xE8",
+  'LET'		=> "\xE9",
+  'LOCAL'	=> "\xEA",
+  'MODE'	=> "\xEB",
+  'MOVE'	=> "\xEC",
+  'NEXT'	=> "\xED",
+  'NEXT:NEXT'   => "\xED,",
+  'NEXT:NEXT:NEXT' => "\xED,,",
+  'NEXT:NEXT:NEXT:NEXT' => "\xED,,,",
+  'N.:N.'	=> "\xED,",
+  'N.:N.:N.'	=> "\xED,,",
+  'N.:N.:N.:N.' => "\xED,,,",
+  'ON'		=> "\xEE",
+  'VDU'		=> "\xEF",
+
+  'PLOT'	=> "\xF0",
+  'PRINT'	=> "\x{10F1}",
+  'PROC'	=> "\x{4F2}",
+  'READ'	=> "\x{6F3}",
+  'REM'		=> "\xF4",
+  'REPEAT'	=> "\x{4F5}",
+  'REPORT'	=> "\xF6",
+  'RESTORE'	=> "\x{7F7}",
+  'RETURN'	=> "\xF8",
+  'RUN'		=> "\xF9",
+  'STOP'	=> "\xFA",
+
+  'COLOUR'	=> "\xFB",
+  'TRACE'	=> "\xFC",
+  'UNTIL'	=> "\xFD",
+  'WIDTH'	=> "\xFE",
+  'OSCLI'	=> "\xFF"
+);
+
+# Minimum abbreviations:
+my @abbrevs = (
+  'ABS'		=> 'AB.',
+  'ACS'		=> 'AC.',
+  'ADVAL'	=> 'AD.',
+  'AND'		=> 'A.',
+  'ASC'		=> 'AS.',
+  'ASN'		=> 'ASN',
+  'ATN'		=> 'AT.',
+  'AUTO'	=> 'AU.',
+  'BGET'	=> 'B.',
+  'BPUT'	=> 'BP.',
+  'CALL'	=> 'CA.',
+  'CHAIN'	=> 'CH.',
+  'CHR$'	=> 'CHR.',
+  'CLEAR'	=> 'CL.',
+  'CLG'		=> 'CLG',
+  'CLOSE'	=> 'CLO.',
+  'CLS'		=> 'CLS',
+  'COLOUR'	=> 'C.',
+  'COS'		=> 'COS',
+  'COUNT'	=> 'COU.',
+  'DATA'	=> 'D.',
+  'DEF'		=> 'DEF',
+  'DEG'		=> 'DE.',
+  'DELETE'	=> 'DEL.',
+  'DIM'		=> 'DIM',
+  'DIV'		=> 'DI.',
+  'DRAW'	=> 'DR.',
+  'ELSE'	=> 'EL.',
+  'END'		=> 'END',
+  'ENDPROC'	=> 'E.',
+  'ENVELOPE'	=> 'ENV.',
+  'EOF'		=> 'EO.',
+  'EOR'		=> 'EOR',
+  'ERL'		=> 'ER.',
+  'ERR'		=> 'ERR',
+  'ERROR'	=> 'ERR.',
+  'EVAL'	=> 'EV.',
+  'EXP'		=> 'EX.',
+  'EXT'		=> 'EXT',
+  'FALSE'	=> 'FA.',
+  'FN'		=> 'FN',
+  'FOR'		=> 'F.',
+  'GCOL'	=> 'GC.',
+  'GET$'	=> 'GE.',
+  'GET'		=> 'GET',
+  'GOSUB'	=> 'GOS.',
+  'GOTO'	=> 'G.',
+  'HIMEM'	=> 'H.',
+  'IF'		=> 'IF',
+  'INKEY'	=> 'INKEY',
+  'INKEY$'	=> 'INK.',
+  'INPUT'	=> 'I.',
+  'INSTR('	=> 'INS.',
+  'INT'		=> 'INT',
+  'LEFT$('	=> 'LE.',
+  'LEN'		=> 'LEN',
+  'LET'		=> 'LET',
+  'LINE'	=> 'LIN.',
+  'LIST'	=> 'L.',
+  'LN'		=> 'LN',
+  'LOAD'	=> 'LO.',
+  'LOCAL'	=> 'LOC.',
+  'LOG'		=> 'LOG',
+  'LOMEM'	=> 'LOM.',
+  'MID$('	=> 'M.',
+  'MOD'		=> 'MOD',
+  'MODE'	=> 'MO.',
+  'MOVE'	=> 'MOV.',
+  'NEW'		=> 'NEW',
+  'NEXT'	=> 'N.',
+  'NOT'		=> 'NO.',
+  'OFF'		=> 'OF.',
+  'OLD'		=> 'O.',
+  'ON'		=> 'ON',
+  'OPENIN'	=> 'OP.',
+  'OPENOUT'	=> 'OPENO.',
+  'OPENUP'	=> 'OPENU.',
+  'OPT'		=> 'OPT',
+  'OR'		=> 'OR',
+  'OSCLI'	=> 'OS.',
+  'PAGE'	=> 'PA.',
+  'PI'		=> 'PI',
+  'PLOT'	=> 'PL.',
+  'POINT('	=> 'PO.',
+  'POS'		=> 'POS',
+  'PRINT'	=> 'P.',
+  'PROC'	=> 'PRO.',
+  'PTR'		=> 'PT.',
+  'RAD'		=> 'RAD',
+  'READ'	=> 'REA.',
+  'REM'		=> 'REM',
+  'RENUMBER'	=> 'REN.',
+  'REPEAT'	=> 'REP.',
+  'REPORT'	=> 'REPO.',
+  'RESTORE'	=> 'RES.',
+  'RETURN'	=> 'R.',
+  'RIGHT$('	=> 'RI.',
+  'RND'		=> 'RN.',
+  'RUN'		=> 'RU.',
+  'SAVE'	=> 'SA.',
+  'SGN'		=> 'SG.',
+  'SIN'		=> 'SI.',
+  'SOUND'	=> 'SO.',
+  'SPC'		=> 'SP.',
+  'SQR'		=> 'SQ.',
+  'STEP'	=> 'S.',
+  'STOP'	=> 'STO.',
+  'STR$'	=> 'STR.',
+  'STRING$('	=> 'STRI.',
+  'TAB('	=> 'TAB.',
+  'TAN'		=> 'T.',
+  'THEN'	=> 'TH.',
+  'TIME'	=> 'TI.',
+  'TO'		=> 'TO',
+  'TRACE'	=> 'TR.',
+  'TRUE'	=> 'TRU.',
+  'UNTIL'	=> 'U.',
+  'USR'		=> 'US.',
+  'VAL'		=> 'VA.',
+  'VDU'		=> 'V.',
+  'VPOS'	=> 'VP.',
+  'WIDTH'	=> 'W.',
+);
+
+sub expand_token {
+    my $token = shift;
+    for (my $i = 1; $i < @abbrevs; $i += 2) {
+	if ($abbrevs[$i] eq $token) {
+	    return $abbrevs[$i - 1];
+	}
+    }
+    return $token;
+}
+
+# Hash to allow undoing abbreviations so we can work with full tokens, which we
+# then tokenise, optimise, or re-abbreviate (but having ensured the shortest
+# possible abbreviation is used).
+my %abbrevs;
+for (my $i = 0; $i < @abbrevs; $i += 2) {
+    my $token = $abbrevs[$i];
+    my $abbrev = $abbrevs[$i + 1];
+    if (!exists($token{$token})) {
+	$token{$token} = $abbrev;
+    }
+    while (1) {
+	if (exists($abbrevs{$abbrev})) {
+	    warn "Collision for '$abbrev': '$abbrevs{$abbrev}' vs '$token'\n";
+	}
+	$abbrevs{$abbrev} = $token;
+	last if (length($abbrev) == length($token));
+	# Remove the '.' then add another character and replace the '.'.
+	$abbrev = substr($abbrev, 0, -1);
+	$abbrev .= substr($token, length($abbrev), 1) . '.';
+    }
+}
+
+my $decode;
+if (@ARGV > 0 && $ARGV[0] eq '--decode') {
+    shift @ARGV;
+    my @detoken = ();
+    for my $k (sort keys %token) {
+	my $t = $token{$k};
+	if (length($t) == 2 && substr($t, -1) eq '=' && substr($k, -1) eq '=') {
+	    # print STDERR "trimming '$k' ";
+	    $t = substr($t, 0, -1);
+	    $k = substr($k, 0, -1);
+	    # print STDERR "to '$k'\n";
+	}
+	if (length($t) == 1) {
+	    $detoken[ord($t)] = $k;
+	    # printf STDERR "token &%02x = '%s'\n", ord($t), $k;
+	    if (ord($t)>=0x100) {
+		$detoken[ord($t)&0xff] //= $k;
+	    }
+	}
+    }
+    for (32 .. 126) {
+	$detoken[$_] //= chr($_);
+    }
+    for (0 .. 0xff) {
+	$detoken[$_] //= sprintf '[UNKNOWN TOKEN &%02x]', $_;
+    }
+    $_ = <>;
+    if (s/^\x{1F5DC}//) {
+	local $/ = undef;
+	my $base2048 = $_ . <>;
+	print "len = " , length($base2048) , "\n";
+	$_ = `node \Q$base2048dir\E/src/decode.js \Q$base2048\E`;
+    }
+    while (defined $_) {
+	my ($q, $c);
+	for (my $i = 0; $i < length($_); ++$i) {
+	    my $p = $c;
+	    $c = substr($_, $i, 1);
+	    if ($c eq '"') {
+		$q = !$q;
+		next;
+	    }
+	    my $codepoint = ord($c);
+	    my $replacement;
+	    if ($q) {
+		# FIXME: Decode VDU sequences encoded as Unicode in strings to
+		# somehow?
+		if ($codepoint < 32 || ($codepoint >= 127 && $codepoint < 160)) {
+		    # Replace non-printables with equivalent printables.
+		    $replacement = chr(0x100 + $codepoint);
+		}
+	    } elsif ($codepoint >= 0x80 && $codepoint <= 0x10ff) {
+		# Expand token
+		$replacement = ' ' . $detoken[$codepoint & 0xff];
+	    } elsif ($codepoint >= ord('A') && $codepoint <= ord('Z')) {
+		if (substr($_, $i + 1) =~ /([A-Z]*\.)/) {
+		    # Expand abbreviation.
+		    $c .= $1;
+		    $replacement = expand_token($c);
+		}
+	    }
+	    if (defined($replacement)) {
+		$_ = substr($_, 0, $i) . $replacement . substr($_, $i + length($c));
+		$i += length($replacement) - length($c);
+		next;
+	    }
+	}
+	print;
+	$_ = <>;
+    }
+    exit 0;
+}
+
+my $seen_rem;
+
+sub token {
+    my ($pre, $w, $k) = @_;
+    my $q = 0;
+    ++$q while $pre =~ /"/g;
+    if ($q % 2 == 1) {
+	return $w . $k;
+    }
+    if (substr($k, -1) eq '.' and exists $abbrevs{$k}) {
+	$k = $abbrevs{$k};
+    }
+    if (!exists $token{$k}) {
+	print STDERR "KEYWORD '$k'\n";
+	return $w . $k;
+    }
+    if ($k eq 'REM') {
+	$seen_rem = 1;
+    }
+    my $t = $token{$k};
+    if ($t =~ /^[A-Z]/) {
+	return $w . $t;
+    }
+    return $t;
+}
+my $T = join("|",map quotemeta, sort {length($b)<=>length($a) or $a cmp $b} (keys %token, keys %abbrevs));
+
+my $o = '';
+
+my $len = 0;
+while (<>) {
+    if ($len > 0) {
+	print "\n";
+	$o .= "\n";
+	++$len;
+    }
+    chomp;
+    # Leave already tokenised lines alone.
+    #    if (/[^\0-\x7f]/) {
+    #	goto leave_alone;
+    #}
+    #next if !$full && /^REM/;
+    $seen_rem = 0;
+    s/( *?)($T)/$seen_rem ? $1.$2 : token($`,$1,$2)/ge;
+    my ($q, $c);
+    for (my $i = 0; $i < length($_); ++$i) {
+	my $p = $c;
+	$c = substr($_, $i, 1);
+	if ($c eq '"') {
+	    $q = !$q;
+	    next;
+	}
+	# Don't strip spaces from REMs - if they're in the code then their
+	# contents is probably being peeked for data.
+	last if ($c eq $token{'REM'});
+	# Don't strip spaces from DATA.
+	last if ($c eq $token{'DATA'});
+	if (!$q) {
+	    if ($c eq ' ' and (!defined $p or $p =~ /^[^A-Za-z]$/)) {
+		$_ = substr($_, 0, $i) . substr($_, $i + 1);
+		--$i;
+	    }
+	}
+    }
+leave_alone:
+    print;
+    $o .= $_;
+    print STDERR "Line length: ", length($_), " bytes\n";
+    $len += length($_);
+}
+print STDERR "\nTotal length: $len bytes\n";
+if ($len > 281 || exists $ENV{FORCE_BASE2048}) {
+    system 'node', "$base2048dir/src/index.js", $o;
+    if ($len > 382) {
+	print "Too long by ", $len - 382, " bytes (pre-BASE2048)\n";
+    }
+}
+
+# BUG: O!2=A ORRND EL.F.R=0TO2 -> syntax error
+# and decoding doesn't insert spaces after tokens which need it
