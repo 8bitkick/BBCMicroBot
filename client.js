@@ -15,7 +15,7 @@ const fs           = require('fs');
 const requirejs    = require('requirejs'); // for jsbeeb compatibility
 const https        = require('https');
 const base2048     = require('base2048');
-const cert_path    = "./certs/";
+const cert_path    = "./certs/"; 
 
 const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
@@ -156,7 +156,7 @@ if (cluster.isMaster && MP == 'true') {
         } else // JSbeeb
         {
           var path = "./tmp/"+tweet.id_str;
-          var prefix = "frame";
+          var prefix = "frame"; 
           var pixel_format = "rgba";
           var emu_name = "jsbeeb";
           var frames  = await emulator.emulate(input,path,emulationDuration,startFrame);
@@ -202,7 +202,7 @@ if (cluster.isMaster && MP == 'true') {
         
         if (frames > 0) {
           await exec(ffmpegCmd);
-          var checksum = await exec('shasum '+path+pixel_format+(frames-1)+'.rgba'+" | awk '{print $1}'");
+          var checksum = await exec('shasum '+path+prefix+(frames-1)+'.rgba'+" | awk '{print $1}'");
         } else {
           var checksum = '';
         }
