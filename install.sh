@@ -4,11 +4,29 @@ echo
 echo Installing BBC Micro Bot
 echo ------------------------
 
+sudo apt install -y libasound2-dev  libx11-dev libxext-dev
+
+echo Building beebjit
+#####################
+git clone https://github.com/scarybeasts/beebjit.git
+cd beebjit
+./build_opt.sh
+cd  ..
+
+echo Building beebasm 
+#####################
+git clone https://github.com/stardot/beebasm.git
+cd beebasm/src
+make all
+cd ../..
+echo 'PUTTEXT "text.bas", "!BOOT", 0' > beebasm/makedisk.asm
+
 echo Getting GXR ROM
 ln -s ./node_modules/jsbeeb/roms/ roms
 cd roms
 curl http://mdfs.net/System/ROMs/Graphics/GXR120 > gxr.rom
 cd -
+cp roms/gxr.rom beebjit/roms/
 
 echo Creating directories
 ########################
