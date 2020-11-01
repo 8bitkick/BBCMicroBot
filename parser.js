@@ -24,7 +24,8 @@ function processInput(tweet,compressed) {
     }
     catch(error){
       console.warn(error);
-      output ="P. \"BASE2048 DECODE ERROR\"\r";
+      console.log("Not base2048 - processing as BASIC tokens");
+      i = tweet.text.trim();
     }
   }
 
@@ -55,6 +56,7 @@ function parseTweet(tweet){
   });
 
   var graphemes = splitter.splitGraphemes(tweet.text.trim());
+var one_hour = 2000000*60*60;
 
   var c = {
     emulator:   "jsbeeb",
@@ -63,7 +65,6 @@ function parseTweet(tweet){
     input:      ""
   }
 
-  var one_hour = 2000000*60*60;
 
   for (let i = 0; i<graphemes.length; i++){
 
@@ -75,23 +76,24 @@ function parseTweet(tweet){
 
       case "📸": // Snapshot after one hour emulation time
       c.emulator = "beebjit";
-      c.flags    = "-cycles "+(one_hour+2000000)+" -frame-cycles "+one_hour;
+      c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour;
       break;
 
+      /*
       case "⏳": // Time lapse after one hour execution time
       case "⌛":
-      c.emulator = "beebjit";
-      c.flags    = "-cycles "+one_hour+" -frame-cycles "+(2000000*5)+" -max-frames 150"
+      c.emulator = "beebjit"; // -rom 7 roms/gxr.rom
+      c.flags    = "-cycles "+one_hour+" -frame-cycles "+(2000000*7)+" -max-frames 150"
       break;
+      */
 
       default:
       c.input += graphemes[i];
-
       var g = graphemes[i].codePointAt(0);
       if (g > 1024 && g < 0x10FF) {c.compressed = true;}
     }
   }
-
+  tweet.text = c.input;
   c.input = processInput(tweet, c.compressed);
   c.rude = (customFilter.clean(c.input) != c.input);
   c.isBASIC = isBASIC(tweet.text);
