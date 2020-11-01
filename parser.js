@@ -88,7 +88,7 @@ function parseTweet(tweet){
       c.input += graphemes[i];
 
       var g = graphemes[i].codePointAt(0);
-      if (g > 1024 && g < 0x10FF) {compressed = true;}
+      if (g > 1024 && g < 0x10FF) {c.compressed = true;}
     }
   }
 
