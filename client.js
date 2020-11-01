@@ -2,7 +2,6 @@
 require('dotenv').config();
 const PORT        = process.env.PORT || 6502;
 const HOST        = process.env.SERVER || 'localhost'
-const MP          = process.env.MP || false
 var   POLL_DELAY  = process.env.POLL_DELAY || 5000
 
 const TEST = (process.argv.indexOf("test") > -1)
@@ -14,15 +13,8 @@ const startFrame          = 1587; // frames (50fps when vsync active)
 const fs           = require('fs');
 const requirejs    = require('requirejs'); // for jsbeeb compatibility
 const https        = require('https');
-const base2048     = require('base2048');
-const Grapheme     = require('grapheme-splitter');
-var splitter = new Grapheme();
-
 const cert_path    = "./certs/";
-
-const Filter       = require('bad-words');
-const customFilter = new Filter({ placeHolder: '*'});
-//customFilter.addWords('words','here');
+const parser       = require('./parser');
 
 var twtr = require(TEST ? './test' : './tweet');
 
@@ -51,22 +43,6 @@ function log(l){console.log(l);}
 
 var clientID = "Cli0";
 
-// Set up multiprocessing
-// -----------------------
-let os = require('os'),
-cluster = require('cluster');
-if (cluster.isMaster && MP == 'true') {
-  let cpus = os.cpus();
-  cpus.forEach(function (cpu, i) {
-    let worker = cluster.fork();
-    worker.on('exit', function () {
-      console.log("Emulator process exited");
-    })
-  });
-
-} else {
-
-  if (cluster.isWorker) {clientID = "Cli"+(cluster.worker.id-1);}
   require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},clientID+":" );
 
   requirejs.config({
@@ -83,107 +59,19 @@ if (cluster.isMaster && MP == 'true') {
   function (emulator) {
     "use strict";
 
-    function processInput(tweet,compressed) {
-      var i = tweet.text.trim();
-
-      function remove_first_occurrence(str, searchstr)       {
-        var index = str.indexOf(searchstr); if (index === -1) {return str;}
-        return str.slice(0, index) + str.slice(index + searchstr.length);}
-
-        var userMentions = [];
-        if (typeof tweet.entities.user_mentions != 'undefined' ){
-          tweet.entities.user_mentions.forEach(function(m) {
-            if (typeof m.indices != 'undefined') {
-              // Use unshift to get the last indices first so we can change the
-              // string there without invalidating indices we've yet to process.
-              userMentions.unshift(m.indices);
-            }
-          });
-        }
-
-        userMentions.forEach(function(m) {
-          i = i.slice(0, m[0]) + i.slice(m[1]);
-        });
-
-        if (compressed == true) {
-          try{
-            i=String.fromCharCode.apply(null, base2048.decode(i.trim()));//output.trim()));
-          }
-          catch(error){
-            console.warn(error);
-            output ="P. \"BASE2048 DECODE ERROR\"\r";
-          }
-        }
-
-        i = i.replace(/[“]/g,'"');
-        i = i.replace(/[”]/g,'"');
-        i = i.replace(/&lt;/g,'<');
-        i = i.replace(/&gt;/g,'>');
-        i = i.replace(/&amp;/g,'&');
-
-        return i;
-      }
-
-      function emojiParse(input){
-        var graphemes = splitter.splitGraphemes(input);
-
-        var emulator = "jsbeeb";
-        var flags="";
-        var compressed = false;
-        var output= "";
-	var one_hour = 2000000*60*60;
-	      
-        for (let i = 0; i<graphemes.length; i++){
-
-          switch (graphemes[i]){
-			  
-            case "🗜":
-            compressed = true;
-            break;
-
-            case "📸": // Snapshot after one hour emulation time
-            emulator = "beebjit";
-            flags    = "-cycles "+(one_hour+2000000)+" -frame-cycles "+one_hour;
-            break;
-
-            case "⏳": // Time lapse after one hour execution time
-	    case "⌛":	  
-            emulator = "beebjit";
-            flags    = "-cycles "+one_hour+" -frame-cycles "+(2000000*5)+" -max-frames 150"
-            break;
-
-            default:
-            output += graphemes[i];
-
-            var g = graphemes[i].codePointAt(0);
-            if (g > 1024 && g < 0x10FF) {compressed = true;}
-          }
-        }
-
-        var directives = {
-          compressed: compressed,
-          flags: flags,
-          emulator: emulator,
-          text: output
-        }
-
-        console.log("\n",input,"\n",directives);
-        return directives;
-      }
-
-
       async function run(tweet){
         console.log("");
         console.log("Running "+tweet.id_str+" from @"+tweet.user.screen_name);
 
-        var c = emojiParse(tweet.text);
+        var c = parser.parseTweet(tweet);
 
-        tweet.text = c.text;
-
-        // Convert tweet to BBC Micro friendly characters
-        var input = processInput(tweet,c.compressed);
-	
-	 //     console.log("INPUT: "+input);return; // ***********
+        // If rude or not basic, skip it
+        if (!c.isBASIC) {console.log ("No BASIC detected");return;}
+        if (c.rude) {
+          console.warn("BLOCKED @"+tweet.user.screen_name)
+          twtr.block(tweet);
+          return;
+        }
 
         var start   = new Date()
 
@@ -195,7 +83,7 @@ if (cluster.isMaster && MP == 'true') {
           var emu_name = "beebjit";
 
           // Run tweet on emulator
-          await fs.writeFileSync("./beebasm/text.bas",input+"\rRUN\r");
+          await fs.writeFileSync("./beebasm/text.bas",c.input+"\rRUN\r");
           await exec("cd beebasm && ./beebasm -i makedisk.asm -do tweet.ssd -opt 3 && cd ../beebjit");
           await exec(" cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -accurate -headless -autoboot -opt video:border-chars=0 -rom 7 roms/gxr.rom "+c.flags+" && cd ..");
 
@@ -205,7 +93,7 @@ if (cluster.isMaster && MP == 'true') {
           var prefix = "frame";
           var pixel_format = "rgba";
           var emu_name = "jsbeeb";
-          var frames  = await emulator.emulate(input,path,emulationDuration,startFrame);
+          var frames  = await emulator.emulate(c.input,path,emulationDuration,startFrame);
         }
 
         // Tweet ID will be used in tmp filename passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
@@ -257,10 +145,7 @@ if (cluster.isMaster && MP == 'true') {
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
 
-        if (customFilter.clean(input) != input) {
-          console.warn("BLOCKED @"+tweet.user.screen_name)
-          twtr.block(tweet);
-        } else if (frames == 0) {
+        if (frames == 0) {
           twtr.noOutput(tweet);
         } else {
           twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio);
@@ -326,4 +211,3 @@ if (cluster.isMaster && MP == 'true') {
       }
     }
   );
-}
