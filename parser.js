@@ -74,7 +74,7 @@ var one_hour = 2000000*60*60;
       c.compressed = true;
       break;
 
-      case "📸": // Snapshot after one hour emulation time
+      case "🚀": // Snapshot after one hour emulation time
       c.emulator = "beebjit";
       c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour;
       break;
