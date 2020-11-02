@@ -85,7 +85,7 @@ var clientID = "Cli0";
           // Run tweet on emulator
           await fs.writeFileSync("./beebasm/text.bas",c.input+"\rRUN\r");
           await exec("cd beebasm && ./beebasm -i makedisk.asm -do tweet.ssd -opt 3 && cd ../beebjit");
-          await exec(" cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -accurate -headless -autoboot -opt video:border-chars=0  "+c.flags+" && cd ..");
+          await exec(" cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -opt video:border-chars=0  "+c.flags+" && cd ..");
 
         } else // JSbeeb
         {
