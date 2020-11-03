@@ -7,6 +7,14 @@ function Tests(since_id){
   console.log("TEST TWEETS QUEUED");
 
   this.tests = [
+        {
+      name: "FRAME_CAPTURE_BEEBJIT", // MODE 0-6
+      text: "🚀0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
+            "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
+            "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
+      mediaType: "image/png",
+      checksum: "773875698a5d64953f4ca3b51fd50c9f69a19907"
+    },
     {
       name: "FRAME_CAPTURE", // MODE 0-6
       text: "0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
