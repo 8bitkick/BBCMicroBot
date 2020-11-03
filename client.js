@@ -151,7 +151,7 @@ var clientID = "Cli0";
         if (frames == 0) {
           twtr.noOutput(tweet);
         } else {
-          twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio);
+          twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio,c.input);
         }
 
         setTimeout(requestTweet, POLL_DELAY);
