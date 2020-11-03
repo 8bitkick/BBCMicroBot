@@ -9,7 +9,7 @@ echo Building beebjit
 git clone https://github.com/scarybeasts/beebjit.git
 cd beebjit
 set -e
-
+sudo apt install -y libasound2-dev  
 gcc -Wall -W -Werror \
     -Wno-unknown-warning-option -Wno-address-of-packed-member \
     -fno-pie -no-pie -Wa,--noexecstack \
@@ -27,7 +27,7 @@ gcc -Wall -W -Werror \
     debug.c jit.c util.c \
     os.c \
     -lm -Wl,--unresolved-symbols=ignore-all -lpthread 
-# forces build without libasound2-dev, libx11-dev, libxext-dev
+# forces build without libx11-dev, libxext-dev
 cd  ..
 
 echo Building beebasm 
