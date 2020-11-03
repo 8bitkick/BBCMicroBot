@@ -61,7 +61,7 @@ const discordClient = new Discord.WebhookClient(process.env.webhookID, process.e
     console.log("Media post DONE ");
 
     // Post to discord too
-    var content = text+" posted \n\n`"+input+"`\nhttps://www.twitter.com/bbcmicrobot/status/"+response.id_str;
+    var content = text+" posted \n\n`"+input+"`\n"+response.entities.media[0].media_url_https;
     console.log(content);
     discordClient.send('Webhook test', {
 	username: 'bbcmicrobot',
