@@ -39,6 +39,7 @@ function exec(cmd) {
   });
 }
 
+
 function log(l){console.log(l);}
 
 var clientID = "Cli0";
@@ -106,12 +107,14 @@ var clientID = "Cli0";
         console.log(emu_name+" DONE in %ds ",end/1000);
 
         // Count unique video frames
-        var frames = (await exec("shasum "+path+"*.rgba | awk '{print $1}' | wc -l"));
-        var uniqueFrames = (await exec("shasum "+path+"*.rgba | awk '{print $1}' | sort | uniq | wc -l"));
+	var shasum_check = (await exec("sha1sum client.js  | awk '{print $1}' | wc -l")); // should equal 1
+	var shasum = (shasum_check > 0) ? "sha1sum" : "shasum";
+        var frames = (await exec(shasum+" "+path+prefix+"*."+pixel_format+" | awk '{print $1}' | wc -l"));
+        var uniqueFrames = (await exec(shasum+" "+path+prefix+"*."+pixel_format+" | awk '{print $1}' | sort | uniq | wc -l"));
 
-        console.log("Captured "+frames+" frames ("+uniqueFrames+" unique)");
+        console.log("Captured "+frames+" frames ("+uniqueFrames+" unique) "+path+prefix);
 
-        start = new Date()
+   	start = new Date();
 
         var hasAudio = fs.existsSync(path+"audiotrack.raw");
 
@@ -122,7 +125,7 @@ var clientID = "Cli0";
           // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
           var mediaFilename = path+'.png';
           var mediaType = 'image/png';
-          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+path+prefix+(frames-1)+'.rgba -vf "scale=1280:1024" '+mediaFilename
+          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+path+prefix+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
         } else {
           // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
           var mediaFilename = path+'.mp4';
@@ -131,16 +134,16 @@ var clientID = "Cli0";
           if (hasAudio) {
             ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+path+'audiotrack.raw ';
           }
-          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+path+prefix+'%d.rgba  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
+          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+path+prefix+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
         if (frames > 0) {
           await exec(ffmpegCmd);
-          var checksum = await exec('shasum '+path+prefix+(frames-1)+'.rgba'+" | awk '{print $1}'");
+          var checksum = await exec(shasum+" "+path+prefix+(frames-1)+'.'+pixel_format+" | awk '{print $1}'");
         } else {
           var checksum = '';
         }
-        exec('rm -f '+path+'*.rgba '+path+'*.raw');
+        exec('rm -f '+path+'*.'+pixel_format+' '+path+'*.raw');
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
