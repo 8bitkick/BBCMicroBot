@@ -8,6 +8,19 @@ const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
 
+function detokenize(string){
+const tokens = ["AND","DIV","EOR","MOD","OR","ERROR","LINE","OFF","STEP","SPC","TAB(","ELSE","THEN","line no.","OPENIN","PTR","PAGE","TIME","LOMEM","HIMEM","ABS","ACS","ADVAL","ASC","ASN","ATN","BGET","COS","COUNT","DEG","ERL","ERR","EVAL","EXP","EXT","FALSE","FN","GET","INKEY","INSTR","INT","LEN","LN","LOG","NOT","OPENUP","OPENOUT","PI","POINT(","POS","RAD","RND","SGN","SIN","SQR","TAN","TO","TRUE","USR","VAL","VPOS","CHR$","GET$","INKEY$","LEFT$(","MID$(","RIGHT$(","STR$","STRING$(","EOF","AUTO","DELETE","LOAD","LIST","NEW","OLD","RENUMBER","SAVE","PUT","PTR","PAGE","TIME","LOMEM","HIMEM","SOUND","BPUT","CALL","CHAIN","CLEAR","CLOSE","CLG","CLS","DATA","DEF","DIM","DRAW","END","ENDPROC","ENVELOPE","FOR","GOSUB","GOTO","GCOL","IF","INPUT","LET","LOCAL","MODE","MOVE","NEXT","ON","VDU","PLOT","PRINT","PROC","READ","REM","REPEAT","REPORT","RESTORE","RETURN","RUN","STOP","COLOUR","TRACE","UNTIL","WIDTH","OSCLI"];
+
+var graphemes = splitter.splitGraphemes(string.trim());
+var output = "";
+
+ for (let i = 0; i<graphemes.length; i++){
+	   var g = graphemes[i].codePointAt(0) & 0xff;
+           output += g>=0x80 ? tokens[g-0x80] : graphemes[i];
+ }
+return output;
+}
+
 function isBASIC(bas){ // TODO convert to regex
   bas = bas.replace(/@\w+/g, "").trim(); // get rid of tags and white space
   var basic = (bas.match(/^\d/) != null) || // code must start with digit
@@ -94,7 +107,7 @@ var one_hour = 2000000*60*60;
     }
   }
   tweet.text = c.input;
-  c.input = processInput(tweet, c.compressed);
+  c.input = detokenize(processInput(tweet, c.compressed));
   c.rude = (customFilter.clean(c.input) != c.input);
   c.isBASIC = isBASIC(tweet.text);
 
