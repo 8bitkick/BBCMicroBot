@@ -16,7 +16,7 @@ var output = "";
 
  for (let i = 0; i<graphemes.length; i++){
 	   var g = graphemes[i].codePointAt(0) & 0xff;
-           output += g>=0x80 ? tokens[g-0x80] : graphemes[i];
+           output += g>=0x80 ? " "+tokens[g-0x80]+" " : graphemes[i];
  }
 return output;
 }
