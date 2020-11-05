@@ -87,18 +87,16 @@ var one_hour = 2000000*60*60;
       c.compressed = true;
       break;
 
-      case "🚀": // Snapshot after one hour emulation time
+      case "🚀": // Snapshot after three hours emulation time
       c.emulator = "beebjit";
-      c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour;
+      c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
       break;
 
-      /*
-      case "⏳": // Time lapse after one hour execution time
+      case "⏳": // Time lapse of three hours execution time
       case "⌛":
-      c.emulator = "beebjit"; // -rom 7 roms/gxr.rom
-      c.flags    = "-cycles "+one_hour+" -frame-cycles "+(2000000*7)+" -max-frames 150"
+      c.emulator = "beebjit"; // 
+      c.flags    = "-cycles "+(3*one_hour+4000000)+" -frame-cycles 4000000 -opt video:border-chars=0,video:paint-start-cycles=4000000,video:paint-cycles="+(3*one_hour/150)+"  -max-frames 150";
       break;
-      */
 
       default:
       c.input += graphemes[i];
