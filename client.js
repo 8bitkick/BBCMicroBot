@@ -77,24 +77,25 @@ var clientID = "Cli0";
         var start   = new Date()
 
         // Emulate
+        var output = "./tmp/"+tweet.id_str;
         if (c.emulator == "beebjit") {
-          var path = "./beebjit/";
+          var path = "beebjit/";
           var prefix = "beebjit_frame_";
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
           // Run tweet on emulator
           await fs.writeFileSync("./beebasm/text.bas",c.input+"\rRUN\r");
-          await exec("cd beebasm && ./beebasm -i makedisk.asm -do tweet.ssd -opt 3 && cd ../beebjit");
-          await exec(" cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -opt video:border-chars=0  "+c.flags+" && cd ..");
+          await exec("cd beebasm && ./beebasm -i makedisk.asm -do tweet.ssd -opt 3");
+          await exec("cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -opt video:border-chars=0 "+c.flags);
 
         } else // JSbeeb
         {
-          var path = "./tmp/"+tweet.id_str;
+          var path = output;
           var prefix = "frame";
           var pixel_format = "rgba";
           var emu_name = "jsbeeb";
-          var frames  = await emulator.emulate(c.input,path,emulationDuration,startFrame);
+          var frames  = await emulator.emulate(c.input,output,emulationDuration,startFrame);
         }
 
         // Tweet ID will be used in tmp filename passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
@@ -123,12 +124,12 @@ var clientID = "Cli0";
           var ffmpegCmd = "";
         } else if (uniqueFrames==1 && !hasAudio) {
           // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
-          var mediaFilename = path+'.png';
+          var mediaFilename = output+'.png';
           var mediaType = 'image/png';
           var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+path+prefix+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
         } else {
           // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
-          var mediaFilename = path+'.mp4';
+          var mediaFilename = output+'.mp4';
           var mediaType = 'video/mp4';
           var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic ';
           if (hasAudio) {
