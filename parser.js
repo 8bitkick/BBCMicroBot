@@ -105,7 +105,9 @@ var one_hour = 2000000*60*60;
     }
   }
   tweet.text = c.input;
-  c.input = detokenize(processInput(tweet, c.compressed));
+  c.input = processInput(tweet, c.compressed);
+  // TODO really we need to be creating a fully tokenized BASIC program below 
+  if (c.emulator=="beebjit") {c.input = detokenize(c.input)}
   c.rude = (customFilter.clean(c.input) != c.input);
   c.isBASIC = isBASIC(tweet.text);
 
