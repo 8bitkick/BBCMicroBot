@@ -14,11 +14,6 @@
   }
 
   const twitter          = new Twitter(API_KEYS);
-  const Discord = require('discord.js');
-
-const discordClient = new Discord.WebhookClient(process.env.webhookID, process.env.webhookToken);
-
-
 
   function post (endpoint, params) {
     return new Promise((resolve, reject) => {
@@ -63,6 +58,11 @@ const discordClient = new Discord.WebhookClient(process.env.webhookID, process.e
     // Post to discord too
     var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n```basic\n"+input+"```\n"+response.entities.media[0].media_url_https+"\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
     console.log(content);
+
+    if (typeof discordClient === 'undefined') {
+      const Discord = require('discord.js');
+      discordClient = new Discord.WebhookClient(process.env.webhookID, process.env.webhookToken);
+    }
     discordClient.send('Webhook test', {
 	username: 'bbcmicrobot',
 	"content": content
