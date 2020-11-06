@@ -16,6 +16,7 @@
     "console-stamp": "^0.2.9",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "grapheme-splitter": "^1.0.4",
     "jsbeeb": "mattgodbolt/jsbeeb#master",
     "request": "^2.88.2",
     "requirejs": "^2.3.6",

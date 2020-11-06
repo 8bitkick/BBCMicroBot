@@ -10,10 +10,15 @@
     consumer_key: process.env.consumer_key,
     consumer_secret: process.env.consumer_secret,
     access_token_key: process.env.access_token_key,
-    access_token_secret: process.env.access_token_secret
+    access_token_secret: process.env.access_token_secret,
   }
 
   const twitter          = new Twitter(API_KEYS);
+  const Discord = require('discord.js');
+
+const discordClient = new Discord.WebhookClient(process.env.webhookID, process.env.webhookToken);
+
+
 
   function post (endpoint, params) {
     return new Promise((resolve, reject) => {
@@ -43,7 +48,7 @@
   	})
   }
 
-  async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio){
+  async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio,input){
     const mediaData   = require('fs').readFileSync(filename);
     const mediaSize   = require('fs').statSync(filename).size;
 
@@ -51,9 +56,18 @@
     var data = await post('media/upload', {command:'INIT',total_bytes: mediaSize,media_type : mediaType});
     await post('media/upload',    {command:'APPEND', media_id:data.media_id_string, media:mediaData,segment_index: 0});
     await post('media/upload',    {command:'FINALIZE', media_id:data.media_id_string});
-    await post('statuses/update', {status:text, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
+    var response = await post('statuses/update', {status:text, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
     await post('favorites/create',{id: replyTo});
-    console.log("Media post DONE");
+    console.log("Media post DONE ");
+
+    // Post to discord too
+    var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n```basic\n"+input+"```\n"+response.entities.media[0].media_url_https+"\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
+    console.log(content);
+    discordClient.send('Webhook test', {
+	username: 'bbcmicrobot',
+	"content": content
+});	    
+    
     }
 
     catch(e) {

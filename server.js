@@ -46,6 +46,6 @@ var listener = https.createServer(options, app).listen(PORT, function () {
 });
 
 // Poll the twitter mentions
-var tweetFeed = new Feed('1260761572890165254');
+var tweetFeed = new Feed('1323720528327266305');
 tweetFeed.update();
 setInterval(function(){ tweetFeed.update(); }, 12500);
