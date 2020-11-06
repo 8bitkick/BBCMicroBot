@@ -85,10 +85,18 @@ var clientID = "Cli0";
           var emu_name = "beebjit";
 
           // Run tweet on emulator
-          await fs.writeFileSync("./beebasm/text.bas",c.input+"\rRUN\r");
-          await exec("cd beebasm && ./beebasm -i makedisk.asm -do tweet.ssd -opt 3");
+          var tokenised;
+          try {
+            tokenised = await emulator.tokenise(c.input);
+          } catch (e) {
+            console.log("Tokenisation FAILED");
+            console.log(e);
+            return 0;
+          }
+          await fs.writeFileSync("./beebasm/tokenised.bas",tokenised,{encoding:"binary"});
+          await fs.writeFileSync("./beebasm/run.txt","LO.\"TWEET\"\nP.CHR$11CHR$11SPC80CHR$11CHR$11;\nRUN\n");
+          await exec("cd beebasm && ./beebasm -i makedisk2.asm -do tweet.ssd -opt 3");
           await exec("cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -opt video:border-chars=0 "+c.flags);
-
         } else // JSbeeb
         {
           var path = output;

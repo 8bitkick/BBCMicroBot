@@ -23,9 +23,9 @@ return output;
 
 function isBASIC(bas){ // TODO convert to regex
   bas = bas.replace(/@\w+/g, "").trim(); // get rid of tags and white space
-  var basic = (bas.match(/^\d/) != null) || // code must start with digit
-  bas.includes("=") ||
-  (bas.match("[^\0-\x7e]")!=null); // Tokens and/or clamp emoji for compressed
+  var basic = (bas.match(/^\d/) != null) || // Line number.
+  bas.includes("=") || // Or contains an equals sign.
+  (bas.match("[^\0-\x7e]")!=null); // Or contains tokens.
   return basic;
 }
 
@@ -106,10 +106,8 @@ var one_hour = 2000000*60*60;
   }
   tweet.text = c.input;
   c.input = processInput(tweet, c.compressed);
-  // TODO really we need to be creating a fully tokenized BASIC program below 
-  if (c.emulator=="beebjit") {c.input = detokenize(c.input)}
   c.rude = (customFilter.clean(c.input) != c.input);
-  c.isBASIC = isBASIC(tweet.text);
+  c.isBASIC = c.compressed || c.emulator === 'beebjit' || isBASIC(tweet.text);
 
   console.log("\n",c);
   return c;

@@ -20,6 +20,12 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
 
   var screenMode = 0x0355; // Current screen mode.
 
+  async function tokenise(input) {
+    return await tokeniser.create().then(function (t) {
+      return t.tokenise(input);
+    });
+  }
+
   async function emulate(input,path,duration,capture_start) {
 
     var frameBuffer32 = new Uint32Array(1024 * 625);
@@ -89,10 +95,9 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         // it doesn't have any line numbers.
         if (/[^\0-\x7e]/.test(input) || !/^ *[0-9]/m.test(input)) {
           /* Tokeniser input method */
-          var t         = await tokeniser.create();
           var tokenised;
           try {
-            tokenised = await t.tokenise(input);
+            tokenised = await tokenise(input);
           }
           catch (e) {
             console.log("Tokenisation FAILED");
@@ -203,7 +208,8 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
 
 
       return {
-        emulate:emulate
+        emulate:emulate,
+        tokenise:tokenise
       };
     }
   );
