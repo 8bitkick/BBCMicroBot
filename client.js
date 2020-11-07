@@ -97,7 +97,7 @@ var clientID = "Cli0";
           await fs.writeFileSync("./beebasm/tokenised.bas",tokenised,{encoding:"binary"});
           await fs.writeFileSync("./beebasm/run.txt","LO.\"TWEET\"\nP.CHR$11CHR$11SPC80CHR$11CHR$11;\nRUN\n");
           await exec("cd beebasm && ./beebasm -i makedisk2.asm -do tweet.ssd -opt 3");
-          await exec("cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -opt video:border-chars=0 "+c.flags);
+          await exec("cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot "+c.flags);
         } else // JSbeeb
         {
           var path = "./tmp/"+tweet.id_str;
