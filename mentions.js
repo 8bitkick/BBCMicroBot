@@ -147,7 +147,7 @@ async function extendTruncated(timeline){
 		bas = bas.replace(/@\w+/g, "").trim(); // get rid of tags and white space
 		var basic = (bas.match(/^\d/) != null) || // code must start with digit
 		bas.includes("=") ||
-		(bas.match("[^\0-\x7e]")!=null); // Tokens and/or clamp emoji for compressed
+		(bas.match("[^\0-\x7e]")!=null); // Tokens and/or emoji.
 		return basic;
 	}
 

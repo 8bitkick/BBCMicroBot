@@ -36,7 +36,8 @@ git clone https://github.com/stardot/beebasm.git
 cd beebasm/src
 make all
 cd ../..
-echo 'PUTTEXT "text.bas", "!BOOT", 0' > beebasm/makedisk.asm
+echo 'PUTFILE "tokenised.bas", "TWEET", 0' > beebasm/makedisk2.asm
+echo 'PUTTEXT "run.txt", "!BOOT", 0' >> beebasm/makedisk2.asm
 
 echo Getting GXR ROM
 ln -s ./node_modules/jsbeeb/roms/ roms
