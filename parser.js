@@ -59,8 +59,8 @@ function parseTweet(tweet){
 var one_hour = 2000000*60*60;
 
   var c = {
-    emulator:   "jsbeeb",
-    flags:      "",
+    emulator:   "beebjit",
+    flags:      "-opt video:paint-start-cycles=60000000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 66000000 ",
     compressed: false,
     input:      ""
   }
