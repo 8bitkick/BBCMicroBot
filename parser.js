@@ -60,7 +60,7 @@ var one_hour = 2000000*60*60;
 
   var c = {
     emulator:   "beebjit",
-    flags:      "-accurate -opt video:paint-start-cycles=60000000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 66000000 ",
+    flags:      "-accurate -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 66000000 ",
     compressed: false,
     input:      ""
   }
