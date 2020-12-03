@@ -19,10 +19,10 @@ var splitter = new Grapheme();
 
 function detokenise(string){
 	const tokens = ["AND ","DIV ","EOR ","MOD ","OR ","ERROR ","LINE ","OFF ","STEP ","SPC","TAB(","ELSE ","THEN ","line no. ","OPENIN","PTR","PAGE ","TIME ","LOMEM ","HIMEM ","ABS","ACS","ADVAL","ASC","ASN","ATN","BGET","COS","COUNT ","DEG","ERL ","ERR ","EVAL","EXP","EXT","FALSE ","FN","GET ","INKEY","INSTR","INT","LEN","LN","LOG","NOT ","OPENIN","OPENOUT","PI ","POINT(","POS ","RAD","RND","SGN","SIN","SQR","TAN","TO ","TRUE ","USR","VAL","VPOS ","CHR$","GET$ ","INKEY$","LEFT$(","MID$(","RIGHT$(","STR$","STRING$(","EOF ","AUTO ","DELETE ","LOAD ","LIST ","NEW ","OLD ","RENUMBER ","SAVE ","PUT","PTR","PAGE ","TIME ","LOMEM ","HIMEM ","SOUND ","BPUT","CALL ","CHAIN ","CLEAR ","CLOSE","CLG ","CLS ","DATA ","DEF ","DIM ","DRAW ","END ","ENDPROC ","ENVELOPE ","FOR ","GOSUB ","GOTO ","GCOL ","IF ","INPUT ","LET ","LOCAL ","MODE ","MOVE ","NEXT ","ON ","VDU ","PLOT ","PRINT ","PROC","READ ","REM ","REPEAT ","REPORT ","RESTORE ","RETURN ","RUN ","STOP ","COLOUR ","TRACE ","UNTIL ","WIDTH ","OSCLI"];
-	
+
 	var graphemes = splitter.splitGraphemes(string.trim());
 	var output = "";
-	
+
 	for (let i = 0; i<graphemes.length; i++){
 		var g = graphemes[i].codePointAt(0) & 0xff;
 		output += g>=0x80 ? " "+tokens[g-0x80] : graphemes[i];
@@ -61,7 +61,7 @@ function get (api,params) {
 async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio,input){
 	const mediaData   = require('fs').readFileSync(filename);
 	const mediaSize   = require('fs').statSync(filename).size;
-	
+
 	try {
 		var data = await post('media/upload', {command:'INIT',total_bytes: mediaSize,media_type : mediaType});
 		await post('media/upload',    {command:'APPEND', media_id:data.media_id_string, media:mediaData,segment_index: 0});
@@ -69,11 +69,18 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		var response = await post('statuses/update', {status:text, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
 		await post('favorites/create',{id: replyTo});
 		console.log("Media post DONE ");
-		
+
+		let progData = encodeURIComponent(JSON.stringify({
+			v:1,
+			program:input,
+			author:response.in_reply_to_screen_name,
+			date: Date.now()
+		}));
+
 		// Post to discord too
-		var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n```basic\n"+detokenise(input)+"```\n"+response.entities.media[0].media_url_https+"\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
+		var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\n[Open source in Owlet Editor](https://bbcmic.ro/#"+progData+">)\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
 			console.log(content);
-			
+
 			if (typeof discordClient === 'undefined') {
 				const Discord = require('discord.js');
 				discordClient = new Discord.WebhookClient(process.env.webhookID, process.env.webhookToken);
@@ -81,16 +88,16 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 			discordClient.send('Webhook test', {
 				username: 'bbcmicrobot',
 				"content": content
-			});	    
-			
+			});
+
 		}
-		
+
 		catch(e) {
 			console.log("Media post FAILED");
 			console.log(e);
 		}
 	}
-	
+
 	function noOutput(tweet) {
 		console.warn("NO VIDEO CAPTURED");
 		if (!ENABLE_TEXT_REPLY) return;
@@ -102,11 +109,11 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 			console.log(e);
 		}
 	}
-	
+
 	function block(tweet) {
 		post('blocks/create',{screen_name: tweet.user.screen_name});
 	}
-	
+
 	module.exports = {
 		videoReply: videoReply,
 		noOutput: noOutput,
@@ -114,3 +121,4 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		post: post,
 		get: get
 	};
+
