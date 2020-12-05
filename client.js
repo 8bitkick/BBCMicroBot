@@ -84,20 +84,23 @@ var clientID = "Cli0";
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
-          // Run tweet on emulator
+        // Run tweet on emulator
 
           var tokenised;
           try {
             tokenised = await emulator.tokenise(c.input);
+            var page = ( c.flags.includes("gxr.rom") ) ? "1c00" : "1900";
+
           } catch (e) {
             console.log("Tokenisation FAILED");
             console.log(e);
             return 0;
           }
-          await fs.writeFileSync("./beebasm/tokenised.bas",tokenised,{encoding:"binary"});
-          await fs.writeFileSync("./beebasm/run.txt","LO.\"TWEET\"\nP.CHR$11CHR$11SPC80CHR$11CHR$11;\nRUN\n");
-          await exec("cd beebasm && ./beebasm -i makedisk2.asm -do tweet.ssd -opt 3");
-          await exec("cd beebjit && ./beebjit -0 ../beebasm/tweet.ssd -fast -headless -autoboot -frames-dir ../tmp/ "+c.flags);
+          await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
+          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags +
+                            " -commands 'breakat 1000000;c;loadmem ../tmp/tweet.bas "+page+";keydown 82;breakat 1100000;c;keyup 82;keydown 85;breakat 1200000;c;keyup 85;keydown 78;breakat 1300000;c;r;keyup 78;keydown 131;breakat 1400000;c;keyup 131;c'";
+          await exec(beebjit_cmd );
+          console.log(beebjit_cmd);
         } else // JSbeeb
         {
           var path = "./tmp/"+tweet.id_str;
