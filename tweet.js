@@ -79,6 +79,9 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 
 		// Post to discord too
 		var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\n[Open source in Owlet Editor](https://bbcmic.ro/#"+progData+">)\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
+		if (content.length>1999) {
+			content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\nSource too long to link to in Owlet\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
+		};
 			console.log(content);
 
 			if (typeof discordClient === 'undefined') {
