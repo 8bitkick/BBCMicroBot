@@ -85,20 +85,44 @@ var clientID = "Cli0";
           var emu_name = "beebjit";
 
         // Run tweet on emulator
-
           var tokenised;
           try {
             tokenised = await emulator.tokenise(c.input);
+            await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
+            await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
+
+            var keyboardBuffer = "03e0"; // BBC Micro OS 1.20
+            var IBP = 0x02E1; // input pointer
+            var OBP = 0x02D8; // output pointer
+
             var page = ( c.flags.includes("gxr.rom") ) ? "1c00" : "1900";
+            var end = parseInt(page,16) + tokenised.length;
+            var endLow = (end & 0xff).toString(16);
+            var endHigh = ((end >>> 8) & 0xff).toString(16);
+
+            // beebjit debug commands
+            var commands = "'"+
+                            ["breakat 600000 ",
+                            "c",
+                            "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
+                            "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
+                            "writem 02e1 e4", // Advance buffer 4 characters
+                            "writem 0000 "+endLow, // LOWMEM
+                            "writem 0001 "+endHigh,
+                            "writem 0002 "+endLow, // VARTOP
+                            "writem 0003 "+endHigh,
+                            "writem 0012 "+endLow, // TOP
+                            "writem 0013 "+endHigh,
+                            "c"
+                        ].join(";")+"'";
 
           } catch (e) {
             console.log("Tokenisation FAILED");
             console.log(e);
             return 0;
           }
-          await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
-          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags +
-                            " -commands 'breakat 1000000;c;loadmem ../tmp/tweet.bas "+page+";keydown 82;breakat 1100000;c;keyup 82;keydown 85;breakat 1200000;c;keyup 85;keydown 78;breakat 1300000;c;r;keyup 78;keydown 131;breakat 1400000;c;keyup 131;c'";
+
+          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + "-commands " + commands;
           await exec(beebjit_cmd );
           console.log(beebjit_cmd);
         } else // JSbeeb
