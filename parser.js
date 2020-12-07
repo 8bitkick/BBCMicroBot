@@ -60,7 +60,7 @@ var one_hour = 2000000*60*60;
 
   var c = {
     emulator:   "beebjit",
-    flags:      "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 66000000 ",
+    flags:      "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 69000000 ",
     compressed: false,
     input:      ""
   }
@@ -78,11 +78,23 @@ var one_hour = 2000000*60*60;
       c.emulator = "beebjit";
       c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
       break;
-
+/*
       case "⏳": // Time lapse of three hours execution time
       case "⌛":
       c.emulator = "beebjit"; // 
       c.flags    = "-cycles "+(3*one_hour+4000000)+" -frame-cycles 4000000 -opt video:border-chars=0,video:paint-start-cycles=4000000,video:paint-cycles="+(3*one_hour/150)+"  -max-frames 150";
+      break;
+*/
+
+      case "⏰": // Fast run 3 hours then 3 seconds time lapse
+      c.emulator = "beebjit";
+      c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
+      break;
+
+      case "🎬": // Fast run 3 hours then 3 seconds time lapse
+      c.emulator = "beebjit";
+      c.flags = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150 -exit-on-max-frames -cycles "+((3*one_hour)+8000000);
+     // c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
       break;
 
       default:
