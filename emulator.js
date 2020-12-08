@@ -6,7 +6,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
 
   const fs = require('fs');
 
-  var video, path, processor, cycles;
+  var video, processor, cycles;
   var thisEmulator = null;
   var MaxCyclesPerIter = 100 * 1000;
   var hexword = utils.hexword;
@@ -26,7 +26,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
     });
   }
 
-  async function emulate(input,path,duration,capture_start) {
+  async function emulate(input,frame_path,audio_file,duration,capture_start) {
 
     var frameBuffer32 = new Uint32Array(1024 * 625);
     var soundBuffer = new Float32Array(44100 * duration).fill(0); 
@@ -45,7 +45,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         soundPoint = soundPoint + 882;
 
         var mode = processor.readmem(screenMode);
-        var fd = fs.openSync(path+'frame'+(frame-capture_start)+'.rgba', 'w');
+        var fd = fs.openSync(frame_path+(frame-capture_start)+'.rgba', 'w');
         // frameBuffer32 includes the frame border.  The area where the image is
         // varies a little by screen mode - it's always 640 pixels wide (i.e. 2560
         // bytes since each pixel is 4 bytes) but in mode 7 it is offset to the
@@ -138,7 +138,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
 
         // Check if the soundBuffer has any non-zero values.
         if (soundBuffer.some(function(elt, idx, a) { return elt != 0; })) {
-          await fs.writeFileSync( path+'audiotrack.raw', soundBuffer.slice(0, soundPoint),(err) => {
+          await fs.writeFileSync(audio_file, soundBuffer.slice(0, soundPoint),(err) => {
             if (err) throw err;
           });
         }
