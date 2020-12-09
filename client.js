@@ -236,7 +236,6 @@ var clientID = "Cli0";
         };
         // Set up twtr object to mock the 'tweet' methods that we use.
         twtr = {};
-        var hasAudio = (audio_file !== null);
         twtr.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
           console.log("Generated " + mediaType);
           exec("xdg-open "+filename);
