@@ -7,6 +7,12 @@ function Tests(since_id){
   console.log("TEST TWEETS QUEUED");
 
   this.tests = [
+    {
+      name: "NOBASIC", // Test a tweet without BASIC isn't run
+      text: "I love the 80s",
+      mediaType: "",
+      checksum: ""
+    },
     /* Rocket mode is currently broken in the code in git!
       name: "FRAME_CAPTURE_BEEBJIT", // MODE 0-6
       text: "🚀0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
@@ -101,7 +107,7 @@ function Tests(since_id){
     },
     {
       name: "OVERLONG", // Test overlong line doesn't crash the bot
-      text: "REM " + ("BBC".repeat(88)),
+      text: "0REM " + ("BBC".repeat(88)),
       mediaType: "text/plain",
       checksum: ""
     },

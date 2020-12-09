@@ -106,7 +106,7 @@ var one_hour = 2000000*60*60;
   tweet.text = c.input;
   c.input = processInput(tweet, c.compressed);
   c.rude = (customFilter.clean(c.input) != c.input);
-  c.isBASIC = c.compressed || c.emulator === 'beebjit' || isBASIC(tweet.text);
+  c.isBASIC = c.compressed || isBASIC(tweet.text);
 
   console.log("\n",c);
   return c;
