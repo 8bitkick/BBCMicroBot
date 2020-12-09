@@ -77,10 +77,11 @@ var clientID = "Cli0";
 
         var start   = new Date()
 
+        var media_path = "./tmp/"+tweet.id_str;
         // Emulate
         if (c.emulator == "beebjit") {
-          var path = "./tmp/beebjit_frame_";
-          var prefix = "";
+          var frame_path = "./tmp/beebjit_frame_";
+          var audio_file = null;
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
@@ -127,14 +128,15 @@ var clientID = "Cli0";
           console.log(beebjit_cmd);
         } else // JSbeeb
         {
-          var path = "./tmp/"+tweet.id_str;
-          var prefix = "frame";
+          var frame_path = media_path + "frame";
+          var audio_file = media_path + "audiotrack.raw";
           var pixel_format = "rgba";
           var emu_name = "jsbeeb";
-          var frames  = await emulator.emulate(c.input,path,emulationDuration,startFrame);
+          var frames  = await emulator.emulate(c.input,frame_path,audio_file,emulationDuration,startFrame);
+          if (!fs.existsSync(audio_file)) audio_file = null;
         }
 
-        // Tweet ID will be used in tmp filename passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
+        // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
         if (/\W/.test(tweet.id_str)) {
           console.error("id_str contained unexpected character");
           process.exit();
@@ -146,41 +148,42 @@ var clientID = "Cli0";
         // Count unique video frames
 	var shasum_check = (await exec("sha1sum client.js  | awk '{print $1}' | wc -l")); // should equal 1
 	var shasum = (shasum_check > 0) ? "sha1sum" : "shasum";
-        var frames = (await exec(shasum+" "+path+prefix+"*."+pixel_format+" | awk '{print $1}' | wc -l"));
-        var uniqueFrames = (await exec(shasum+" "+path+prefix+"*."+pixel_format+" | awk '{print $1}' | sort | uniq | wc -l"));
+        var frames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | wc -l"));
+        var uniqueFrames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | sort | uniq | wc -l"));
 
-        console.log("Captured "+frames+" frames ("+uniqueFrames+" unique) "+path+prefix);
+        console.log("Captured "+frames+" frames ("+uniqueFrames+" unique) "+frame_path);
 
    	start = new Date();
-
-        var hasAudio = fs.existsSync(path+"audiotrack.raw");
 
         if (frames == 0) {
           // NO VIDEO -> NOTHING
           var ffmpegCmd = "";
-        } else if (uniqueFrames==1 && !hasAudio) {
+        } else if (uniqueFrames==1 && audio_file === null) {
           // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
-          var mediaFilename = path+'.png';
+          var mediaFilename = media_path+'.png';
           var mediaType = 'image/png';
-          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+path+prefix+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
+          var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+frame_path+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
         } else {
           // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
-          var mediaFilename = path+'.mp4';
+          var mediaFilename = media_path+'.mp4';
           var mediaType = 'video/mp4';
           var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic ';
-          if (hasAudio) {
-            ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+path+'audiotrack.raw ';
+          if (audio_file !== null) {
+            ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+audio_file;
           }
-          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+path+prefix+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
+          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+frame_path+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
         }
 
         if (frames > 0) {
           await exec(ffmpegCmd);
-          var checksum = await exec(shasum+" "+path+prefix+(frames-1)+'.'+pixel_format+" | awk '{print $1}'");
+          var checksum = await exec(shasum+" "+frame_path+(frames-1)+'.'+pixel_format+" | awk '{print $1}'");
         } else {
           var checksum = '';
         }
-        exec('rm -f '+path+'*.'+pixel_format+' '+path+'*.raw');
+        exec('rm -f '+frame_path+'*.'+pixel_format);
+        if (audio_file !== null) {
+          fs.unlinkSync(audio_file);
+        }
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
@@ -188,6 +191,7 @@ var clientID = "Cli0";
         if (frames == 0) {
           twtr.noOutput(tweet);
         } else {
+          var hasAudio = (audio_file !== null);
           twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio,c.input);
         }
 
