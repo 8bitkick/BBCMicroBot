@@ -88,7 +88,14 @@ var clientID = "Cli0";
         // Run tweet on emulator
           var tokenised;
           try {
-            tokenised = await emulator.tokenise(c.input);
+            var basic = c.input;
+            var tmp = basic.replace(/@\w+/g, "").trim(); // get rid of tags and white space
+            if (tmp.match(/^\d/) != null) {
+                // If there are line numbers remove a trailing explicit "RUN".
+                basic = basic.replace(/\n\s*RUN[\s\n]*$/, "");
+            }
+
+            tokenised = await emulator.tokenise(basic);
             await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
             await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
 

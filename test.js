@@ -72,7 +72,7 @@ function Tests(since_id){
       name: "YOUONLYRUNONCE", // Check that an explicit RUN suppresses an implicit one.
       text: '1PRINT"HELLO":!-512=&B000B\nRUN',
       mediaType: "image/png",
-      checksum: "382a540645171c0befb5e2757b721b15010bdf74"
+      checksum: "28222f638d2c0b97e7e03d0e54561ab7364bd445"
     },
     {
       name: "NOLINENOS", // Test no line numbers -> tokeniser.
