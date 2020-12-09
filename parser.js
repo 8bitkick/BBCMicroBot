@@ -77,24 +77,28 @@ var one_hour = 2000000*60*60;
       case "🚀": // Snapshot after three hours emulation time
       c.emulator = "beebjit";
       c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
+      c.isBASIC  = true;
       break;
 /*
       case "⏳": // Time lapse of three hours execution time
       case "⌛":
       c.emulator = "beebjit"; // 
       c.flags    = "-cycles "+(3*one_hour+4000000)+" -frame-cycles 4000000 -opt video:border-chars=0,video:paint-start-cycles=4000000,video:paint-cycles="+(3*one_hour/150)+"  -max-frames 150";
+      c.isBASIC  = true;
       break;
 */
 
       case "⏰": // Fast run 3 hours then 3 seconds time lapse
       c.emulator = "beebjit";
       c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
+      c.isBASIC = true;
       break;
 
       case "🎬": // Fast run 3 hours then 3 seconds time lapse
       c.emulator = "beebjit";
       c.flags = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150 -exit-on-max-frames -cycles "+((3*one_hour)+8000000);
      // c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
+      c.isBASIC = true;
       break;
 
       default:
@@ -106,7 +110,9 @@ var one_hour = 2000000*60*60;
   tweet.text = c.input;
   c.input = processInput(tweet, c.compressed);
   c.rude = (customFilter.clean(c.input) != c.input);
-  c.isBASIC = c.compressed || isBASIC(tweet.text);
+  if (!c.isBASIC) {
+    c.isBASIC = c.compressed || isBASIC(tweet.text);
+  }
 
   console.log("\n",c);
   return c;
