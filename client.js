@@ -139,7 +139,7 @@ var clientID = "Cli0";
         // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
         if (/\W/.test(tweet.id_str)) {
           console.error("id_str contained unexpected character");
-          process.exit();
+          process.exit(1);
         }
 
         var end     = new Date() - start
@@ -215,7 +215,7 @@ var clientID = "Cli0";
 
             } else {
               if (TEST && tweet.text == null) {process.exit()};
-              run(tweet).catch((err) => console.error(err));;
+              run(tweet).catch((err) => {console.error(err); process.exit(1)});
             }
           });
         }).on("error", (err) => {
@@ -243,11 +243,11 @@ var clientID = "Cli0";
         };
         twtr.block = function(tweet) {
           console.log("Failed: Tweet blocked because of badwords");
-          process.exit();
+          process.exit(1);
         };
         twtr.noOutput = function(tweet) {
           console.log("Failed: No output captured");
-          process.exit();
+          process.exit(1);
         };
         run(tweet);
       } else {
