@@ -67,11 +67,15 @@ var clientID = "Cli0";
         var c = parser.parseTweet(tweet);
 
         // If rude or not basic, skip it
-        if (!c.isBASIC) {console.log ("No BASIC detected");return;}
+        if (!c.isBASIC) {
+          console.log ("No BASIC detected");
+          setTimeout(requestTweet, POLL_DELAY);
+          return;
+        }
         if (c.rude) {
           console.warn("BLOCKED @"+tweet.user.screen_name)
           await twtr.block(tweet);
-		  setTimeout(requestTweet, POLL_DELAY);
+          setTimeout(requestTweet, POLL_DELAY);
           return;
         }
 
@@ -127,7 +131,8 @@ var clientID = "Cli0";
           } catch (e) {
             console.log("Tokenisation FAILED");
             console.log(e);
-            return 0;
+            setTimeout(requestTweet, POLL_DELAY);
+            return;
           }
 
           let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + " -commands " + commands;
