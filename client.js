@@ -222,7 +222,14 @@ var clientID = "Cli0";
 
             } else {
               if (TEST && tweet.text == null) {process.exit()};
-              run(tweet).catch((err) => {console.error(err); process.exit(1)});
+              run(tweet).catch((err) => {
+                  console.error(err);
+                  if (TEST) {
+                      tweetServer.path="/quit";
+                      https.get(tweetServer);
+                      process.exit(1);
+                  }
+              });
             }
           });
         }).on("error", (err) => {
