@@ -22,19 +22,19 @@ function Tests(since_id){
             "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
             "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
       mediaType: "video/mp4",
-      checksum: "16fcadcb6bb3b10db6f196683b6ed9129187d692"
+      checksum: "b0a979b0be31f48fc85b29635f55489857327f26"
     },
     {
       name: "CHARACTERS",
       text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
-      checksum: "8054997db79c6860f43c81a73a291a3ddd59850f"
+      checksum: "c3f630a42cc39990a6e38c574a93f6c79b3c5a8a"
     },
     {
       name: "BASE2048", // Test code HT @kweepa
       text: '🗜КຣǃݣਬૡૐγҐണญءषmಒڤѳൾऎ෮ݏʦߠeռOಕॸiचȾeӕPಕऋͼޏࡪઽڽϟඈ೦Φଞ੫સڍݗɞรݲணࡪܒڅېɞදཝю೫શށळʔแօС౺ມڭରඥഉæбॲອڵخɺඟཥЩඥՅ۹ฅඌೡࡋହ೬Ɲ۱ͷاฃβѡಡІݑஹʒಉɎғअϭޞՕ०ސړਝదӌՒใঔಉцఏ೪ຽݙฆතကཥఏߣƭܜରص༠uДߣϳ۹મɲ൶ಇ୲ଢࢲڝXঊಛuƿດێҏࡄƝۇ੫ʗӏସκǀࢴӊ௫डథØчϏझࢷڍਡ౬ࡈүଥ೭ࡉȶɮൎੳњছƙࡈͰϭဥΞѥઝƗեहݲດۄҏइƟݭலͲດڻҏइρࢶଈচ౫२ӷڛǃݬݦʊഏڼҏइρࢲਦཨ୪qХߤԺDcখມفϦ൩ഴށҜࠔറยϦࡘ5',
       mediaType: "image/png",
-      checksum: "03436fb61783e175ab6d5074093f5fda73c8efd5",
+      checksum: "b4632a9bb1e0b187850e7b3ddfc463753452ace7"
     },
     /* beebjit doesn't currently support capturing audio output
     {
@@ -63,13 +63,13 @@ function Tests(since_id){
       name: "MODE6", // Test stripes aren't transparent in PNG
       text: '1MO.6:?&D0=2:F.L=0TO999:V.32+L MOD95:N.:V.19;4;0;279;0;0;0;0;',
       mediaType: "image/png",
-      checksum: "9b1fcaefd928558fd03862188e2ab509c92c9a0e"
+      checksum: "06577a813c4df4f59f0e2325e9fe5874b7106293"
     },
     {
       name: "RUNCHECK", // Regression test for program that didn't used to get run
       text: '0REM THIS SHOULD GET RUN\n1MO.6:P."MODE6":V.19;4;0;19,1,6;0;279;0;0;0;0',
       mediaType: "image/png",
-      checksum: "a1723914eecd51a83a1a0384b2773db8f7c55ca9"
+      checksum: "b595b191a31cff941162438d1ce0135d71018a01"
     },
     {
       name: "YOUONLYRUNONCE", // Check that an explicit RUN suppresses an implicit one.
@@ -81,13 +81,13 @@ function Tests(since_id){
       name: "NOLINENOS", // Test no line numbers -> tokeniser.
       text: "P.\"HELLO\";\nV.279;0;0;0;0;32\nP.\"WORLD\"",
       mediaType: "image/png",
-      checksum: "18bf9fc11ddf61914cd96014d1815af735560628"
+      checksum: "5c3db47017774d43ad27c9916af332d471e273e6"
     },
     {
       name: "TOKENS", // Test tokens -> tokeniser.
       text: "\xf1~\u0190\n\xef279;0;0;0;0;\n",
       mediaType: "image/png",
-      checksum: "a7bffbe345411afb00e58f032df1800a8f02d663"
+      checksum: "27760d3701f31e398df07429364ef0ebcc8b2434"
     },
     {
       name: "MENTIONS", // Test mention removal
@@ -97,7 +97,7 @@ function Tests(since_id){
         { screen_name: "rheolism", indices: [13, 22] }
       ],
       mediaType: "image/png",
-      checksum: "ff26b135a00313cfce0ee0a6fcc995cc80426589"
+      checksum: "10e6285dc55ec5ddab8470e8f038725db2d0ffbc"
     },
     {
       name: "OVERLONG", // Test overlong line doesn't crash the bot
