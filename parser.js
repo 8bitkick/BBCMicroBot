@@ -60,7 +60,7 @@ var one_hour = 2000000*60*60;
 
   var c = {
     emulator:   "beebjit",
-    flags:      "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 69000000 ",
+    flags:      "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 69000000",
     compressed: false,
     input:      ""
   }

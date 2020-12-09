@@ -123,7 +123,7 @@ var clientID = "Cli0";
             return 0;
           }
 
-          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + "-commands " + commands;
+          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + " -commands " + commands;
           await exec(beebjit_cmd );
           console.log(beebjit_cmd);
         } else // JSbeeb
