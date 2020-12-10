@@ -67,11 +67,15 @@ var clientID = "Cli0";
         var c = parser.parseTweet(tweet);
 
         // If rude or not basic, skip it
-        if (!c.isBASIC) {console.log ("No BASIC detected");return;}
+        if (!c.isBASIC) {
+          console.log ("No BASIC detected");
+          setTimeout(requestTweet, POLL_DELAY);
+          return;
+        }
         if (c.rude) {
           console.warn("BLOCKED @"+tweet.user.screen_name)
           await twtr.block(tweet);
-		  setTimeout(requestTweet, POLL_DELAY);
+          setTimeout(requestTweet, POLL_DELAY);
           return;
         }
 
@@ -88,7 +92,14 @@ var clientID = "Cli0";
         // Run tweet on emulator
           var tokenised;
           try {
-            tokenised = await emulator.tokenise(c.input);
+            var basic = c.input;
+            var tmp = basic.replace(/@\w+/g, "").trim(); // get rid of tags and white space
+            if (tmp.match(/^\d/) != null) {
+                // If there are line numbers remove a trailing explicit "RUN".
+                basic = basic.replace(/\n\s*RUN[\s\n]*$/, "");
+            }
+
+            tokenised = await emulator.tokenise(basic);
             await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
             await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
 
@@ -103,7 +114,7 @@ var clientID = "Cli0";
 
             // beebjit debug commands
             var commands = "'"+
-                            ["breakat 600000 ",
+                            ["breakat 725000",
                             "c",
                             "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
                             "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
@@ -120,10 +131,11 @@ var clientID = "Cli0";
           } catch (e) {
             console.log("Tokenisation FAILED");
             console.log(e);
-            return 0;
+            setTimeout(requestTweet, POLL_DELAY);
+            return;
           }
 
-          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + "-commands " + commands;
+          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + " -commands " + commands;
           await exec(beebjit_cmd );
           console.log(beebjit_cmd);
         } else // JSbeeb
@@ -139,7 +151,7 @@ var clientID = "Cli0";
         // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
         if (/\W/.test(tweet.id_str)) {
           console.error("id_str contained unexpected character");
-          process.exit();
+          process.exit(1);
         }
 
         var end     = new Date() - start
@@ -215,7 +227,14 @@ var clientID = "Cli0";
 
             } else {
               if (TEST && tweet.text == null) {process.exit()};
-              run(tweet).catch((err) => console.error(err));;
+              run(tweet).catch((err) => {
+                  console.error(err);
+                  if (TEST) {
+                      tweetServer.path="/quit";
+                      https.get(tweetServer);
+                      process.exit(1);
+                  }
+              });
             }
           });
         }).on("error", (err) => {
@@ -243,11 +262,11 @@ var clientID = "Cli0";
         };
         twtr.block = function(tweet) {
           console.log("Failed: Tweet blocked because of badwords");
-          process.exit();
+          process.exit(1);
         };
         twtr.noOutput = function(tweet) {
           console.log("Failed: No output captured");
-          process.exit();
+          process.exit(1);
         };
         run(tweet);
       } else {

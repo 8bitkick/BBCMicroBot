@@ -7,13 +7,17 @@ function Tests(since_id){
   console.log("TEST TWEETS QUEUED");
 
   this.tests = [
-        {
-      name: "FRAME_CAPTURE_BEEBJIT", // MODE 0-6
-      text: "🚀0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
-            "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
-            "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
+    {
+      name: "NOBASIC", // Test a tweet without BASIC isn't run
+      text: "I love the 80s",
+      mediaType: "",
+      checksum: ""
+    },
+    {
+      name: "ROCKET_MODE", // Test that a slow program completes
+      text: "🚀0 MODE 2:VDU5\n10 FOR X = 0 TO 1279 STEP8:FOR Y = 0 TO 1023 STEP 4:GCOL 0, RND(7):PLOT 69, X, Y:NEXT:NEXT\nREPEAT UNTIL FALSE",
       mediaType: "image/png",
-      checksum: "773875698a5d64953f4ca3b51fd50c9f69a19907"
+      checksum: "a02c1e9f18e3a86718067695c0e6e97ffdd5c6bd"
     },
     {
       name: "FRAME_CAPTURE", // MODE 0-6
@@ -21,70 +25,72 @@ function Tests(since_id){
             "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
             "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
       mediaType: "video/mp4",
-      checksum: "16fcadcb6bb3b10db6f196683b6ed9129187d692"
+      checksum: "b0a979b0be31f48fc85b29635f55489857327f26"
     },
     {
       name: "CHARACTERS",
       text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
-      checksum: "8054997db79c6860f43c81a73a291a3ddd59850f"
+      checksum: "c3f630a42cc39990a6e38c574a93f6c79b3c5a8a"
     },
     {
       name: "BASE2048", // Test code HT @kweepa
       text: '🗜КຣǃݣਬૡૐγҐണญءषmಒڤѳൾऎ෮ݏʦߠeռOಕॸiचȾeӕPಕऋͼޏࡪઽڽϟඈ೦Φଞ੫સڍݗɞรݲணࡪܒڅېɞදཝю೫શށळʔแօС౺ມڭରඥഉæбॲອڵخɺඟཥЩඥՅ۹ฅඌೡࡋହ೬Ɲ۱ͷاฃβѡಡІݑஹʒಉɎғअϭޞՕ०ސړਝదӌՒใঔಉцఏ೪ຽݙฆතကཥఏߣƭܜରص༠uДߣϳ۹મɲ൶ಇ୲ଢࢲڝXঊಛuƿດێҏࡄƝۇ੫ʗӏସκǀࢴӊ௫डథØчϏझࢷڍਡ౬ࡈүଥ೭ࡉȶɮൎੳњছƙࡈͰϭဥΞѥઝƗեहݲດۄҏइƟݭலͲດڻҏइρࢶଈচ౫२ӷڛǃݬݦʊഏڼҏइρࢲਦཨ୪qХߤԺDcখມفϦ൩ഴށҜࠔറยϦࡘ5',
       mediaType: "image/png",
-      checksum: "03436fb61783e175ab6d5074093f5fda73c8efd5",
+      checksum: "b4632a9bb1e0b187850e7b3ddfc463753452ace7"
     },
+    /* beebjit doesn't currently support capturing audio output
     {
       name: "STATICAUDIO", // Test static image with audio gives a video
       text: '0V.279;0;0;0;0;12:P."BEEP":REP.V.7:U.NOTINKEY50',
       mediaType: "video/mp4",
       hasAudio: true,
-      checksum: "c28811f08350a0fd116ff103671e05de6f6731a5"
+      checksum: "810209c18581c36ad7a3eb40502519e1aec39cae"
     },
     {
       name: "AUDIOVISUAL", // Video with sound
       text: '1MO.2:V.5:ENV.1,1,-26,-36,-45,255,255,255,127,0,0,0,126,0:SO.1,1,1,1\n2GC.0,RND(7):PL.85,RND(1280),1023A.RND:G.2\n',
       mediaType: "video/mp4",
       hasAudio: true,
-      checksum: "ddc2194259220d5b629f993d7988e2e01f470b01"
+      checksum: "4a954818f333f1d9a3b7334246bcdb5056295e3d"
     },
+    */
     {
-      name: "NOVSYNC", // Test handling of no frames captured
+      name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a blank screen.
       text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
-      mediaType: "text/plain",
+      mediaType: "image/png",
       hasAudio: false,
-      checksum: ""
+      checksum: "b4a13b79814de541aaacf23ac510b94334ef0c98"
     },
     {
       name: "MODE6", // Test stripes aren't transparent in PNG
       text: '1MO.6:?&D0=2:F.L=0TO999:V.32+L MOD95:N.:V.19;4;0;279;0;0;0;0;',
       mediaType: "image/png",
-      checksum: "9b1fcaefd928558fd03862188e2ab509c92c9a0e"
+      checksum: "06577a813c4df4f59f0e2325e9fe5874b7106293"
     },
     {
       name: "RUNCHECK", // Regression test for program that didn't used to get run
       text: '0REM THIS SHOULD GET RUN\n1MO.6:P."MODE6":V.19;4;0;19,1,6;0;279;0;0;0;0',
       mediaType: "image/png",
-      checksum: "a1723914eecd51a83a1a0384b2773db8f7c55ca9"
+      checksum: "b595b191a31cff941162438d1ce0135d71018a01"
     },
     {
       name: "YOUONLYRUNONCE", // Check that an explicit RUN suppresses an implicit one.
       text: '1PRINT"HELLO":!-512=&B000B\nRUN',
       mediaType: "image/png",
-      checksum: "382a540645171c0befb5e2757b721b15010bdf74"
+      checksum: "28222f638d2c0b97e7e03d0e54561ab7364bd445"
     },
     {
       name: "NOLINENOS", // Test no line numbers -> tokeniser.
       text: "P.\"HELLO\";\nV.279;0;0;0;0;32\nP.\"WORLD\"",
       mediaType: "image/png",
-      checksum: "18bf9fc11ddf61914cd96014d1815af735560628"
+      checksum: "5c3db47017774d43ad27c9916af332d471e273e6"
     },
     {
       name: "TOKENS", // Test tokens -> tokeniser.
       text: "\xf1~\u0190\n\xef279;0;0;0;0;\n",
       mediaType: "image/png",
-      checksum: "a7bffbe345411afb00e58f032df1800a8f02d663"
+      checksum: "27760d3701f31e398df07429364ef0ebcc8b2434"
     },
     {
       name: "MENTIONS", // Test mention removal
@@ -94,11 +100,11 @@ function Tests(since_id){
         { screen_name: "rheolism", indices: [13, 22] }
       ],
       mediaType: "image/png",
-      checksum: "ff26b135a00313cfce0ee0a6fcc995cc80426589"
+      checksum: "10e6285dc55ec5ddab8470e8f038725db2d0ffbc"
     },
     {
       name: "OVERLONG", // Test overlong line doesn't crash the bot
-      text: "REM " + ("BBC".repeat(88)),
+      text: "0REM " + ("BBC".repeat(88)),
       mediaType: "text/plain",
       checksum: ""
     },
