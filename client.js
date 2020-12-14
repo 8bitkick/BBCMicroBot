@@ -114,7 +114,7 @@ var clientID = "Cli0";
 
             // beebjit debug commands
             var commands = "'"+
-                            ["breakat 625000",
+                            ["breakat 725000",
                             "c",
                             "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
                             "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
