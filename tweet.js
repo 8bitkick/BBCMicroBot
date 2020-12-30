@@ -67,7 +67,8 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
                         v:1,
                         program:input,
                         author:text,
-                        date: Date.now()
+                        date: Date.now(),
+			id: replyTo
                 }));
 	
 		progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
