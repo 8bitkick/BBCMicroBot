@@ -63,21 +63,23 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 	const mediaSize   = require('fs').statSync(filename).size;
 
 	try {
+		 let progData = encodeURIComponent(JSON.stringify({
+                        v:1,
+                        program:input,
+                        author:text,
+                        date: Date.now()
+                }));
+	
+		progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
+
+
 		var data = await post('media/upload', {command:'INIT',total_bytes: mediaSize,media_type : mediaType});
 		await post('media/upload',    {command:'APPEND', media_id:data.media_id_string, media:mediaData,segment_index: 0});
 		await post('media/upload',    {command:'FINALIZE', media_id:data.media_id_string});
-		var response = await post('statuses/update', {status:text, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
+		var response = await post('statuses/update', {status:text+" Source: https://bbcmic.ro/#"+progData, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
 		await post('favorites/create',{id: replyTo});
 		console.log("Media post DONE ");
 
-		let progData = encodeURIComponent(JSON.stringify({
-			v:1,
-			program:input,
-			author:response.in_reply_to_screen_name,
-			date: Date.now()
-		}));
-
-		progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
 
 		// Post to discord too
 		var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\n[Open source in Owlet Editor](https://bbcmic.ro/#"+progData+")\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
