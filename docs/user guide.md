@@ -16,7 +16,7 @@ Normally the bot runs your code for 30 seconds, and then takes 3 second video cl
 
 ### Emojis
 
-Certain emojis are commands to the bot. These are not included in the program sent to the BBC Micro emulator. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulations only take a few seconds.
+You can add an emoji to the end of your tweet to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulations only take a few seconds.
 
 *Note - GXR graphics functions are **not available** in the 🚀 or 🎬 modes!*
 
