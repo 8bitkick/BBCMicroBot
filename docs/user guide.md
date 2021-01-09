@@ -6,7 +6,7 @@ This guide will outline how BBC Micro Bot works on Twitter and tricks to reduce 
 
 ## How to run your code
 
-When you include [@bbcmicrobot](https://twitter.com/bbcmicrobot) in a tweet the bot will run your tweet as code on a BBC Micro emulator. 
+When you include [@bbcmicrobot](https://twitter.com/bbcmicrobot) in a tweet the bot will run your tweet as code on a BBC Micro emulator. Your code must fit within a single tweet, limiting it to 280 characters.
 
 ### Default 
 
@@ -44,7 +44,6 @@ One of the fun and challenging aspects of the bot is you need to squeeze your co
 10 PRINT "HELLO WORLD"
 20 GOTO 10 
 ```
-*34 characters*
 
 
 ### Removing line numbers and spaces
@@ -55,7 +54,6 @@ You do not need line numbers in your tweeted code. The numbers are automatically
 PRINT"HELLO WORLD"
 GOTO10 
 ```
-*26 characters*
 
 
 ### BBC BASIC byte tokens
@@ -66,7 +64,6 @@ Every BBC BASIC keyword is represented in memory as a single byte. For example `
 ñ"HELLO WORLD"
 å10
 ```
-*18 characters*
 
 Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
@@ -81,6 +78,16 @@ BBC BASIC keywords can also be abbreviated. Abbreviations have the advantage tha
 P."HELLO WORLD"
 GOTO 10 
 ```
-*24 characters*
+
+### base2048 encoding
+
+(Base2048)[https://github.com/qntm/base2048] is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to 350 characters in total. 
+
+```
+༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
+```
+
+The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 250 characters in length. It will only encode when you hit the `share` button and send as a tweet. 
+
 
 
