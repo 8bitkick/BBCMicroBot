@@ -38,15 +38,14 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 ## Reducing code size
 
-One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! There are many techniques:
-
+One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by now means comprehensive.
 
 
 ### BBC BASIC byte tokens
 
 Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`.  With the [Owlet Editor](https://bbcmic.ro) you can easily reduce program size using byte tokens by pressing the `Shrink` button - this can save a lot of characters in a tweet. 
 
-A full list of byte tokens can be (found here)[http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm]. Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
+There is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm) for reference. Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
 
 ### Abbreviations 
