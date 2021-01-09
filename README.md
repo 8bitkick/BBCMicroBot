@@ -4,15 +4,23 @@
 
 A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. 
 
-### Try it now!
+## Using the bot
 
 You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitter.com/bbcmicrobot)
+
+## User Guide
+
+Here are [full instructions on using the bot](https://github.com/8bitkick/BBCMicroBot/blob/master/docs/user%20guide.md).
+
+## Background
 
 The [@bbcmicrobot](https://twitter.com/bbcmicrobot) gained fans like comedian Dara Ó Briain, science writer Ben Goldacre, and Raspberry Pi founder Eben Upton. The concept is simple - make a retrocomputer accessible over social media. The bot runs any tweet written in BBC BASIC (1982) a programming language developed by Sophie Wilson who later went on to create the ARM architecture.
 
 The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
 
 If you're interested there is also the start of a [Commodore 64 version](https://github.com/8bitkick/c64bot) as well as other bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart).
+
+# Contributing
 
 ## Running your own bot instance
 
@@ -52,12 +60,7 @@ You should see output like the following:
 ~~~~
 
 
-
-In the `tmp` folder you should also see the test output files:
-
-
-![image](https://github.com/8bitkick/BBCMicroBot/blob/master/images/BASE2048.png)
-
+In the `tmp` folder you should also see the test output files.
 
 ## Interactive testing
 
@@ -81,17 +84,8 @@ You can then run the bot with
 
 Please refer to the https://developer.twitter.com if you are unfamiliar with these processes.
 
-## Notes / excuses from the creator
-
-BBCMicroBot was a side project that got unexpectedly successful. There are definitely some areas that can be improved and enhancement to be added which I have not had time for. I'm hoping the talent of the bot users can be focussed there! If you have suggestions please go for it. Let's keep discussion around code issues on github rather than on the bot account as much as possible.
-
-### Architecture
-The bot uses Twitter mentions timeline polling and hardcoded delays instead of using webhooks or querying the rate limit APIs. There are more elegant ways of doing this but it's worked solidly for months! Some advantages of this approach is it only needs the free tier Twitter Dev account and doesn't require any open incoming ports on the host machine (definitely a bonus if you run it a home). 
-
-### Security
-The purpose of the bot is to allow remote execution of arbitrary code (albeit BASIC) submitted by strangers on the Internet - this is in general not a good idea. The fact that user input is sanitized by first passing through Twitter, and is run on a BBC Micro 'VM' is a big plus, but security is certainly a concern. There is more that can and should be done to sandbox the emulator for example.
-
 ### Thanks
+
 Thanks to Matt Godbolt for the JSBeeb emulator that made this project possible and to all the @bbcmicrobot users for their support - I hope this source code is interesting or useful. 
 
 
