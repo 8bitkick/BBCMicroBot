@@ -32,7 +32,7 @@ If you copy or modify someones code you should either reply to the original twee
 
 BBC Micro Bot is a place to write fun code and help each other out doing it. Tweets contains any bad words will be ignored and the user account blocked. This is automatic and on quite a strict filter. 
 
-## Writing code
+# Writing code in a tweet
 
 The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative coding with BBC Micro Bot. From within the editor you can hit the `Share` button to automatically be taken to your Twitter account and tweet the code.
 
@@ -57,21 +57,6 @@ PRINT"HELLO WORLD"
 GOTO10 
 ```
 
-
-### BBC BASIC byte tokens
-
-Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`. We can use these byte tokens directly in tweets to save characters. The [Owlet Editor](https://bbcmic.ro) lets you automatically do this quickly and easily with the `Shrink` button. 
-
-```
-ñ"HELLO WORLD"
-å10
-```
-
-Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
-
-There is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm) for reference. 
-
-
 ### Abbreviations 
 
 BBC BASIC keywords can also be abbreviated. Abbreviations have the advantage that they are still somewhat readable. However they are not as small as byte tokens. For example `PRINT` can become `P.`. You can find a list of minimum abbreviations [here](https://central.kaserver5.org/Kasoft/Typeset/BBC/Ch47.html). Using the [Owlet Editor](https://bbcmic.ro) you can expand any abbreviation to the full keyword using the `expand` button. 
@@ -80,6 +65,19 @@ BBC BASIC keywords can also be abbreviated. Abbreviations have the advantage tha
 P."HELLO WORLD"
 GOTO 10 
 ```
+
+### BBC BASIC byte tokens
+
+Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`. We can use these byte tokens directly in tweets to save characters. The [Owlet Editor](https://bbcmic.ro) lets you automatically do this quickly and easily with the `Shrink` button. Here is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm) for reference. 
+
+```
+ñ"HELLO WORLD"
+å10
+```
+### Representing binary data in tweets
+
+Note that some byte values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. For byte tokens this is done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
+
 
 ### base2048 encoding
 
@@ -90,6 +88,23 @@ GOTO 10
 ```
 
 The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 280 characters in length. It will only encode when you hit the `share` button and send as a tweet. You can also decode in Owlet with the `Expand` button.
+
+
+## Advanced minification techniques
+
+### Reducing VDU and graphics commands
+
+VDU commands are powerful in BBC BASIC. One of their many uses is to change the colors assigned in the current palette:
+
+```
+VDU 19,1,4,0,0,0
+VDU 19,2,6,0,0,0
+```
+Instead of declaring the values in a `VDU` statement you can instead `PRINT` the byte values instead and they will be executed by the VDU driver. There's a handy [online tool to convert VDU calls to strings](https://8bitkick.github.io/vdu/). The VDU calls above would become:
+```
+PRINT"ēāĄĀĀĀēĂĆĀĀĀ"
+```
+Note that graphics commands (e.g. `GCOL` and `PLOT`) can also be expressed as VDU commands as shown in the [table on the conversion page](https://8bitkick.github.io/vdu/). This mean complex graphics sequences can be run using a single `PRINT` command! This can save a lot of characters.
 
 
 
