@@ -43,9 +43,11 @@ One of the fun and challenging aspects of the bot is you need to squeeze your co
 
 ### BBC BASIC byte tokens
 
-Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`.  With the [Owlet Editor](https://bbcmic.ro) you can easily reduce program size using byte tokens by pressing the `Shrink` button - this can save a lot of characters in a tweet. 
+Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`. We can use these byte tokens directly in tweets to save characters. The [Owlet Editor](https://bbcmic.ro) lets you automatically do this quickly and easily with the `Shrink` button. 
 
-There is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm) for reference. Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
+Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
+
+There is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm) for reference. 
 
 
 ### Abbreviations 
