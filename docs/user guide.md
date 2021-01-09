@@ -40,10 +40,31 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
+```
+10 PRINT "HELLO WORLD"
+20 GOTO 10 
+```
+*34 characters*
+
+### Removing line numbers and spaces
+
+You do not need line numbers in your tweeted code. The numbers are automatically added in increments of 10 by the bot. As a guide Owlet will show you the line numbers in the gutter of the editor if you omit them from your code. Spaces are usually removable, but are required in some cases where a variable name is directly next to a BASIC keyword.
+
+```
+PRINT"HELLO WORLD"
+GOTO10 
+```
+*26 characters*
 
 ### BBC BASIC byte tokens
 
 Every BBC BASIC keyword is represented in memory as a single byte. For example `PRINT` is represented as byte value 0xF1 which is `ñ`. We can use these byte tokens directly in tweets to save characters. The [Owlet Editor](https://bbcmic.ro) lets you automatically do this quickly and easily with the `Shrink` button. 
+
+```
+ñ"HELLO WORLD"
+å10
+```
+*18 characters*
 
 Note that some values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. This is also done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
@@ -54,5 +75,10 @@ There is a [full list of byte tokens](http://www.benryves.com/bin/bbcbasic/manua
 
 BBC BASIC keywords can also be abbreviated. Abbreviations have the advantage that they are still somewhat readable. However they are not as small as byte tokens. For example `PRINT` can become `P.`. You can find a list of minimum abbreviations [here](https://central.kaserver5.org/Kasoft/Typeset/BBC/Ch47.html). Using the [Owlet Editor](https://bbcmic.ro) you can expand any abbreviation to the full keyword using the `expand` button. 
 
+```
+P."HELLO WORLD"
+GOTO 10 
+```
+*24 characters*
 
 
