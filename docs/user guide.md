@@ -40,6 +40,8 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
+One tip for starters - `@bbcmicrobot` is a long name. If you reply to a tweet from @bbcmicrobot you don't need to explicity include the `@bbcmicrobot` mention in the code for the bot to see and run your tweet. This will save you 13 characters. 
+
 ```
 10 PRINT "HELLO WORLD"
 20 GOTO 10 
@@ -81,13 +83,13 @@ GOTO 10
 
 ### base2048 encoding
 
-(Base2048)[https://github.com/qntm/base2048] is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to 350 characters in total. 
+[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readible:
 
 ```
 ༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
 ```
 
-The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 250 characters in length. It will only encode when you hit the `share` button and send as a tweet. 
+The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 280 characters in length. It will only encode when you hit the `share` button and send as a tweet. You can also decode in Owlet with the `Expand` button.
 
 
 
