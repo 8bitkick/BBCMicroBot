@@ -8,9 +8,7 @@ A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/ma
 
 You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitter.com/bbcmicrobot)
 
-## User Guide
-
-Here are [full instructions on using the bot](https://github.com/8bitkick/BBCMicroBot/blob/master/docs/user%20guide.md).
+For help running code on the bot please see [the User Guide](https://github.com/8bitkick/BBCMicroBot/blob/master/docs/user%20guide.md).
 
 ## Background
 
