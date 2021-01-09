@@ -2,9 +2,9 @@
 
 This guide will outline how BBC Micro Bot works on Twitter and tricks to reduce the size of your code to fit in a tweet with the [Owlet Editor](https://bbcmic.ro). 
 
-## First read this
+## Prerequisites 
 
-Read this awesome [interactive BBC BASIC tutorial](https://www.bbcmicrobot.com/learn/index.html) first if you aren’t familiar or want a refresher. The guide below is more about using the bot and how to minify code rather than covering the BBC BASIC language.
+Before reading below check this awesome [interactive BBC BASIC tutorial](https://www.bbcmicrobot.com/learn/index.html) first if you aren’t familiar or want a refresher. The guide below is more about using the bot and how to minify code rather than covering the BBC BASIC language.
 
 ## How to run your code
 
