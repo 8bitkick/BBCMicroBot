@@ -92,7 +92,7 @@ The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as bas
 
 ## Advanced minification techniques
 
-### Reducing VDU and graphics commands
+### VDU and graphics commands
 
 VDU commands are powerful in BBC BASIC. One of their many uses is to change the colors assigned in the current palette:
 
@@ -100,11 +100,22 @@ VDU commands are powerful in BBC BASIC. One of their many uses is to change the 
 VDU 19,1,4,0,0,0
 VDU 19,2,6,0,0,0
 ```
-Instead of declaring the values in a `VDU` statement you can instead `PRINT` the byte values instead and they will be executed by the VDU driver. There's a handy [online tool to convert VDU calls to strings](https://8bitkick.github.io/vdu/). The VDU calls above would become:
+Instead of declaring the values in a `VDU` statement you can instead `PRINT` the byte values and they will be executed by the VDU driver with an identical result. There's a handy [online tool to convert VDU calls to strings](https://8bitkick.github.io/vdu/). The VDU calls above would become:
 ```
 PRINT"ēāĄĀĀĀēĂĆĀĀĀ"
 ```
 Note that graphics commands (e.g. `GCOL` and `PLOT`) can also be expressed as VDU commands as shown in the [table on the conversion page](https://8bitkick.github.io/vdu/). This mean complex graphics sequences can be run using a single `PRINT` command! This can save a lot of characters.
 
+### Inline binary data
 
+Using the BASIC `DATA` and `READ` keywords to store data can quickly become large. It's possible to be byte data directly into a `REM` statement to be read out by the BBC BASIC peek command `?`. The address of the data is calculated as a 5 byte offset from the start of the BASIC program memory defined in `PAGE`
 
+```
+REMthis statement is my data
+D=PAGE+5
+FOR A=0 TO 24
+PRINT D?A
+NEXT
+```
+
+In this example the first value returned would be 116, the ASCII value for the letter `t`
