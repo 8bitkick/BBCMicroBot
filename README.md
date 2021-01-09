@@ -18,9 +18,9 @@ The Twitter community rose to the challenge with some seriously creative and cle
 
 If you're interested there is also the start of a [Commodore 64 version](https://github.com/8bitkick/c64bot) as well as other bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart).
 
-# Contributing
+## Contributing
 
-## Running your own bot instance
+### Running your own bot instance
 
 For development and testing you can run your own instance of the bot on a Linux machine. I've been running it on:
 
@@ -35,7 +35,7 @@ For development and testing you can run your own instance of the bot on a Linux 
 * Download or clone this BBCMicroBot repository and `cd` into the directory
 * `npm install`
 
-## Local testing
+### Local testing
 
 To run a set of test tweets defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/master/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
 
@@ -60,7 +60,7 @@ You should see output like the following:
 
 In the `tmp` folder you should also see the test output files.
 
-## Interactive testing
+### Interactive testing
 
 The `try` subcommand allows you to run a BASIC program from a file.  If the bot would have posted a replied it instead runs `xdg-open` with the video or image output filename as an argument, which should open it in a suitable viewer:
 
@@ -70,9 +70,7 @@ If you omit the filename, it defaults to reading from `stdin` which is handy for
 
 `echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try`
 
-## Connecting to a Twitter account
-
-### Set-up
+### Connecting to a Twitter account
 
 To run the bot on a Twitter account you need to apply for a Twitter developer account, generate API keys for your bot application and put them into a `.env` file to be accessed by [tweet.js](https://github.com/8bitkick/BBCMicroBot/blob/39c3587c60753db84b48888ea1f01d72d0081f92/tweet.js#L3). 
 
