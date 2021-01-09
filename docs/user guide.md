@@ -38,7 +38,7 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 ## Reducing code size
 
-One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by now means comprehensive.
+One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
 
 ### BBC BASIC byte tokens
