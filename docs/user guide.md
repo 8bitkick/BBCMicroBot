@@ -18,6 +18,8 @@ Normally the bot runs your code for 30 seconds, and then takes 3 second video cl
 
 Certain emojis are commands to the bot. These are not included in the program sent to the BBC Micro emulator. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulations only take a few seconds.
 
+*Note - GXR graphics functions are **not available** in the 🚀 or 🎬 modes!*
+
 🚀  The rocket emoji instructs the bot to run a 3 hour emulation and respond with a screenshot
 
 🎬  The clapper board emoji instructs the bot to run a 3 hour emulation and respond with a 3 second video
