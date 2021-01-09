@@ -46,6 +46,7 @@ One of the fun and challenging aspects of the bot is you need to squeeze your co
 ```
 *34 characters*
 
+
 ### Removing line numbers and spaces
 
 You do not need line numbers in your tweeted code. The numbers are automatically added in increments of 10 by the bot. As a guide Owlet will show you the line numbers in the gutter of the editor if you omit them from your code. Spaces are usually removable, but are required in some cases where a variable name is directly next to a BASIC keyword.
@@ -55,6 +56,7 @@ PRINT"HELLO WORLD"
 GOTO10 
 ```
 *26 characters*
+
 
 ### BBC BASIC byte tokens
 
