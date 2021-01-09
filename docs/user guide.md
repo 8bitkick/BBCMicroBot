@@ -120,4 +120,4 @@ PRINT D?A
 NEXT
 ```
 
-In this example the first value returned would be 116, the ASCII value for the letter `t`
+In this example the first value returned would be 116, the ASCII value for the letter `t`. You can create a Twitter-friendly byte string to use in a `REM` from comma separated data with the [VDU to string tool](https://8bitkick.github.io/vdu/)
