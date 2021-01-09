@@ -110,7 +110,7 @@ Note that graphics commands (e.g. `GCOL` and `PLOT`) can also be expressed as VD
 
 ### Inline binary data
 
-Using the BASIC `DATA` and `READ` keywords to store data can quickly become large. It's possible to be byte data directly into a `REM` statement to be read out by the BBC BASIC peek command `?`. The address of the data is calculated as a 5 byte offset from the start of the BASIC program memory defined in `PAGE`
+Using the BASIC `DATA` and `READ` keywords to store data can quickly become large. It's possible to store byte data directly into a `REM` statement to be read out by the BBC BASIC peek command `?`. The address of the data is calculated as a 5 byte offset from the start of the BASIC program memory defined in `PAGE`
 
 ```
 REMthis statement is my data
