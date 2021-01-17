@@ -16,7 +16,7 @@ Normally the bot runs your code for 30 seconds, and then takes 3 second video cl
 
 ### Emojis
 
-You can add an emoji to the end of your tweet to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulations only take a few seconds.
+You can add an emoji to the end of your tweet to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulation only takes a few seconds.
 
 *Note - GXR graphics functions are **not available** in the 🚀 or 🎬 modes!*
 
@@ -32,7 +32,7 @@ The bot will reply to any mention that starts with a line number, contains an `=
 
 ## Etiquette 
 
-If you copy or modify someones code you should either reply to the original tweet so people can see the thread, or acknowledge the author in your tweet. When you tweet the at the bot your code is public. You might find that other users are inspired to help reduce the size of your code, improve the design or remix it - you should take this as a compliment!
+If you copy or modify someone's code you should either reply to the original tweet so people can see the thread, or acknowledge the author in your tweet. When you tweet at the bot your code is public. You might find that other users are inspired to help reduce the size of your code, improve the design or remix it - you should take this as a compliment!
 
 BBC Micro Bot is a place to write fun code and help each other out doing it. Tweets contains any bad words will be ignored and the user account blocked. This is automatic and on quite a strict filter. 
 
@@ -42,9 +42,9 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 ## Reducing code size
 
-One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
+One of the fun and challenging aspects of the bot is you need to squeeze your code into a tweet - code golf! Techniques to do this have evolved over time, many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
-One tip for starters - `@bbcmicrobot` is a long name. If you reply to a tweet from @bbcmicrobot you don't need to explicity include the `@bbcmicrobot` mention in the code for the bot to see and run your tweet. This will save you 13 characters. 
+One tip for starters - `@bbcmicrobot` is a long name. If you reply to a tweet from @bbcmicrobot you don't need to explicitly include the `@bbcmicrobot` mention in the code for the bot to see and run your tweet. This will save you 13 characters.
 
 ```
 10 PRINT "HELLO WORLD"
@@ -80,12 +80,12 @@ Every BBC BASIC keyword is represented in memory as a single byte. For example `
 ```
 ### Representing binary data in tweets
 
-Note that some byte values must be ORed with 0x100 in order to map to a valid Unicode charcter that can be used in the edtior or in a tweet. For byte tokens this is done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
+Note that some byte values must be ORed with 0x100 in order to map to a valid Unicode character that can be used in the editor or in a tweet. For byte tokens this is done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
 
 ### base2048 encoding
 
-[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readible:
+[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readable:
 
 ```
 ༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
