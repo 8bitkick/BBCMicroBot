@@ -56,11 +56,11 @@ function Tests(since_id){
     },
     */
     {
-      name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a blank screen.
+      name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a flickery video.
       text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
-      mediaType: "image/png",
+      mediaType: "video/mp4",
       hasAudio: false,
-      checksum: "b4a13b79814de541aaacf23ac510b94334ef0c98"
+      checksum: "c4fa65e04c8575b829f62e38de55c1cb28c8846c"
     },
     {
       name: "MODE6", // Test stripes aren't transparent in PNG
