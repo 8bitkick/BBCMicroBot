@@ -176,14 +176,14 @@ var clientID = "Cli0";
           var mediaType = 'image/png';
           var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+frame_path+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
         } else {
-          // ANIMATION OR STATIC IMAGE WITH SOUND -> MP4 VIDEO
-          var mediaFilename = media_path+'.mp4';
-          var mediaType = 'video/mp4';
+          // ANIMATION OR STATIC IMAGE WITH SOUND -> GIF 
+          var mediaFilename = media_path+'.gif';
+          var mediaType = 'image/gif';
           var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic ';
           if (audio_file !== null) {
             ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+audio_file;
           }
-          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+frame_path+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -filter:v "scale=1280:1024" -q 0 -b:v 8M -b:a 128k -c:v libx264 -pix_fmt yuv420p -strict -2 -shortest '+mediaFilename
+	          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+frame_path+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -b:v 8M -b:a 128k -strict -2 -shortest '+mediaFilename
         }
 
         if (frames > 0) {
@@ -196,6 +196,9 @@ var clientID = "Cli0";
         if (audio_file !== null) {
           fs.unlinkSync(audio_file);
         }
+	if (frames > 1) {
+//	await exec ("gifsicle "+mediaFilename+" --optimize=3 --output"); 
+	}
 
         var end = new Date() - start
         console.log("Ffmpeg DONE in %ds ",end/1000);
