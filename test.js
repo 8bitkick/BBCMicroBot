@@ -24,7 +24,7 @@ function Tests(since_id){
       text: "0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
             "60 MOVE 0,0\n70 DRAW 1279,0\n80 DRAW 1279,1023\n90 DRAW 0,1023\n100 DRAW 0,0\n"+
             "110 DRAW 1279,1023\n120 VDU 23,1,0;0;0;0;\n130 P.TAB(0,16);INT(TIME/10)/10;\" s   \"\n140 GOTO 130",
-      mediaType: "video/mp4",
+      mediaType: "image/gif",
       checksum: "b0a979b0be31f48fc85b29635f55489857327f26"
     },
     {
@@ -43,14 +43,14 @@ function Tests(since_id){
     {
       name: "STATICAUDIO", // Test static image with audio gives a video
       text: '0V.279;0;0;0;0;12:P."BEEP":REP.V.7:U.NOTINKEY50',
-      mediaType: "video/mp4",
+      mediaType: "image/gif",
       hasAudio: true,
       checksum: "810209c18581c36ad7a3eb40502519e1aec39cae"
     },
     {
       name: "AUDIOVISUAL", // Video with sound
       text: '1MO.2:V.5:ENV.1,1,-26,-36,-45,255,255,255,127,0,0,0,126,0:SO.1,1,1,1\n2GC.0,RND(7):PL.85,RND(1280),1023A.RND:G.2\n',
-      mediaType: "video/mp4",
+      mediaType: "image/gif",
       hasAudio: true,
       checksum: "4a954818f333f1d9a3b7334246bcdb5056295e3d"
     },
@@ -58,7 +58,7 @@ function Tests(since_id){
     {
       name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a flickery video.
       text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
-      mediaType: "video/mp4",
+      mediaType: "image/gif",
       hasAudio: false,
       checksum: "c4fa65e04c8575b829f62e38de55c1cb28c8846c"
     },
@@ -163,7 +163,7 @@ function Tests(since_id){
     if (tweet.bbcmicrobot_has_audio != hasAudio) {
       throw new Error(replyTo+' TEST - \u001b[31mFAILED\u001b[0m')
     }
-    if (mediaType == 'video/mp4') {
+    if (mediaType == 'image/gif') { 
       exec('ffprobe -v 0 -select_streams a -show_streams '+filename).then(
         function(audioInfo) {
           var videoHasAudio = (audioInfo.length > 0);
