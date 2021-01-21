@@ -72,13 +72,12 @@ G.10
 
 ### BBC BASIC byte tokens
 
-Every BBC BASIC keyword is represented in memory as a single byte. We can use these byte tokens directly in tweets to save characters. You can quickly do the conversion in the [Owlet Editor](https://bbcmic.ro) using the `Shrink` button (so you don't need to worry about learning the [values of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm)). As you can see below after conversion the `PRINT` keyword shrinks to a byte token 0xF1, which in Unicode is `ñ`.
+Every BBC BASIC keyword is represented in memory as a single byte. We can use these byte tokens directly in tweets to save characters. You can quickly do the conversion in the [Owlet Editor](https://bbcmic.ro) using the `Shrink` button (so you don't need to worry about learning the [values of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm)). After conversion the `PRINT` keyword shrinks to a byte token 0xF1. This is represented in Unicode as U+00F1 `ñ`.
 
 ```
 ñ"HELLO WORLD"
 å10
 ```
-### Representing binary data in tweets
 
 Note that some byte values must be ORed with 0x100 in order to map to a valid Unicode character that can be used in the editor or in a tweet. For byte tokens this is done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
