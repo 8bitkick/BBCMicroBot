@@ -17,6 +17,7 @@
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "gifsicle": "^5.1.0",
     "grapheme-splitter": "^1.0.4",
     "jsbeeb": "https://github.com/mattgodbolt/jsbeeb.git#78eeeb3299c4640ca709df189c76d7447977258f",
     "request": "^2.88.2",
