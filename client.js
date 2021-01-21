@@ -15,6 +15,7 @@ const requirejs    = require('requirejs'); // for jsbeeb compatibility
 const https        = require('https');
 const cert_path    = "./certs/";
 const parser       = require('./parser');
+const gifsicle     = require('gifsicle');
 
 var twtr = require(TEST ? './test' : './tweet');
 
@@ -197,7 +198,8 @@ var clientID = "Cli0";
           fs.unlinkSync(audio_file);
         }
 	if (frames > 1) {
-//	await exec ("gifsicle "+mediaFilename+" --optimize=3 --output"); 
+	var output = await exec ("gifsicle "+mediaFilename+" --optimize=3 --colors=16 --output "+mediaFilename); 
+	console.log("Gifsicle:"+output);
 	}
 
         var end = new Date() - start
