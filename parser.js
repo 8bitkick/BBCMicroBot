@@ -100,6 +100,10 @@ var one_hour = 2000000*60*60;
      // c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
       c.isBASIC = true;
       break;
+        
+      case "⛔": // Do not run 
+      c.isBASIC  = false;
+      return c;
 
       default:
       c.input += graphemes[i];
