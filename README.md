@@ -16,7 +16,7 @@ The [@bbcmicrobot](https://twitter.com/bbcmicrobot) gained fans like comedian Da
 
 The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
 
-If you're interested there is also the start of a [Commodore 64 version](https://github.com/8bitkick/c64bot) as well as other bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart).
+It started a Twitter code bot revolution! There's a guide to building emulators in the cloud in the [Commodore 64 notes](https://github.com/8bitkick/c64bot) as well as full bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart) and Kay Savetz's AppleIIbot, PC BASIC Bot and [Atari8BitBot](https://github.com/savetz/Atari8BitBot).
 
 ## Contributing
 
