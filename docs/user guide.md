@@ -14,7 +14,7 @@ When you include [@bbcmicrobot](https://twitter.com/bbcmicrobot) in a tweet the 
 
 Normally the bot runs your code for 30 seconds, and then takes 3 second video clip that it posts to Twitter. If that last 3 seconds is a static image the bot will reply with a PNG image instead.
 
-### Emojis
+### Emoji commands
 
 You can add an emoji to the end of your tweet to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulation only takes a few seconds. Although the emulation is fast the video capture at the end is real-time - the 🎬 is the same as leaving a real BBC Micro running for 3 hours and then afterwards taking a look at the screen for 3 seconds. 
 
@@ -22,9 +22,16 @@ You can add an emoji to the end of your tweet to send a command to the bot. Thes
 
 🚀  The rocket emoji instructs the bot to run a 3 hour emulation and then capture a screenshot
 
-🎬  The clapper board emoji instructs the bot to run a 3 hour emulation and then capture a 3 second video
+🎬  The clapper board is runs like rocket but then captures a 3 second video
 
 🗜️  The clamp icon is no longer used. It was used to show a tweet was base2048 encoded, but this is now autodetected.
+
+### VSYNC behavior with 🎬 mode animations 
+
+We use the beebjit `-fast` parameter to achive really fast emulation in the accelerated modes, the downside being some unexpected 'relativistic' effects. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time.
+
+Therefore is your code waits for an external timer based event like VSYNC the video will appear to freeze. It's recommended to use loop based delays in code you intend to run with 🎬 mode for that reason. The emulator still takes a screenshot every 1/50th of a second, and resulting animation will look [pretty much the same on a real machine](https://twitter.com/bbcmicrobot/status/1355360243224510471?s=20).
+
 
 ### Ignored tweets
 
@@ -72,7 +79,7 @@ G.10
 
 ### BBC BASIC byte tokens
 
-Every BBC BASIC keyword is represented in memory as a single byte. We can use these byte tokens directly in tweets to save characters. You can quickly do the conversion in the [Owlet Editor](https://bbcmic.ro) using the `Shrink` button (so you don't need to worry about learning the [values of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm)). The `PRINT` keyword shrinks to byte token 0xF1. This is represented in a tweet as Unicode U+00F1 which is `ñ`.
+As with the original implementation each BBC BASIC keyword is represented in memory as a single byte. We can use these byte tokens directly in tweets to save characters. You can quickly do the conversion in the [Owlet Editor](https://bbcmic.ro) using the `Shrink` button (so you don't need to worry about learning the [values of byte tokens](http://www.benryves.com/bin/bbcbasic/manual/Appendix_Tokeniser.htm)). The `PRINT` keyword shrinks to byte token 0xF1. This is represented in a tweet as Unicode U+00F1 which is `ñ`.
 
 ```
 ñ"HELLO WORLD"
