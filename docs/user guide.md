@@ -28,9 +28,9 @@ You can add an emoji to the end of your tweet to send a command to the bot. Thes
 
 ### VSYNC behavior with 🎬 mode animations 
 
-We use the beebjit `-fast` parameter to achive really fast emulation in the accelerated modes, the downside being some unexpected 'relativistic' effects. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time.
+We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time.
 
-Therefore if your code waits for an external timer based event like VSYNC the video will appear to freeze. It's recommended to use loop based delays in code you intend to run with 🎬 mode for that reason. The emulator still takes a screenshot every 1/50th of a second, and resulting animation will look [pretty much the same on a real machine](https://twitter.com/bbcmicrobot/status/1355360243224510471?s=20).
+If your code waits for an external timer based event like VSYNC the video will appear to freeze. It's recommended to use loop based delays in code you intend to run with 🎬 mode for that reason. The emulator still takes a screenshot every 1/50th of a second, and resulting animation will look [pretty much the same on a real machine](https://twitter.com/bbcmicrobot/status/1355360243224510471?s=20).
 
 
 ### Ignored tweets
