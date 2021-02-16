@@ -26,7 +26,7 @@ You can add an emoji to the end of your tweet to send a command to the bot. Thes
 
 🗜️  The clamp icon is no longer used. It was used to show a tweet was base2048 encoded, but this is now autodetected.
 
-### VSYNC behavior with 🎬 mode animations 
+### Unexpected behavior with 🎬 mode animations 
 
 We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time.
 
