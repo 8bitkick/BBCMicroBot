@@ -119,7 +119,7 @@ var clientID = "Cli0";
                             "c",
                             "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
                             "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
-                            "writem 02e1 e4", // Advance buffer 4 characters
+                            "writem 02e1 e4", // Advance pointer 4 bytes
                             "writem 0000 "+endLow, // LOWMEM
                             "writem 0001 "+endHigh,
                             "writem 0002 "+endLow, // VARTOP
