@@ -184,7 +184,7 @@ var clientID = "Cli0";
           if (audio_file !== null) {
             ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+audio_file;
           }
-	          ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+frame_path+'%d.'+pixel_format+'  -af "highpass=f=50, lowpass=f=15000,volume=0.5" -b:v 8M -b:a 128k -strict -2 -shortest '+mediaFilename
+	ffmpegCmd = ffmpegCmd + '-y -f image2 -r 50 -s 640x512 -pix_fmt '+pixel_format+' -vcodec rawvideo -i '+frame_path+'%d.'+pixel_format+'  -i images/palette.png -filter_complex "[0:v][1:v] paletteuse" -af "highpass=f=50, lowpass=f=15000,volume=0.5" -b:v 8M -b:a 128k -strict -2 -shortest '+mediaFilename
         }
 
         if (frames > 0) {
