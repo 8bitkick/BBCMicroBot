@@ -5,6 +5,7 @@
 const ENABLE_TEXT_REPLY = false;
 
 require('dotenv').config();
+const fs	       = require('fs');
 const Twitter          = require('twitter');
 const API_KEYS         = {
 	consumer_key: process.env.consumer_key,
@@ -80,6 +81,25 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		var response = await post('statuses/update', {status:text+" Source: https://bbcmic.ro/#"+progData, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
 		await post('favorites/create',{id: replyTo});
 		console.log("Media post DONE ");
+
+		// Generate record in s3 'database'
+		let basic = tweet.full_text || tweet.text;
+		basic = basic.replace(/@\w+/g, "").trim();
+		basic = basic.replace(/[“]/g,'"');
+		basic = basic.replace(/[”]/g,'"');
+		basic = basic.replace(/&lt;/g,'<');
+		basic = basic.replace(/&gt;/g,'>');
+		basic = basic.replace(/&amp;/g,'&');
+
+		let record = {
+				"v":1,
+				"author":tweet.user.screen_name,
+				"program":basic,
+				"date":Math.floor(new Date(tweet.created_at)),
+				"reply_id":response.id_str
+				}
+
+		await fs.writeFileSync('./output/'+tweet.id_str, JSON.stringify(record,null,4));
 
 
 		// Post to discord too
