@@ -8,7 +8,7 @@ const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
 
-function isBASIC(bas){ // TODO convert to regex
+function isBASIC(bas){ 
   bas = bas.replace(/@\w+/g, "").trim(); // get rid of tags and white space
   var basic = (bas.match(/^\d/) != null) || // Line number.
   bas.includes("=") || // Or contains an equals sign.
@@ -62,7 +62,8 @@ var one_hour = 2000000*60*60;
     emulator:   "beebjit",
     flags:      "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 69000000",
     compressed: false,
-    input:      ""
+    input:      "",
+    emoji:      null
   }
 
 
@@ -75,9 +76,9 @@ var one_hour = 2000000*60*60;
       break;
 
       case "🚀": // Snapshot after three hours emulation time
-      c.emulator = "beebjit";
       c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
       c.isBASIC  = true;
+      c.emoji    = "rocket";
       break;
 /*
       case "⏳": // Time lapse of three hours execution time
@@ -95,10 +96,10 @@ var one_hour = 2000000*60*60;
       break;
 */
       case "🎬": // Fast run 3 hours then 3 seconds time lapse
-      c.emulator = "beebjit";
       c.flags = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150 -exit-on-max-frames -cycles "+((3*one_hour)+8000000);
      // c.flags = "-cycles "+(3*one_hour+9000000)+" -opt video:paint-start-cycles="+(3*one_hour)+",video:paint-cycles=40000,video:border-chars=0 -frame-cycles 1 -max-frames 150";
       c.isBASIC = true;
+      c.emoji   = "clapper";
       break;
         
       case "⛔": // Do not run 
