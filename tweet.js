@@ -80,7 +80,7 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		await post('media/upload',    {command:'FINALIZE', media_id:data.media_id_string});
 		var response = await post('statuses/update', {status:text+" Source: https://bbcmic.ro/#"+progData, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
 		await post('favorites/create',{id: replyTo});
-		console.log("Media post DONE ");
+		console.log("Media post DONE "+response.id_str);
 
 		// Generate record in s3 'database'
 		let basic = tweet.full_text || tweet.text;
@@ -92,14 +92,14 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		basic = basic.replace(/&amp;/g,'&');
 
 		let record = {
-				"v":1,
+				"v":2,
 				"author":tweet.user.screen_name,
 				"program":basic,
-				"date":Math.floor(new Date(tweet.created_at)),
-				"reply_id":response.id_str
+				"date":Math.floor(new Date(tweet.created_at))/1000,
+				"in_reply_to_id_str":tweet.id_str
 				}
 
-		await fs.writeFileSync('./output/'+tweet.id_str, JSON.stringify(record,null,4));
+		await fs.writeFileSync('./output/'+response.id_str, JSON.stringify(record,null,4));
 
 
 		// Post to discord too
@@ -149,4 +149,3 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		post: post,
 		get: get
 	};
-
