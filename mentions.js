@@ -113,7 +113,7 @@ function filterTimeline(timeline){
 async function getTimeline(api, params){
 	var timeline = await tweet.get(api, params); // get some timeline
 	timeline = await extendTruncated(timeline); // we need to fetch 'extended' tweets for text over 140 charcters
-	//timeline = timeline.map(t => t.entities.urls.length == 0 ? t : revertURL(t)); // and swap t.co URLs back to text
+	timeline = timeline.map(t => t.entities.urls.length == 0 ? t : revertURL(t)); // and swap t.co URLs back to text
 	return timeline;
 }
 
@@ -131,6 +131,15 @@ async function extendTruncated(timeline){
 		});}
 
 		return timeline;
+	}
+
+
+	// Replace t.co URLs with original tweet text
+	function revertURL(t){
+		t.entities.urls.forEach(function(u) {
+			t.text = t.text.replace(u.url, u.display_url);
+		})
+		return t;
 	}
 
 
