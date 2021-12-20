@@ -28,7 +28,7 @@ You can add an emoji to the end of your tweet to send a command to the bot. Thes
 
 ### Unexpected behavior with 🎬 mode animations 
 
-We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time. This means `*FX 19` or `INKEY` based timing will not work well!
+We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time. This means flashing colours in the palette, and `*FX 19` or `INKEY` based timing will not work well!
 
 If your code waits for an external timer based event like VSYNC the video will appear to freeze. It's recommended to use `FOR ... NEXT` loop based delays in code you intend to run with 🎬 mode for that reason. The emulator takes a screenshot every 40,000 emulated 6502 cycles (which is the same period as VSYNC) and so resulting animation will still look [pretty much the same on a real machine](https://twitter.com/bbcmicrobot/status/1356755101587697669?s=20).
 
