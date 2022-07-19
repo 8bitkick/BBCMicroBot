@@ -99,6 +99,8 @@ Note that some byte values must be ORed with 0x100 in order to map to a valid Un
 
 The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 280 characters in length. It will only encode when you hit the `share` button and send as a tweet. You can also decode in Owlet with the `Expand` button.
 
+*Every reply tweet from BBC Micro Bot includes a link to source which allows you to decode base2048 into BBC BASIC.*
+
 
 ## Advanced minification techniques
 
