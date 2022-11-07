@@ -20,6 +20,8 @@
     "gifsicle": "^5.1.0",
     "grapheme-splitter": "^1.0.4",
     "jsbeeb": "https://github.com/mattgodbolt/jsbeeb.git#78eeeb3299c4640ca709df189c76d7447977258f",
+    "mastodon": "^1.2.2",
+    "npmlog": "^7.0.1",
     "request": "^2.88.2",
     "requirejs": "^2.3.6",
     "shelljs": "^0.8.4",

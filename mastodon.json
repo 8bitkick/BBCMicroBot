@@ -1,0 +1,74 @@
+[06/11/2022 20:39:39 ] [LOG]    Serv: {
+  id: '109292779039545453',
+  created_at: '2022-11-05T19:11:01.429Z',
+  in_reply_to_id: '109292630262682237',
+  in_reply_to_account_id: '109246658710563854',
+  sensitive: false,
+  spoiler_text: '',
+  visibility: 'public',
+  language: 'en',
+  uri: 'https://mastodon.me.uk/users/bbcmicrobot/statuses/109292779039545453',
+  url: 'https://mastodon.me.uk/@bbcmicrobot/109292779039545453',
+  replies_count: 1,
+  reblogs_count: 0,
+  favourites_count: 2,
+  edited_at: null,
+  favourited: false,
+  reblogged: false,
+  muted: false,
+  bookmarked: false,
+  pinned: false,
+  content: '<p>Thanks <span class="h-card"><a href="https://social.linux.pizza/@Jaffa" class="u-url mention">@<span>Jaffa</span></a></span> yeah that might be the way. I can have it respond to toots with <a href="https://mastodon.me.uk/tags/bbcmicrobot" class="mention hashtag" rel="tag">#<span>bbcmicrobot</span></a> (I think this is specific enough not to be spammy. I will check with <span class="h-card"><a href="https://mastodon.me.uk/@Floppy" class="u-url mention">@<span>Floppy</span></a></span> once things calm down a bit)</p>',
+  reblog: null,
+  application: {
+    name: 'Mastodon for iOS',
+    website: 'https://app.joinmastodon.org/ios'
+  },
+  account: {
+    id: '109289826032916877',
+    username: 'bbcmicrobot',
+    acct: 'bbcmicrobot',
+    display_name: 'BBC Micro Bot :mastodon:',
+    locked: false,
+    bot: true,
+    discoverable: true,
+    group: false,
+    created_at: '2022-11-05T00:00:00.000Z',
+    note: '<p>Programs in a single toot of code 👾 1980s BBC Micro Model B 32K 6502. Acorn Computers and ARM stuff. BBC BASIC.  Also building a 3D <a href="https://mastodon.me.uk/tags/retrocomputing" class="mention hashtag" rel="tag">#<span>retrocomputing</span></a> simulator at virtual.bbcmic.ro <a href="https://mastodon.me.uk/tags/bbcmicrobot" class="mention hashtag" rel="tag">#<span>bbcmicrobot</span></a></p><p>⚠️ Bot not online yet... I&#39;m busy porting it!</p><p><a href="https://www.bbcmicrobot.com" target="_blank" rel="nofollow noopener noreferrer"><span class="invisible">https://www.</span><span class="">bbcmicrobot.com</span><span class="invisible"></span></a></p>',
+    url: 'https://mastodon.me.uk/@bbcmicrobot',
+    avatar: 'https://cdn.masto.host/mastodonmeuk/accounts/avatars/109/289/826/032/916/877/original/7d1450f49b48a83e.png',
+    avatar_static: 'https://cdn.masto.host/mastodonmeuk/accounts/avatars/109/289/826/032/916/877/original/7d1450f49b48a83e.png',
+    header: 'https://cdn.masto.host/mastodonmeuk/accounts/headers/109/289/826/032/916/877/original/b7165f77e4b670b0.png',
+    header_static: 'https://cdn.masto.host/mastodonmeuk/accounts/headers/109/289/826/032/916/877/original/b7165f77e4b670b0.png',
+    followers_count: 508,
+    following_count: 46,
+    statuses_count: 36,
+    last_status_at: '2022-11-07',
+    emojis: [ [Object] ],
+    fields: [ [Object] ]
+  },
+  media_attachments: [],
+  mentions: [
+    {
+      id: '109246658710563854',
+      username: 'Jaffa',
+      url: 'https://social.linux.pizza/@Jaffa',
+      acct: 'Jaffa@social.linux.pizza'
+    },
+    {
+      id: '1',
+      username: 'Floppy',
+      url: 'https://mastodon.me.uk/@Floppy',
+      acct: 'Floppy'
+    }
+  ],
+  tags: [
+    {
+      name: 'bbcmicrobot',
+      url: 'https://mastodon.me.uk/tags/bbcmicrobot'
+    }
+  ],
+  emojis: [],
+  card: null,
+  poll: null
+}

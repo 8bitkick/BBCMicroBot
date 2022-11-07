@@ -7,8 +7,8 @@ const TEST = (process.argv.indexOf("test") > -1)
 const express   = require('express');
 const https     = require("https");
 const fs        = require("fs");
-const Feed      = TEST ? require("./test").Feed : require('./mentions');
 const cert_path = "./certs/";
+const Feed      = require('./hashtag');
 
 // add timestamps in front of log messages
 require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" );
@@ -21,9 +21,9 @@ var served = 0;
 
 app.get('/pop', (req, res) => {
   if (req.client.authorized) {
-    var tweet = tweetFeed.pop();
-    res.send(tweet);
-    if (TEST && tweet.text == null) {process.exit()};
+    var toot = tootFeed.pop();
+    res.send(toot);
+    if (TEST && toot.text == null) {process.exit()};
   }
 })
 
@@ -42,10 +42,10 @@ var options = {
 };
 
 var listener = https.createServer(options, app).listen(PORT, function () {
-  console.log('BBC Micro Bot tweet server listening on port ' + listener.address().port);
+  console.log('BBC Micro Bot toot server listening on port ' + listener.address().port);
 });
 
 // Poll the twitter mentions
-var tweetFeed = new Feed('1323720528327266305');
-tweetFeed.update();
-setInterval(function(){ tweetFeed.update(); }, 12500);
+var tootFeed = new Feed();
+tootFeed.update();
+setInterval(function(){ tootFeed.update(); }, 12500);
