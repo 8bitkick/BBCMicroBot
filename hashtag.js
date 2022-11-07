@@ -27,24 +27,22 @@ class Timeline {
 
 
 	async update() {
-
+		log.info("Queue length :"+this.queue.length)
+		if (this.queue.length>0) return
 		//console.log(`${config.api_url}timelines/public/?access_token=${config.access_token}&tag=${config.hashtag}`)
 		const response = (await client.get('/timelines/tag/:hashtag',{'hashtag':`${config.hashtag}`})).data;
 
 		// List all tagged posts
 		for (var i = 0; i < response.length; i++) {
-
 			// Remove those we've already liked
 			if (response[i].favourited !== true) {
-
 				response[i].text = response[i].content.replace(/<[^>]*>?/gm, '');
 				console.log(response[i].id,"@"+response[i].account.username+" tagged #bbcmicrobot");
 				this.queue.push(response[i]);
 			}
-
 		}
-
 	}
+
 }
 
 

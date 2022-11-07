@@ -15,13 +15,14 @@ require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" 
 
 function log(l){console.log(l)}
 
+var tootFeed = new Feed();
 var app = express();
 var emulators = 0;
 var served = 0;
 
 app.get('/pop', (req, res) => {
   if (req.client.authorized) {
-    var toot = tootFeed.pop();
+    var toot = tootFeed.queue.pop();
     res.send(toot);
     if (TEST && toot.text == null) {process.exit()};
   }
@@ -46,6 +47,6 @@ var listener = https.createServer(options, app).listen(PORT, function () {
 });
 
 // Poll the twitter mentions
-var tootFeed = new Feed();
+
 tootFeed.update();
 setInterval(function(){ tootFeed.update(); }, 12500);

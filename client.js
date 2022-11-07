@@ -1,5 +1,18 @@
 "use strict";
 require('dotenv').config();
+const Mastodon       = require('mastodon');
+const log            = require('npmlog');
+
+require('dotenv').config();
+log.level = process.env.LOG_LEVEL || 'verbose';
+
+const config = {
+	access_token: process.env.ACCESS_TOKEN,
+	api_url: `https://${process.env.API_HOST}/api/v1/`,
+	hashtag: process.env.HASHTAG,
+};
+
+
 const PORT        = process.env.PORT || 6502;
 const HOST        = process.env.SERVER || 'localhost'
 var   POLL_DELAY  = process.env.POLL_DELAY || 5000
@@ -17,8 +30,6 @@ const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 
-var twtr = require(TEST ? './test' : './tweet');
-
 var tweetServer = {
   hostname: HOST,
   port: PORT,
@@ -33,15 +44,12 @@ function exec(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
-        console.warn(error);
+        console.info(error);
       }
       resolve(stdout? stdout.trim() : stderr);
     });
   });
 }
-
-
-function log(l){console.log(l);}
 
 var clientID = "Cli0";
 
@@ -62,10 +70,14 @@ function (emulator) {
   "use strict";
 
   async function run(tweet){
-    console.log("");
-    console.log("Running "+tweet.id_str+" from @"+tweet.user.screen_name);
+    log.warn("");
+    log.warn("Running "+tweet.id+" from @"+tweet.account.username);
 
     var c = parser.parseTweet(tweet);
+
+    console.log(c)
+
+      process.exit();
     var one_hour = 2000000*60*60;
 
     // 1 = No emoji / 30 seconds / default
@@ -84,12 +96,12 @@ function (emulator) {
 
     // If rude or not basic, skip it
     if (c.mode == 0) {
-      console.log ("No BASIC detected");
+      log.warn ("No BASIC detected");
       setTimeout(requestTweet, POLL_DELAY);
       return;
     }
     if (c.mode == -1) {
-      console.warn("BLOCKED @"+tweet.user.screen_name)
+      console.info("BLOCKED @"+tweet.user.screen_name)
       await twtr.block(tweet);
       setTimeout(requestTweet, POLL_DELAY);
       return;
@@ -144,15 +156,15 @@ function (emulator) {
       ].join(";")+"'";
 
     } catch (e) {
-      console.log("Tokenisation FAILED");
-      console.log(e);
+      log.warn("Tokenisation FAILED");
+      log.warn(e);
       setTimeout(requestTweet, POLL_DELAY);
       return;
     }
 
     let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + flags + " -commands " + commands;
     await exec(beebjit_cmd );
-    console.log(beebjit_cmd);
+    log.warn(beebjit_cmd);
   } else // JSbeeb
   {
     var frame_path = media_path + "frame";
@@ -169,7 +181,7 @@ function (emulator) {
   }
 
   var end     = new Date() - start
-  console.log(emu_name+" DONE in %ds ",end/1000);
+  log.warn(emu_name+" DONE in %ds ",end/1000);
 
   // Count unique video frames
   var shasum_check = (await exec("sha1sum client.js  | awk '{print $1}' | wc -l")); // should equal 1
@@ -177,7 +189,7 @@ function (emulator) {
   var frames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | wc -l"));
   var uniqueFrames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | sort | uniq | wc -l"));
 
-  console.log("Captured "+frames+" frames ("+uniqueFrames+" unique) "+frame_path);
+  log.warn("Captured "+frames+" frames ("+uniqueFrames+" unique) "+frame_path);
 
   start = new Date();
 
@@ -212,11 +224,11 @@ function (emulator) {
   }
   if (frames > 1) {
     var output = await exec ("gifsicle "+mediaFilename+" --optimize=3 --colors=16 --output "+mediaFilename);
-    console.log("Gifsicle:"+output);
+    log.warn("Gifsicle:"+output);
   }
 
   var end = new Date() - start
-  console.log("Ffmpeg DONE in %ds ",end/1000);
+  log.warn("Ffmpeg DONE in %ds ",end/1000);
 
   if (frames == 0) {
     twtr.noOutput(tweet);
@@ -238,6 +250,7 @@ function requestTweet() {
     });
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
+      console.log(data)
       var tweet = JSON.parse(data);
       if (typeof tweet.text === 'undefined') {
         setTimeout(requestTweet, 5000);
@@ -274,16 +287,16 @@ if (try_arg > 0) {
   // Set up twtr object to mock the 'tweet' methods that we use.
   twtr = {};
   twtr.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
-    console.log("Generated " + mediaType);
+    log.warn("Generated " + mediaType);
     exec("xdg-open "+filename);
     process.exit();
   };
   twtr.block = function(tweet) {
-    console.log("Failed: Tweet blocked because of badwords");
+    log.warn("Failed: Tweet blocked because of badwords");
     process.exit(1);
   };
   twtr.noOutput = function(tweet) {
-    console.log("Failed: No output captured");
+    log.warn("Failed: No output captured");
     process.exit(1);
   };
   run(tweet);
