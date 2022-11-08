@@ -25,7 +25,7 @@ app.get('/pop', (req, res) => {
     let toot = (tootFeed.queue.length>0) ? tootFeed.queue.pop() : "{}";
 
     res.send(toot);
-  
+
   }
 })
 
@@ -50,4 +50,4 @@ var listener = https.createServer(options, app).listen(PORT, function () {
 // Poll the twitter mentions
 
 tootFeed.update();
-setInterval(function(){ tootFeed.update(); }, 12500);
+setInterval(function(){ tootFeed.update(); }, 30000);

@@ -101,7 +101,7 @@ function (emulator) {
       return;
     }
     if (c.mode == -1) {
-      console.info("BLOCKED @"+tweet.user.screen_name)
+      console.info("BLOCKED @"+tweet.account.url)
       await mastodon.block(tweet);
       setTimeout(requestTweet, POLL_DELAY);
       return;
@@ -127,6 +127,8 @@ function (emulator) {
         }
 
         tokenised = await emulator.tokenise(basic);
+
+
         await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
         await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
 
@@ -164,6 +166,7 @@ function (emulator) {
 
     let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + flags + " -commands " + commands;
     await exec(beebjit_cmd );
+
     log.warn(beebjit_cmd);
   } else // JSbeeb
   {
@@ -200,12 +203,12 @@ function (emulator) {
     // STATIC IMAGE WITHOUT SOUND -> PNG SCREENSHOT
     var mediaFilename = media_path+'.png';
     var mediaType = 'image/png';
-    var ffmpegCmd = 'ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+frame_path+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
+    var ffmpegCmd = './ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+frame_path+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
   } else {
     // ANIMATION OR STATIC IMAGE WITH SOUND -> GIF
     var mediaFilename = media_path+'.gif';
     var mediaType = 'image/gif';
-    var ffmpegCmd = 'ffmpeg -hide_banner -loglevel panic ';
+    var ffmpegCmd = './ffmpeg -hide_banner -loglevel panic ';
     if (audio_file !== null) {
       ffmpegCmd = ffmpegCmd + '-f f32le -ar 44100 -ac 1 -i '+audio_file;
     }
@@ -222,7 +225,7 @@ function (emulator) {
   if (audio_file !== null) {
     fs.unlinkSync(audio_file);
   }
-  if (frames > 1) {
+  if (frames > 1 && !TEST) {
     var output = await exec ("gifsicle "+mediaFilename+" --optimize=3 --colors=16 --output "+mediaFilename);
     log.warn("Gifsicle:"+output);
   }
@@ -234,7 +237,7 @@ function (emulator) {
     mastodon.noOutput(tweet);
   } else {
     var hasAudio = (audio_file !== null);
-    mastodon.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio,c.program,c.mode);
+    mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.url,tweet,checksum,hasAudio,c.program,c.mode);
   }
 
   setTimeout(requestTweet, POLL_DELAY);

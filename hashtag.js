@@ -1,20 +1,19 @@
 "use strict";
 
-const Mastodon       = require('mastodon');
+
 const log            = require('npmlog');
-const fs             = require('fs')
-
-
-require('dotenv').config();
 log.level = process.env.LOG_LEVEL || 'verbose';
+const fs             = require('fs');
 
+const Mastodon       = require('mastodon');
+require('dotenv').config();
 const config = {
 	access_token: process.env.ACCESS_TOKEN,
 	api_url: `https://${process.env.API_HOST}/api/v1/`,
 	hashtag: process.env.HASHTAG,
 };
-
 const client   = new Mastodon(config);
+
 log.info("BBC Micro Bot mastodon edition");
 log.info(`Running on: ${process.env.API_HOST}  #${config.hashtag}`);
 
