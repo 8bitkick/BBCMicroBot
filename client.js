@@ -1,6 +1,6 @@
 "use strict";
 require('dotenv').config();
-const Mastodon       = require('mastodon');
+const mastodon       = require('./mastodon');
 const log            = require('npmlog');
 
 require('dotenv').config();
@@ -77,7 +77,7 @@ function (emulator) {
 
     console.log(c)
 
-      process.exit();
+
     var one_hour = 2000000*60*60;
 
     // 1 = No emoji / 30 seconds / default
@@ -102,7 +102,7 @@ function (emulator) {
     }
     if (c.mode == -1) {
       console.info("BLOCKED @"+tweet.user.screen_name)
-      await twtr.block(tweet);
+      await mastodon.block(tweet);
       setTimeout(requestTweet, POLL_DELAY);
       return;
     }
@@ -231,10 +231,10 @@ function (emulator) {
   log.warn("Ffmpeg DONE in %ds ",end/1000);
 
   if (frames == 0) {
-    twtr.noOutput(tweet);
+    mastodon.noOutput(tweet);
   } else {
     var hasAudio = (audio_file !== null);
-    twtr.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio,c.program,c.mode);
+    mastodon.videoReply(mediaFilename,mediaType,tweet.id_str,"@"+tweet.user.screen_name,tweet,checksum,hasAudio,c.program,c.mode);
   }
 
   setTimeout(requestTweet, POLL_DELAY);
@@ -257,7 +257,10 @@ function requestTweet() {
         return;
 
       } else {
-        if (TEST && tweet.text == null) {process.exit()};
+        if (TEST && tweet.text == null) {
+					console.error("Empty text")
+					process.exit()
+				};
         run(tweet).catch((err) => {
           console.error(err);
           if (TEST) {
@@ -284,18 +287,18 @@ if (try_arg > 0) {
     user: { screen_name: 'try' },
     entities: {}
   };
-  // Set up twtr object to mock the 'tweet' methods that we use.
-  twtr = {};
-  twtr.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
+  // Set up mastodon object to mock the 'tweet' methods that we use.
+  mastodon = {};
+  mastodon.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
     log.warn("Generated " + mediaType);
     exec("xdg-open "+filename);
     process.exit();
   };
-  twtr.block = function(tweet) {
+  mastodon.block = function(tweet) {
     log.warn("Failed: Tweet blocked because of badwords");
     process.exit(1);
   };
-  twtr.noOutput = function(tweet) {
+  mastodon.noOutput = function(tweet) {
     log.warn("Failed: No output captured");
     process.exit(1);
   };

@@ -22,9 +22,10 @@ var served = 0;
 
 app.get('/pop', (req, res) => {
   if (req.client.authorized) {
-    var toot = tootFeed.queue.pop();
+    let toot = (tootFeed.queue.length>0) ? tootFeed.queue.pop() : "{}";
+
     res.send(toot);
-    if (TEST && toot.text == null) {process.exit()};
+  
   }
 })
 
