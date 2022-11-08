@@ -9,7 +9,7 @@ function parseTweet(tweet){
 
   // get rid of tags and white space
   let text = tweet.text;
-  text = text.replace(/#bbcmicrobot/g, "").trim();
+
 
   // Check for emojis
   let rocket  = text.replace(/\uD83D\uDE80/g,"");
@@ -32,6 +32,8 @@ function parseTweet(tweet){
   let tokens =  text.match([/\x{0080}-\x{01FF}/g])!=null;
 
   // replace twitter escaped HTML escaped chars
+  text = text.replace(/<br \/>/g,"\r\n");
+  text = text.replace(/<[^>]*>?/gm, '');
   text = text.replace(/[“]/g,'"'); // replace italic quotes
   text = text.replace(/[”]/g,'"');
   text = text.replace(/&quot;/g,'"');
@@ -39,6 +41,7 @@ function parseTweet(tweet){
   text = text.replace(/&gt;/g,'>');
   text = text.replace(/&amp;/g,'&');
   text = text.replace(/&#39;/g,"'");
+  text = text.replace(/\#bbcmicrobot/g, "").trim();
 
   if (mode == 0) {mode = 1;} // BASIC, 30 seconds default
   if (customFilter.clean(text) != text) {mode = -1}; // RUDE

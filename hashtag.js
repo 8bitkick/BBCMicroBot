@@ -35,7 +35,7 @@ class Timeline {
 		for (var i = 0; i < response.length; i++) {
 			// Remove those we've already liked
 			if (response[i].favourited !== true) {
-				response[i].text = response[i].content.replace(/<[^>]*>?/gm, '');
+				response[i].text = response[i].content;//.replace(/<[^>]*>?/gm, '');<br />
 				console.log(response[i].id,"@"+response[i].account.username+" tagged #bbcmicrobot");
 				this.queue.push(response[i]);
 			}

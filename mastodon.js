@@ -57,8 +57,8 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		// var response = await post('statuses/update', {status:text+" Source: https://bbcmic.ro/#"+progData, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
 		// await post('favorites/create',{id: replyTo});
 
-		await toot.post('statuses/:id/favourite', { id: [tweet.id]});
-		log.info("Favourited "+tweet.id);
+		//await toot.post('statuses/:id/favourite', { id: [tweet.id]});
+		log.info("NOT Favourited "+tweet.id);
 
 
 

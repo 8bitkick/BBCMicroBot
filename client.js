@@ -84,7 +84,7 @@ function (emulator) {
     let flags = "-accurate -rom 7 roms/gxr.rom -opt video:paint-start-cycles=60680000,video:border-chars=0 -frame-cycles 1 -max-frames 150 -cycles 69000000";
     let emu_name = "beebjit";
 
-    switch (c.mode){
+    switch (2){//}(c.mode){
       case 2: // rocket
       flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
       break;
@@ -109,7 +109,7 @@ function (emulator) {
 
     var start   = new Date()
 
-    var media_path = "./tmp/"+tweet.id_str;
+    var media_path = "./tmp/"+tweet.id;
     // Emulate
     if (emu_name == "beebjit") {
       var frame_path = "./tmp/beebjit_frame_";
@@ -125,9 +125,9 @@ function (emulator) {
           // If there are line numbers remove a trailing explicit "RUN".
           basic = basic.replace(/\n\s*RUN[\s\n]*$/, "");
         }
-
+console.log(basic)
         tokenised = await emulator.tokenise(basic);
-
+console.log(tokenised)
 
         await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
         await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
