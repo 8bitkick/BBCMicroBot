@@ -54,26 +54,17 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		let resp = await toot.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output" });
 		log.info(resp)
 		let id = resp.data.id;
-		let response = await toot.post('statuses', { status:text+" Source: https://bbcmic.ro/#"+progData, media_ids: [id],in_reply_to_id:replyTo});//, spoiler_text: "Shakespearean Epitaph" })
+		let params = { status:text+" Source: https://bbcmic.ro/#"+progData, media_ids: [id],in_reply_to_id:replyTo};
+		params.visibility = "direct";
+		params.description = tweet.spoiler_text;
+		let response = await toot.post('statuses', params);//, spoiler_text: "Shakespearean Epitaph" })
 
 		log.info(response)
-		// var data = await post('media/upload', {command:'INIT',total_bytes: mediaSize,media_type : mediaType});
-		// await post('media/upload',    {command:'APPEND', media_id:data.media_id_string, media:mediaData,segment_index: 0});
-		// await post('media/upload',    {command:'FINALIZE', media_id:data.media_id_string});
-		// var response = await post('statuses/update', {status:text+" Source: https://bbcmic.ro/#"+progData, media_ids:data.media_id_string, in_reply_to_status_id: replyTo});
-		// await post('favorites/create',{id: replyTo});
 
+		// await toot.post('statuses/:id/favourite', { id: [tweet.id]});
+		// log.info("Favourited "+tweet.id);
 
-
-
-
-		await toot.post('statuses/:id/favourite', { id: [tweet.id]});
-		log.info("Favourited "+tweet.id);
-
-
-
-
-		log.info("Media post DONE "+response.id);
+		log.info("Media post DONE ",JSON.stringify(response));
 
 		let record = {
 				"v":2,
