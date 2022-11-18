@@ -1,5 +1,6 @@
 "use strict";
 
+require('dotenv').config();
 const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
@@ -7,12 +8,15 @@ const Grapheme     = require('grapheme-splitter');
 var splitter = new Grapheme();
 
 function processInput(tweet) {
-  var i = tweet.text.trim();
+  let i = tweet.text.trim();
+
 
   // replace twitter escaped HTML escaped chars
-  i = i.replace(/<br \/>/g,"\n\r");
-  i = i.replace(/<br\/>/g,"\n\r");
+
+  i = i.replace(/<br \/>/g,"\n");
+  i = i.replace(/<br>/g,"\n");
   i = i.replace(/<[^>]*>?/gm, '');
+  i = i.replace(/#bbcmicrobot/gi, '');
   i = i.replace(/[“]/g,'"'); // replace italic quotes
   i = i.replace(/[”]/g,'"');
   i = i.replace(/&quot;/g,'"');
@@ -21,7 +25,9 @@ function processInput(tweet) {
   i = i.replace(/&amp;/g,'&');
   i = i.replace(/&#39;/g,"'");
 
-  return i;
+console.log(i)
+
+ return i;
 }
 
 function parseTweet(tweet){
@@ -103,6 +109,10 @@ var one_hour = 2000000*60*60;
   c.input = processInput(tweet);
   c.rude = (customFilter.clean(c.input) != c.input);
 
+  // c.emulator = "beebjit";
+  // c.flags    = "-cycles "+(3*one_hour+4000000000)+" -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
+  // c.isBASIC  = true;
+  //   c.mode = 2;
 
   console.log("\n",c);
   return c;

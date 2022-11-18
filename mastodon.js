@@ -53,16 +53,16 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 
 		let resp = await toot.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output" });
 		log.info(resp)
-		let id = resp.data.id;
-		let params = { status:text+" Source: https://bbcmic.ro/#"+progData, media_ids: [id],in_reply_to_id:replyTo};
-		params.visibility = "direct";
+		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
+		let params = { status:"I ran "+text+"'s program and got:", media_ids: [id],in_reply_to_id:replyTo};
+		params.visibility = "public";
 		params.description = tweet.spoiler_text;
 		let response = await toot.post('statuses', params);//, spoiler_text: "Shakespearean Epitaph" })
 
-		log.info(response)
+		//log.info(response)
 
-		// await toot.post('statuses/:id/favourite', { id: [tweet.id]});
-		// log.info("Favourited "+tweet.id);
+		await toot.post('statuses/:id/favourite', { id: [tweet.id]});
+		log.info("Favourited "+tweet.id);
 
 		log.info("Media post DONE ",JSON.stringify(response));
 

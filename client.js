@@ -66,6 +66,7 @@ var clientID = "Cli0";
         console.log("Running "+tweet.id_str+" from @"+tweet.account.url);
 
         var c = parser.parseTweet(tweet);
+
 				console.log("Parser output",c);
         // If rude or not basic, skip it
         if (!c.isBASIC) {
@@ -94,12 +95,13 @@ var clientID = "Cli0";
           var tokenised;
           try {
             var basic = c.input;
-            var tmp = basic.replace(/@\w+/g, "").trim(); // get rid of tags and white space
+            var tmp = basic.replace(/\#\w+/g, "").trim(); // get rid of tags and white space
             if (tmp.match(/^\d/) != null) {
                 // If there are line numbers remove a trailing explicit "RUN".
                 basic = basic.replace(/\n\s*RUN[\s\n]*$/, "");
             }
 
+						console.log(basic)
             tokenised = await emulator.tokenise(basic);
             await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
             await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
