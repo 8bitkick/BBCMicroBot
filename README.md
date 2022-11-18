@@ -2,21 +2,25 @@
 
 ![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A twitter bot that runs mentions on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a tweet of 3 second, 50fps video after 30 seconds of emulated execution time. 
+A bot that runs toots that mention the #bbcmicrobot tag on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a toot of 3 second, 50fps video after 30 seconds of emulated execution time.
 
 ## Using the bot
 
-You can try the bot now live at [https://twitter.com/bbcmicrobot](https://twitter.com/bbcmicrobot)
+You can try the bot now live at [https://mastodon.me.uk/@bbcmicrobot](https://mastodon.me.uk/@bbcmicrobot)
 
 For help running code on the bot please see [the User Guide](https://github.com/8bitkick/BBCMicroBot/blob/master/docs/user%20guide.md).
 
 ## Background
 
-The [@bbcmicrobot](https://twitter.com/bbcmicrobot) gained fans like comedian Dara Ó Briain, science writer Ben Goldacre, and Raspberry Pi founder Eben Upton. The concept is simple - make a retrocomputer accessible over social media. The bot runs any tweet written in BBC BASIC (1982) a programming language developed by Sophie Wilson who later went on to create the ARM architecture.
+The [@bbcmicrobot](https://mastodon.me.uk/@bbcmicrobot) gained fans like comedian Dara Ó Briain, science writer Ben Goldacre, and Raspberry Pi founder Eben Upton. The concept is simple - make a retrocomputer accessible over social media. The bot runs any toot written in BBC BASIC (1982) a programming language developed by Sophie Wilson who later went on to create the ARM architecture.
 
-The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html). 
+The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html).
 
-It started a Twitter code bot revolution! There's a guide to building emulators in the cloud in the [Commodore 64 notes](https://github.com/8bitkick/c64bot) as well as full bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart) and Kay Savetz's AppleIIbot, PC BASIC Bot and [Atari8BitBot](https://github.com/savetz/Atari8BitBot).
+It started a Twitter code bot revolution! There's a guide to building emulators in the cloud in the [Commodore 64 notes](https://github.com/8bitkick/c64bot) as well as full bot projects inspired by it including [Auto tootcart for the pico8](https://gitlab.com/rendello/auto_tootcart) and Kay Savetz's AppleIIbot, PC BASIC Bot and [Atari8BitBot](https://github.com/savetz/Atari8BitBot).
+
+In November 2022 BBC Micro Bot was founded on Mastodon.
+
+https://mastodon.me.uk/@bbcmicrobot
 
 ## Contributing
 
@@ -30,14 +34,14 @@ For development and testing you can run your own instance of the bot on a Linux 
 
 ### Installation
 
-* Install [Node.js v12.x](https://nodejs.org/en/download/) 
+* Install [Node.js v12.x](https://nodejs.org/en/download/)
 * Install [ffmpeg](https://www.ffmpeg.org/download.html) (e.g. `sudo apt install ffmpeg`)
 * Download or clone this BBCMicroBot repository and `cd` into the directory
 * `npm install`
 
 ### Local testing
 
-To run a set of test tweets defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/master/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
+To run a set of test toots defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/master/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
 
 `npm test`
 
@@ -50,9 +54,9 @@ You should see output like the following:
 [14/06/2020 09:06:49 ] [LOG]    Cli0: Loading ROM from roms/BASIC.ROM
 [14/06/2020 09:06:49 ] [LOG]    Cli0: Loading ROM from roms/b/DFS-0.9.rom
 [14/06/2020 09:06:49 ] [LOG]    Cli0: Loading ROM from roms/gxr.rom
-[14/06/2020 09:06:59 ] [LOG]    Cli0: JSbeeb DONE in 9.807s 
+[14/06/2020 09:06:59 ] [LOG]    Cli0: JSbeeb DONE in 9.807s
 [14/06/2020 09:07:01 ] [LOG]    Cli0: JSbeeb captured 150 frames (1 unique)
-[14/06/2020 09:07:01 ] [LOG]    Cli0: Ffmpeg DONE in 0.172s 
+[14/06/2020 09:07:01 ] [LOG]    Cli0: Ffmpeg DONE in 0.172s
 [14/06/2020 09:07:01 ] [LOG]    Cli0: checksum: 80f830477fc1632c3f8a65702825f33b3d6c069e
 [14/06/2020 09:07:01 ] [LOG]    Cli0: BASE2048 TEST - OK
 ~~~~
@@ -72,7 +76,7 @@ If you omit the filename, it defaults to reading from `stdin` which is handy for
 
 ### Connecting to a Twitter account
 
-To run the bot on a Twitter account you need to apply for a Twitter developer account, generate API keys for your bot application and put them into a `.env` file to be accessed by [tweet.js](https://github.com/8bitkick/BBCMicroBot/blob/39c3587c60753db84b48888ea1f01d72d0081f92/tweet.js#L3). 
+To run the bot on a Twitter account you need to apply for a Twitter developer account, generate API keys for your bot application and put them into a `.env` file to be accessed by [toot.js](https://github.com/8bitkick/BBCMicroBot/blob/39c3587c60753db84b48888ea1f01d72d0081f92/toot.js#L3).
 
 You can then run the bot with
 
@@ -82,6 +86,4 @@ Please refer to the https://developer.twitter.com if you are unfamiliar with the
 
 ### Thanks
 
-Thanks to Matt Godbolt for the JSBeeb emulator that made this project possible and to all the @bbcmicrobot users for their support - I hope this source code is interesting or useful. 
-
-
+Thanks to Matt Godbolt for the JSBeeb emulator that made this project possible and to all the @bbcmicrobot users for their support - I hope this source code is interesting or useful.
