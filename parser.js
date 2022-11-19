@@ -12,9 +12,14 @@ function processInput(tweet) {
 
 
   // replace twitter escaped HTML escaped chars
-
+  console.log(i)
   i = i.replace(/<br \/>/g,"\n");
   i = i.replace(/<br>/g,"\n");
+  i = i.replace(/<p \/>/g,"\n");
+  i = i.replace(/<p>/g,"\n");
+
+//  i = i.replace(/^W+/g,""); // remove whitepace at beginning of lines
+//  i = i.replace(/\n\n/g,"\n"); // remove empty lines
   i = i.replace(/<[^>]*>?/gm, '');
   i = i.replace(/#bbcmicrobot/gi, '');
   i = i.replace(/[“]/g,'"'); // replace italic quotes
