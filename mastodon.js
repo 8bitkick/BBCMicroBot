@@ -1,7 +1,4 @@
-/* Set to false to avoid potentially tweeting repetitive messages - we don't
-* want the bot to be shadow-banned by twitter as happened to a previous
-* incarnation which responded with text instead of images or videos.
-*/
+
 const ENABLE_TEXT_REPLY = false;
 const log            = require('npmlog');
 log.level = process.env.LOG_LEVEL || 'verbose';
@@ -37,8 +34,7 @@ function get (path,params) {
 }
 
 async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio,program,mode){
-	// const mediaData   = require('fs').readFileSync(filename);
-	// const mediaSize   = require('fs').statSync(filename).size;
+
 
 	try {
 		 let progData = encodeURIComponent(JSON.stringify({
@@ -56,9 +52,8 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
 		let params = { status:"I ran "+text+"'s program and got this.", media_ids: [id],in_reply_to_id:replyTo};
 		params.visibility = "public";
-//		params.description = tweet.spoiler_text;
-		//params.spoiler_text = "";
-		let response = await toot.post('statuses', params);//, spoiler_text: "Shakespearean Epitaph" })
+
+		let response = await toot.post('statuses', params);
 
 		//log.info(response)
 
@@ -67,23 +62,17 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 
 		log.info("Media post DONE ");
 
-		let record = {
-				"v":2,
-				"author":tweet.user.screen_name,
-				"program":program,
-				"mode":mode,
-				"date":Math.floor(new Date(tweet.created_at))/1000,
-				"in_reply_to_id_str":tweet.id_str
-				}
+		// let record = {
+		// 		"v":2,
+		// 		"author":tweet.user.screen_name,
+		// 		"program":program,
+		// 		"mode":mode,
+		// 		"date":Math.floor(new Date(tweet.created_at))/1000,
+		// 		"in_reply_to_id_str":tweet.id_str
+		// 		}
+		//
+		// await fs.writeFileSync('./output/'+response.id_str, JSON.stringify(record,null,4));
 
-		await fs.writeFileSync('./output/'+response.id_str, JSON.stringify(record,null,4));
-
-		// Post to discord too
-		var content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\n[Open source in Owlet Editor](https://bbcmic.ro/#"+progData+")\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
-		if (content.length>1999) {
-			content = "["+text+"](https://www.twitter.com/"+response.in_reply_to_screen_name+">) posted \n"+response.entities.media[0].media_url_https+"\n\nSource too long to link to in Owlet\n[See original tweet](https://www.twitter.com/bbcmicrobot/status/"+response.id_str+">)\n";
-		};
-			log.info(content);
 		}
 
 		catch(e) {
