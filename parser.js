@@ -17,7 +17,6 @@ function processInput(tweet) {
   i = i.replace(/<br>/g,"\n");
   i = i.replace(/<p \/>/g,"\n");
   i = i.replace(/<p>/g,"\n");
-
 //  i = i.replace(/^W+/g,""); // remove whitepace at beginning of lines
 //  i = i.replace(/\n\n/g,"\n"); // remove empty lines
   i = i.replace(/<[^>]*>?/gm, '');

@@ -36,6 +36,10 @@ function get (path,params) {
 async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio,program,mode){
 
 
+	if (tweet.spoiler_text == ""){
+		console.log("No CW on bot source post")
+	}
+
 	try {
 		 let progData = encodeURIComponent(JSON.stringify({
                         "v":1,
