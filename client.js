@@ -18,7 +18,7 @@ const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 
-var mastodon = TRY ? null : require('./mastodon');
+var mastodon = TRY ? null : require(TEST ? './test' : './mastodon');
 
 var tweetServer = {
   hostname: HOST,

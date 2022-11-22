@@ -8,7 +8,7 @@ const express   = require('express');
 const https     = require("https");
 const fs        = require("fs");
 const cert_path = "./certs/";
-const Feed      = require('./hashtag');
+const Feed      = TEST ? require("./test").Feed : require('./hashtag');
 
 // add timestamps in front of log messages
 require( 'console-stamp' )( console, { pattern: 'dd/mm/yyyy HH:MM:ss '},"Serv:" );
