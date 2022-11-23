@@ -26,8 +26,8 @@ function processInput(tweet) {
   i = i.replace(/&quot;/g,'"');
   i = i.replace(/&lt;/g,'<');
   i = i.replace(/&gt;/g,'>');
-  i = i.replace(/&amp;/g,'&');
   i = i.replace(/&#39;/g,"'");
+  i = i.replace(/&amp;/g,'&');
 
 console.log(i)
 
