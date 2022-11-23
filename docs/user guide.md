@@ -18,15 +18,17 @@ Normally the bot runs your code for 30 seconds, and then takes 3 second video cl
 
 You can add an emoji to the end of your tweet to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulation only takes a few seconds. Although the emulation is fast the video capture at the end is real-time - the 🎬 is the same as leaving a real BBC Micro running for 3 hours and then afterwards taking a look at the screen for 3 seconds. 
 
-*Note - GXR graphics functions are **not available** in the 🚀 or 🎬 modes!*
 
-    No emoji means the bot runs 30 seconds and then captures a 3 second video - GXR is available.
+Bot execution modes
 
-🚀  The rocket emoji instructs the bot to run a 3 hour emulation and then capture a screenshot
+| Emoji       | Pre render  | GXR | Output.     |
+| ----------- | ----------- | ----| ----------- |
+| None        | 30 sec      | Yes | 3 sec video |
+| 🎬          | 3 hours*    | No  | 3 sec video |
+| 🚀          | 3 hours*    | No  | screen shot |
 
-🎬  The clapper board is runs like rocket but then captures a 3 second video
 
-🗜️  The clamp icon is no longer used. It was used to show a tweet was base2048 encoded, but this is now autodetected.
+\* The bot runs 3 hours equivalent 6502 execution in just a few seconds thanks to Beebjit!
 
 ### Unexpected behavior with 🎬 mode animations 
 
@@ -91,18 +93,13 @@ As with the original implementation each BBC BASIC keyword is represented in mem
 Note that some byte values must be ORed with 0x100 in order to map to a valid Unicode character that can be used in the editor or in a tweet. For byte tokens this is done automatically in Owlet, and the BBC Micro emulator ANDs all character codepoints with 0xFF to return them to single byte values. 
 
 
-### base2048 encoding
+### base2048 encoding [deprecated for Mastodon due to larger post length]
 
 [Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readable:
 
 ```
 ༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
 ```
-
-The [Owlet Editor](https://bbcmic.ro) will automatically encode any tweet as base2048 if it is over 280 characters in length. It will only encode when you hit the `share` button and send as a tweet. You can also decode in Owlet with the `Expand` button.
-
-*Every reply tweet from BBC Micro Bot includes a link to source which allows you to decode base2048 into BBC BASIC.*
-
 
 ## Advanced minification techniques
 
