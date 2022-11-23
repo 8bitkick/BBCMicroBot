@@ -14,7 +14,7 @@ cd  ..
 echo Getting GXR ROM
 ln -s ./node_modules/jsbeeb/roms/ roms
 cd roms
-curl http://mdfs.net/System/ROMs/Graphics/GXR120 > gxr.rom
+curl https://mdfs.net/System/ROMs/Graphics/GXR120 > gxr.rom
 cd -
 cp roms/gxr.rom beebjit/roms/
 
