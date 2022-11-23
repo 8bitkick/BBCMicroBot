@@ -20,6 +20,8 @@ You can add an emoji to the end of your tweet to send a command to the bot. Thes
 
 *Note - GXR graphics functions are **not available** in the 🚀 or 🎬 modes!*
 
+    No emoji means the bot runs 30 seconds and then captures a 3 second video - GXR is available.
+
 🚀  The rocket emoji instructs the bot to run a 3 hour emulation and then capture a screenshot
 
 🎬  The clapper board is runs like rocket but then captures a 3 second video
