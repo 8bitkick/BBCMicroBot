@@ -5,6 +5,7 @@ const HOST        = process.env.SERVER || 'localhost'
 var   POLL_DELAY  = process.env.POLL_DELAY || 5000
 
 const TEST = (process.argv.indexOf("test") > -1)
+const TRY = (process.argv.indexOf("try") > -1)
 POLL_DELAY = TEST ? 0 : POLL_DELAY ;
 
 const emulationDuration   = 33; // seconds
@@ -17,7 +18,7 @@ const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 
-var mastodon = require('./mastodon');
+var mastodon = TRY ? null : require('./mastodon');
 
 var tweetServer = {
   hostname: HOST,
@@ -254,28 +255,29 @@ var clientID = "Cli0";
       var try_arg = process.argv.indexOf("try") + 1;
       if (try_arg > 0) {
         var try_file = (try_arg == process.argv.length) ? "/dev/stdin" : process.argv[try_arg];
-        var tweet = {
+        var toot = {
           text: fs.readFileSync(try_file, 'utf8'),
           id_str: 'try',
           user: { screen_name: 'try' },
+          account: { username: 'try', url: 'https://localhost/@try' },
           entities: {}
         };
-        // Set up mastodon object to mock the 'tweet' methods that we use.
+        // Set up mastodon object to mock the methods that we use.
         mastodon = {};
-        mastodon.videoReply = function(filename,mediaType,replyTo,text,tweet,checksum,hasAudio) {
+        mastodon.videoReply = function(filename,mediaType,replyTo,text,toot,checksum,hasAudio) {
           console.log("Generated " + mediaType);
           exec("xdg-open "+filename);
           process.exit();
         };
-        mastodon.block = function(tweet) {
-          console.log("Failed: Tweet blocked because of badwords");
+        mastodon.block = function(toot) {
+          console.log("Failed: Toot blocked because of badwords");
           process.exit(1);
         };
-        mastodon.noOutput = function(tweet) {
+        mastodon.noOutput = function(toot) {
           console.log("Failed: No output captured");
           process.exit(1);
         };
-        run(tweet);
+        run(toot);
       } else {
         requestTweet();
       }
