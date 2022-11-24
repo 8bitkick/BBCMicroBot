@@ -1,5 +1,7 @@
 "use strict";
 
+const TRY = (process.argv.indexOf("try") > -1)
+
 require('dotenv').config();
 const Filter       = require('bad-words');
 const customFilter = new Filter({ placeHolder: '*'});
@@ -10,6 +12,7 @@ var splitter = new Grapheme();
 function processInput(tweet) {
   let i = tweet.text.trim();
 
+  if (TRY) return i;
 
   // replace twitter escaped HTML escaped chars
   console.log(i)
