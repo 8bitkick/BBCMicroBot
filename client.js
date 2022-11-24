@@ -64,7 +64,7 @@ var clientID = "Cli0";
 
       async function run(tweet){
         console.log("");
-        console.log("Running "+tweet.id_str+" from @"+tweet.account.url);
+        console.log("Running "+tweet.id+" from "+tweet.account.url);
 
         var c = parser.parseTweet(tweet);
 
@@ -257,7 +257,7 @@ var clientID = "Cli0";
         var try_file = (try_arg == process.argv.length) ? "/dev/stdin" : process.argv[try_arg];
         var toot = {
           text: fs.readFileSync(try_file, 'utf8'),
-          id_str: 'try',
+          id: 'try',
           user: { screen_name: 'try' },
           account: { username: 'try', url: 'https://localhost/@try' },
           entities: {}

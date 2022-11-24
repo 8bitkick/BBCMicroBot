@@ -72,10 +72,10 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		// 		"program":program,
 		// 		"mode":mode,
 		// 		"date":Math.floor(new Date(tweet.created_at))/1000,
-		// 		"in_reply_to_id_str":tweet.id_str
+		// 		"in_reply_to_id":tweet.id
 		// 		}
 		//
-		// await fs.writeFileSync('./output/'+response.id_str, JSON.stringify(record,null,4));
+		// await fs.writeFileSync('./output/'+response.id, JSON.stringify(record,null,4));
 
 		}
 
@@ -89,7 +89,7 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		console.warn("NO VIDEO CAPTURED");
 		if (!ENABLE_TEXT_REPLY) return;
 		try {
-			post('statuses/update', {status: "@"+tweet.user.screen_name+" Sorry, no output captured from that program", in_reply_to_status_id: tweet.id_str});
+			post('statuses/update', {status: "@"+tweet.user.screen_name+" Sorry, no output captured from that program", in_reply_to_status_id: tweet.id});
 		}
 		catch(e) {
 			log.info("Non-media post FAILED");
