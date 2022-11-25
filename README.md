@@ -1,6 +1,6 @@
 # BBCMicroBot
 
-![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=master)
+![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=mastodon)
 
 A bot that runs toots that mention the #bbcmicrobot tag on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a toot of 3 second, 50fps video after 30 seconds of emulated execution time.
 
