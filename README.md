@@ -41,7 +41,7 @@ For development and testing you can run your own instance of the bot on a Linux 
 
 ### Local testing
 
-To run a set of test toots defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/master/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
+To run a set of test toots defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/mastodon/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
 
 `npm test`
 
@@ -74,15 +74,13 @@ If you omit the filename, it defaults to reading from `stdin` which is handy for
 
 `echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try`
 
-### Connecting to a Twitter account
+### Connecting to a Mastodon account
 
-To run the bot on a Twitter account you need to apply for a Twitter developer account, generate API keys for your bot application and put them into a `.env` file to be accessed by [toot.js](https://github.com/8bitkick/BBCMicroBot/blob/39c3587c60753db84b48888ea1f01d72d0081f92/toot.js#L3).
+You need to put the `ACCESS_TOKEN` for the Mastodon account for the bot and the `HASHTAG` that the bot should watch for in a `.env` file to be accessed by [mastodon.js](https://github.com/8bitkick/BBCMicroBot/blob/mastodon/mastodon.js#L8).
 
 You can then run the bot with
 
 `npm start`
-
-Please refer to the https://developer.twitter.com if you are unfamiliar with these processes.
 
 ### Thanks
 
