@@ -61,15 +61,6 @@ function Tests(since_id){
       checksum: "4a954818f333f1d9a3b7334246bcdb5056295e3d"
     },
     */
-/* FIXME beebjit now gives a flickery video too - check when this changed and update
-    {
-      name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a flickery video.
-      text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
-      mediaType: "image/gif",
-      hasAudio: false,
-      checksum: "c4fa65e04c8575b829f62e38de55c1cb28c8846c"
-    },
-*/
     {
       name: "MODE6", // Test stripes aren't transparent in PNG
       text: '1MO.6:?&D0=2:F.L=0TO999:V.32+L MOD95:N.:V.19;4;0;279;0;0;0;0;',
