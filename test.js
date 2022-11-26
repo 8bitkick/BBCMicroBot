@@ -177,14 +177,14 @@ function Tests(since_id){
   function noOutput(tweet) {
     // If the checksum is empty then we expect no output.
     if (tweet.bbcmicrobot_checksum == '') {
-      console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+      console.log(tweet.id+' TEST - \u001b[32mOK\u001b[0m')
     } else {
-      throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+      throw new Error(tweet.id+' TEST - \u001b[31mFAILED\u001b[0m')
     }
   }
 
   function block(tweet) {
-    throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+    throw new Error(tweet.id+' TEST - \u001b[31mFAILED\u001b[0m')
   }
 
   module.exports = {
