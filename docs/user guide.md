@@ -30,6 +30,11 @@ Bot execution modes
 
 \* The bot runs 3 hours equivalent 6502 execution in just a few seconds thanks to Beebjit!
 
+Other emojis commands
+
+* 🖬 or 💾 loads the DFS ROM. By default the bot doesn't do this - DFS was an add-on to the original hardware and isn't very useful with the bot. This is mostly provided as a way to allow easily running programs written for older versions of the bot which always loaded the DFS ROM. |
+
+
 ### Unexpected behavior with 🎬 mode animations 
 
 We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time. This means flashing colours in the palette, and `*FX 19` or `INKEY` based timing will not work well!
