@@ -101,6 +101,12 @@ function Tests(since_id){
       mediaType: "text/plain",
       checksum: ""
     },
+    {
+      name: "TOKENISE_LONG", // Test tokenisation handles a long input
+      text: "0PRINT" + (":PRINT".repeat(125)),
+      mediaType: "image/gif",
+      checksum: "b1099ab5729e3fdabb1aa12c05aae77f18e6ee83"
+    },
       {name: null, text: null}
   ]
 
