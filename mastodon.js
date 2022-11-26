@@ -9,9 +9,10 @@ const config = {
 	api_url: `https://${process.env.API_HOST}/api/v1/`,
 	hashtag: process.env.HASHTAG,
 };
-const toot   = new Mastodon(config);
 
+const toot   = new Mastodon(config);
 const fs	   = require('fs');
+
 
 function detokenise(string){
 	const tokens = ["AND ","DIV ","EOR ","MOD ","OR ","ERROR ","LINE ","OFF ","STEP ","SPC","TAB(","ELSE ","THEN ","line no. ","OPENIN","PTR","PAGE ","TIME ","LOMEM ","HIMEM ","ABS","ACS","ADVAL","ASC","ASN","ATN","BGET","COS","COUNT ","DEG","ERL ","ERR ","EVAL","EXP","EXT","FALSE ","FN","GET ","INKEY","INSTR","INT","LEN","LN","LOG","NOT ","OPENIN","OPENOUT","PI ","POINT(","POS ","RAD","RND","SGN","SIN","SQR","TAN","TO ","TRUE ","USR","VAL","VPOS ","CHR$","GET$ ","INKEY$","LEFT$(","MID$(","RIGHT$(","STR$","STRING$(","EOF ","AUTO ","DELETE ","LOAD ","LIST ","NEW ","OLD ","RENUMBER ","SAVE ","PUT","PTR","PAGE ","TIME ","LOMEM ","HIMEM ","SOUND ","BPUT","CALL ","CHAIN ","CLEAR ","CLOSE","CLG ","CLS ","DATA ","DEF ","DIM ","DRAW ","END ","ENDPROC ","ENVELOPE ","FOR ","GOSUB ","GOTO ","GCOL ","IF ","INPUT ","LET ","LOCAL ","MODE ","MOVE ","NEXT ","ON ","VDU ","PLOT ","PRINT ","PROC","READ ","REM ","REPEAT ","REPORT ","RESTORE ","RETURN ","RUN ","STOP ","COLOUR ","TRACE ","UNTIL ","WIDTH ","OSCLI"];
@@ -33,8 +34,22 @@ function get (path,params) {
 		log.info("get",path,params)
 }
 
+function genShortURL(){
+	// Were assuming single thread sequential URL generation here...
+	let num = Math.floor(Date.now()/1000)-1669485542;
+	let digits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	let len = Math.min(digits.length, 62);
+	let result = '';
+	while (num > 0) {
+		result = digits[num % len] + result;
+		num = parseInt(num / len, 10);
+	}
+	return result;
+}
+
 async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudio,program,mode){
 
+		let short_url=genShortURL();
 
 	if (tweet.spoiler_text == ""){
 		console.log("No CW on bot source post")
@@ -46,16 +61,16 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
                         "program":program,
                         "author":text,
                         "date": Date.now(),
-												"id": replyTo
+												"id": null,
+												"src": tweet.url
                 }));
 
 		progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
-
 		let resp = await toot.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output - "+tweet.spoiler_text });
 		log.info(resp)
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
-		let params = { status:"I ran "+text+"'s program and got this.", media_ids: [id],in_reply_to_id:replyTo};
-		params.visibility = "public";
+		let params = { status:"I ran "+text+"'s program and got this.\nView source: http://link.bbcmic.ro/"+short_url, media_ids: [id],in_reply_to_id:replyTo};
+		params.visibility = "direct";//"public";
 
 		let response = await toot.post('statuses', params);
 
@@ -66,22 +81,13 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 
 		log.info("Media post DONE ");
 
-		// let record = {
-		// 		"v":2,
-		// 		"author":tweet.user.screen_name,
-		// 		"program":program,
-		// 		"mode":mode,
-		// 		"date":Math.floor(new Date(tweet.created_at))/1000,
-		// 		"in_reply_to_id":tweet.id
-		// 		}
-		//
-		// await fs.writeFileSync('./output/'+response.id, JSON.stringify(record,null,4));
-
+		return {full:"https://bbcmic.ro/#"+progData,key:short_url}
 		}
 
 		catch(e) {
 			log.info("Media post FAILED");
 			log.info(e);
+			return null;
 		}
 	}
 

@@ -212,11 +212,18 @@ var clientID = "Cli0";
           mastodon.noOutput(tweet);
         } else {
           var hasAudio = (audio_file !== null);
-          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,c.input,c.mode);
+          let response = await mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,c.input,c.mode);
+          if (response !== null) {uploadLink(response)}
         }
 
         setTimeout(requestTweet, POLL_DELAY);
       };
+
+      async function uploadLink(response){
+        let cmd = "aws s3api put-object --bucket link.bbcmic.ro --website-redirect-location '"+response.full+"' --key "+response.key;
+        await exec(cmd);
+        console.log(cmd);
+      }
 
       function requestTweet() {
         tweetServer.path="/pop";
