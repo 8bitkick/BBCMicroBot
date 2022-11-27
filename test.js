@@ -83,18 +83,12 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "27760d3701f31e398df07429364ef0ebcc8b2434"
     },
-/* FIXME: @-mentions are not currently removed for mastodon
     {
-      name: "MENTIONS", // Test mention removal
-      text: "@BBCMicroBot @RhEolisM 1V.279;0;0;0;0;12:PRINTCHR$141\"Hello\"'CHR$141\"Hello\"CHR$21\n",
-      user_mentions: [
-        { screen_name: "bbcmicrobot", indices: [0, 12] },
-        { screen_name: "rheolism", indices: [13, 22] }
-      ],
+      name: "MENTIONS", // Test mention and hashtag removal
+      text: "<span class=\"h-card\"><a href=\"https://mastodon.me.uk/@bbcmicrobot\" class=\"u-url mention\">@<span>BBCMicroBot</span></a></span> <span class=\"h-card\"><a href=\"https://mastodon.nz/@rheolism\" class=\"u-url mention\">@<span>RhEolisM</span></a></span> <a href=\"https://mastodon.me.uk/tags/bbcmicrobot\" class=\"mention hashtag\" rel=\"tag\">#<span>bbcmicrobot</span></a> 1V.279;0;0;0;0;12:PRINTCHR$141\"Hello\"'CHR$141\"Hello\"CHR$21\n",
       mediaType: "image/png",
       checksum: "10e6285dc55ec5ddab8470e8f038725db2d0ffbc"
     },
-*/
     {
       name: "OVERLONG", // Test overlong line doesn't crash the bot
       text: "0REM " + ("BBC".repeat(88)),
