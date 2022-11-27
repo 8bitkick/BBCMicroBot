@@ -61,7 +61,7 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 		log.info(resp)
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
 		let params = { status:"I ran "+text+"'s program and got this.\nSource: http://link.bbcmic.ro/"+short_url+" #bbcbasic", media_ids: [id],in_reply_to_id:replyTo};
-		params.visibility = "direct";//"public";
+		params.visibility = "public";
 
 		let response = await toot.post('statuses', params);
 		log.info("Media post DONE ",JSON.stringify(response));
