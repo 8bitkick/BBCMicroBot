@@ -21,7 +21,7 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "a02c1e9f18e3a86718067695c0e6e97ffdd5c6bd"
     },
-/* FIXME The timing seems to be off (maybe due to changes in beebjit?)
+/* FIXME The timing seems to be off (due to beebjit commit 1565081621bc49db857390eb04a52be815d66add)
     {
       name: "FRAME_CAPTURE", // MODE 0-6
       text: "0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
