@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server & node client",
     "test": "node server test & node client test",
-    "install": "sh ./install.sh"
+    "install": "bash ./install.sh"
   },
   "author": "",
   "license": "ISC",
