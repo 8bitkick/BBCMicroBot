@@ -8,53 +8,47 @@ const customFilter = new Filter({ placeHolder: '*'});
 //customFilter.addWords('words','here');
 const Grapheme     = require('grapheme-splitter');
 var splitter = new Grapheme();
+const htmlparser2  = require('htmlparser2');
 
-function processInput(tweet) {
-  let i = tweet.text.trim();
+function processInput(toot) {
+  if (TRY) return toot.text.trim();
 
-  if (TRY) return i;
+  var out = '';
+  var ignore = 0;
+  const htmlparser = new htmlparser2.Parser({
+    onopentag(name, attributes) {
+      if (ignore) {
+        ++ignore;
+        return;
+      }
 
-  // replace twitter escaped HTML escaped chars
-  console.log(i)
-  i = i.replace(/<br \/>/g,"\n");
-  i = i.replace(/<br>/g,"\n");
-  i = i.replace(/<p \/>/g,"\n");
-  i = i.replace(/<p>/g,"\n");
-  i = i.trim();
-//  i = i.replace(/^W+/g,""); // remove whitepace at beginning of lines
-//  i = i.replace(/\n\n/g,"\n"); // remove empty lines
-  i = i.replace(/<[^>]*>?/gm, '');
-  i = i.replace(/#bbcmicrobot/gi, '');
-  i = i.replace(/[“]/g,'"'); // replace italic quotes
-  i = i.replace(/[”]/g,'"');
-  i = i.replace(/&quot;/g,'"');
-  i = i.replace(/&lt;/g,'<');
-  i = i.replace(/&gt;/g,'>');
-  i = i.replace(/&#39;/g,"'");
-  i = i.replace(/&amp;/g,'&');
+      var c = attributes['class'];
+      if (c !== undefined && c.includes('mention')) {
+        ignore = 1;
+        return;
+      }
+      if (name === 'p' || name === 'br') out += '\n';
+    },
+    ontext(text) {
+      if (!ignore) out += text;
+    },
+    onclosetag(name) {
+      if (ignore) --ignore;
+    },
+  });
 
-console.log(i)
+  console.log(toot.text)
+  htmlparser.parseComplete(toot.text);
+  out = out.trim();
+//  out = out.replace(/^W+/g,""); // remove whitespace at beginning of lines
+//  out = out.replace(/\n\n/g,"\n"); // remove empty lines
+  out = out.replace(/[“”]/g,'"'); // replace italic quotes
+  console.log(out)
 
- return i;
+  return out;
 }
 
 function parseTweet(tweet){
-
-  // var userMentions = [];
-  // if (typeof tweet.entities.user_mentions != 'undefined' ){
-  //   tweet.entities.user_mentions.forEach(function(m) {
-  //     if (typeof m.indices != 'undefined') {
-  //       // Use unshift to get the last indices first so we can change the
-  //       // string there without invalidating indices we've yet to process.
-  //       userMentions.unshift(m.indices);
-  //     }
-  //   });
-  // }
-  //
-  // userMentions.forEach(function(m) {
-  //   tweet.text = tweet.text.slice(0, m[0]) + tweet.text.slice(m[1]);
-  // });
-
   var graphemes = splitter.splitGraphemes(tweet.text.trim());
 var one_hour = 2000000*60*60;
 

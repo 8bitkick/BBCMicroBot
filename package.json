@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server & node client",
     "test": "node server test & node client test",
-    "install": "sh ./install.sh"
+    "install": "bash ./install.sh"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +17,8 @@
     "express": "^4.17.1",
     "gifsicle": "^5.1.0",
     "grapheme-splitter": "^1.0.4",
-    "jsbeeb": "git+https://github.com/mattgodbolt/jsbeeb.git#78eeeb3299c4640ca709df189c76d7447977258f",
+    "htmlparser2": "^8.0.1",
+    "jsbeeb": "git+https://github.com/mattgodbolt/jsbeeb.git#8935c9a3a095e846f63c0e4a08070f76ad01473e",
     "mastodon": "^1.2.2",
     "npmlog": "^7.0.1",
     "request": "^2.88.2",

@@ -2,7 +2,7 @@
 
 ![Node.js CI](https://github.com/8bitkick/BBCMicroBot/workflows/Node.js%20CI/badge.svg?branch=mastodon)
 
-A bot that runs toots that mention the #bbcmicrobot tag on a [BBC Micro emulator](https://github.com/mattgodbolt/jsbeeb) and responds with a toot of 3 second, 50fps video after 30 seconds of emulated execution time.
+A bot that runs toots that mention the #bbcmicrobot tag on a [BBC Micro emulator](https://github.com/scarybeasts/beebjit/) and responds with a toot of 3 second, 50fps video after 30 seconds of emulated execution time.
 
 ## Using the bot
 
@@ -16,7 +16,7 @@ The [@bbcmicrobot](https://mastodon.me.uk/@bbcmicrobot) gained fans like comedia
 
 The Twitter community rose to the challenge with some seriously creative and clever code within 280 character limit. Read [more background on BBC Micro Bot here](https://www.dompajak.com/bbcmicrobot.html).
 
-It started a Twitter code bot revolution! There's a guide to building emulators in the cloud in the [Commodore 64 notes](https://github.com/8bitkick/c64bot) as well as full bot projects inspired by it including [Auto tootcart for the pico8](https://gitlab.com/rendello/auto_tootcart) and Kay Savetz's AppleIIbot, PC BASIC Bot and [Atari8BitBot](https://github.com/savetz/Atari8BitBot).
+It started a Twitter code bot revolution! There's a guide to building emulators in the cloud in the [Commodore 64 notes](https://github.com/8bitkick/c64bot) as well as full bot projects inspired by it including [Auto Tweetcart for the pico8](https://gitlab.com/rendello/auto_tweetcart) and Kay Savetz's AppleIIbot, PC BASIC Bot and [Atari8BitBot](https://github.com/savetz/Atari8BitBot).
 
 In November 2022 BBC Micro Bot was founded on Mastodon.
 
@@ -41,7 +41,7 @@ For development and testing you can run your own instance of the bot on a Linux 
 
 ### Local testing
 
-To run a set of test toots defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/master/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
+To run a set of test toots defined in [test.js](https://github.com/8bitkick/BBCMicroBot/blob/mastodon/test.js) and output the video or image capture to the `./tmp/` folder. For each test a checksum of the last frame of emulator video is compared against a known good value. To run the tests type:
 
 `npm test`
 
@@ -74,15 +74,13 @@ If you omit the filename, it defaults to reading from `stdin` which is handy for
 
 `echo '0MO.4:REP.V.RND(2)*45+2:U.0'|node client try`
 
-### Connecting to a Twitter account
+### Connecting to a Mastodon account
 
-To run the bot on a Twitter account you need to apply for a Twitter developer account, generate API keys for your bot application and put them into a `.env` file to be accessed by [toot.js](https://github.com/8bitkick/BBCMicroBot/blob/39c3587c60753db84b48888ea1f01d72d0081f92/toot.js#L3).
+You need to put the `ACCESS_TOKEN` for the Mastodon account for the bot and the `HASHTAG` that the bot should watch for in a `.env` file to be accessed by [mastodon.js](https://github.com/8bitkick/BBCMicroBot/blob/mastodon/mastodon.js#L8).
 
 You can then run the bot with
 
 `npm start`
-
-Please refer to the https://developer.twitter.com if you are unfamiliar with these processes.
 
 ### Thanks
 

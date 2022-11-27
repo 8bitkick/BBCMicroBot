@@ -37,14 +37,6 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "c3f630a42cc39990a6e38c574a93f6c79b3c5a8a"
     },
-/*
-    {
-      name: "BASE2048", // Test code HT @kweepa
-      text: '🗜КຣǃݣਬૡૐγҐണญءषmಒڤѳൾऎ෮ݏʦߠeռOಕॸiचȾeӕPಕऋͼޏࡪઽڽϟඈ೦Φଞ੫સڍݗɞรݲணࡪܒڅېɞදཝю೫શށळʔแօС౺ມڭରඥഉæбॲອڵخɺඟཥЩඥՅ۹ฅඌೡࡋହ೬Ɲ۱ͷاฃβѡಡІݑஹʒಉɎғअϭޞՕ०ސړਝదӌՒใঔಉцఏ೪ຽݙฆතကཥఏߣƭܜରص༠uДߣϳ۹મɲ൶ಇ୲ଢࢲڝXঊಛuƿດێҏࡄƝۇ੫ʗӏସκǀࢴӊ௫डథØчϏझࢷڍਡ౬ࡈүଥ೭ࡉȶɮൎੳњছƙࡈͰϭဥΞѥઝƗեहݲດۄҏइƟݭலͲດڻҏइρࢶଈচ౫२ӷڛǃݬݦʊഏڼҏइρࢲਦཨ୪qХߤԺDcখມفϦ൩ഴށҜࠔറยϦࡘ5',
-      mediaType: "image/png",
-      checksum: "b4632a9bb1e0b187850e7b3ddfc463753452ace7"
-    },
-*/
     /* beebjit doesn't currently support capturing audio output
     {
       name: "STATICAUDIO", // Test static image with audio gives a video
@@ -61,15 +53,6 @@ function Tests(since_id){
       checksum: "4a954818f333f1d9a3b7334246bcdb5056295e3d"
     },
     */
-/* FIXME beebjit now gives a flickery video too - check when this changed and update
-    {
-      name: "NOVSYNC", // Test handling of no vsync - jsbeeb gave no frames, beebjit gives a flickery video.
-      text: '1MO.2:!-512=&B0308:REP.P."FAILURE IS ALWAYS AN OPTION":U.0',
-      mediaType: "image/gif",
-      hasAudio: false,
-      checksum: "c4fa65e04c8575b829f62e38de55c1cb28c8846c"
-    },
-*/
     {
       name: "MODE6", // Test stripes aren't transparent in PNG
       text: '1MO.6:?&D0=2:F.L=0TO999:V.32+L MOD95:N.:V.19;4;0;279;0;0;0;0;',
@@ -100,23 +83,23 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "27760d3701f31e398df07429364ef0ebcc8b2434"
     },
-/* FIXME: @-mentions are not currently removed for mastodon
     {
-      name: "MENTIONS", // Test mention removal
-      text: "@BBCMicroBot @RhEolisM 1V.279;0;0;0;0;12:PRINTCHR$141\"Hello\"'CHR$141\"Hello\"CHR$21\n",
-      user_mentions: [
-        { screen_name: "bbcmicrobot", indices: [0, 12] },
-        { screen_name: "rheolism", indices: [13, 22] }
-      ],
+      name: "MENTIONS", // Test mention and hashtag removal
+      text: "<span class=\"h-card\"><a href=\"https://mastodon.me.uk/@bbcmicrobot\" class=\"u-url mention\">@<span>BBCMicroBot</span></a></span> <span class=\"h-card\"><a href=\"https://mastodon.nz/@rheolism\" class=\"u-url mention\">@<span>RhEolisM</span></a></span> <a href=\"https://mastodon.me.uk/tags/bbcmicrobot\" class=\"mention hashtag\" rel=\"tag\">#<span>bbcmicrobot</span></a> 1V.279;0;0;0;0;12:PRINTCHR$141\"Hello\"'CHR$141\"Hello\"CHR$21\n",
       mediaType: "image/png",
       checksum: "10e6285dc55ec5ddab8470e8f038725db2d0ffbc"
     },
-*/
     {
       name: "OVERLONG", // Test overlong line doesn't crash the bot
       text: "0REM " + ("BBC".repeat(88)),
       mediaType: "text/plain",
       checksum: ""
+    },
+    {
+      name: "TOKENISE_LONG", // Test tokenisation handles a long input
+      text: "0PRINT" + (":PRINT".repeat(125)),
+      mediaType: "image/gif",
+      checksum: "b1099ab5729e3fdabb1aa12c05aae77f18e6ee83"
     },
       {name: null, text: null}
   ]
@@ -188,14 +171,14 @@ function Tests(since_id){
   function noOutput(tweet) {
     // If the checksum is empty then we expect no output.
     if (tweet.bbcmicrobot_checksum == '') {
-      console.log(tweet.id_str+' TEST - \u001b[32mOK\u001b[0m')
+      console.log(tweet.id+' TEST - \u001b[32mOK\u001b[0m')
     } else {
-      throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+      throw new Error(tweet.id+' TEST - \u001b[31mFAILED\u001b[0m')
     }
   }
 
   function block(tweet) {
-    throw new Error(tweet.id_str+' TEST - \u001b[31mFAILED\u001b[0m')
+    throw new Error(tweet.id+' TEST - \u001b[31mFAILED\u001b[0m')
   }
 
   module.exports = {

@@ -153,8 +153,8 @@ var clientID = "Cli0";
         }
 
         // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
-        if (/\W/.test(tweet.id_str)) {
-          console.error("id_str contained unexpected character");
+        if (/\W/.test(tweet.id)) {
+          console.error("id contained unexpected character");
           process.exit(1);
         }
 
