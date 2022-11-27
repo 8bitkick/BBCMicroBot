@@ -72,9 +72,8 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 
 		let progData = encodeURIComponent(JSON.stringify({
 											 "v":3,  // Mastodon era
-											 "program":program,
-											 "toot": response.url,
-											 "src": tweet.url
+											 "p":program, // Program
+											 "s":tweet.url.replace("https://","") // Source URL
 							 }));
 
 	 progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
