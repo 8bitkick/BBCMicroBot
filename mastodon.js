@@ -56,30 +56,30 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 	}
 
 	try {
-		 let progData = encodeURIComponent(JSON.stringify({
-                        "v":1,
-                        "program":program,
-                        "author":text,
-                        "date": Date.now(),
-												"id": null,
-												"src": tweet.url
-                }));
 
-		progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
 		let resp = await toot.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output - "+tweet.spoiler_text });
 		log.info(resp)
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
-		let params = { status:"I ran "+text+"'s program and got this.\nView source: http://link.bbcmic.ro/"+short_url, media_ids: [id],in_reply_to_id:replyTo};
+		let params = { status:"I ran "+text+"'s program and got this.\nSource: http://link.bbcmic.ro/"+short_url+" #bbcbasic", media_ids: [id],in_reply_to_id:replyTo};
 		params.visibility = "direct";//"public";
 
 		let response = await toot.post('statuses', params);
-
-		//log.info(response)
+		log.info("Media post DONE ",JSON.stringify(response));
 
 		await toot.post('statuses/:id/favourite', { id: [tweet.id]});
 		log.info("Favourited "+tweet.id);
 
-		log.info("Media post DONE ");
+
+		let progData = encodeURIComponent(JSON.stringify({
+											 "v":1,
+											 "program":program,
+											 "author":text,
+											 "date": Date.now(),
+											 "id": null,
+											 "src": tweet.url
+							 }));
+
+	 progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
 
 		return {full:"https://bbcmic.ro/#"+progData,key:short_url}
 		}
