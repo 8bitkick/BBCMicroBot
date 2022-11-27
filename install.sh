@@ -18,7 +18,7 @@ git reset --hard
 # https://github.com/scarybeasts/beebjit/issues/45
 git checkout 9fcaa1096857e919f6872856c7bbc77f38e77027
 # Backport warning fix, which is error with -Werror
-git cherry-pick -x c00f1b736582beb8362dfd5e5ecc33e192ab3040
+git cherry-pick --no-commit c00f1b736582beb8362dfd5e5ecc33e192ab3040
 # if scarybeasts used Makefiles we could save a compile & link every time...
 ./build_headless_opt.sh
 popd
