@@ -23,7 +23,7 @@ function get (path,params) {
 
 function genShortURL(){
 	// Were assuming single thread sequential URL generation here...
-	let num = Math.floor(Date.now()/1000)-1669485542;
+	let num = Math.floor(Date.now()/1000)-1577865600;
 	let digits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	let len = Math.min(digits.length, 62);
 	let result = '';
@@ -64,8 +64,9 @@ async function videoReply(filename,mediaType,replyTo,text,tweet,checksum,hasAudi
 							 }));
 
 	 progData = progData.replace(/\(/g, '%28').replace(/\)/g, '%29');
+	 let experimental = (mode !== 1) ? "?experimental=true&" : "";
 
-		return {full:"https://bbcmic.ro/#"+progData,key:short_url}
+		return {full:"https://bbcmic.ro/"+experimental+"#"+progData,key:short_url}
 		}
 
 		catch(e) {
