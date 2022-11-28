@@ -58,7 +58,8 @@ var one_hour = 2000000*60*60;
     compressed: false,
     input:      "",
 	  mode: 1,
-    isBASIC: true
+    isBASIC: true,
+    useDFS: false
   }
 
 
@@ -100,6 +101,11 @@ var one_hour = 2000000*60*60;
       c.isBASIC  = false;
 		    c.mode = 0;
       return c;
+
+      case "🖬":
+      case "💾": // Not really period appropriate, but probably the more common "floppy disk" emoji.
+      c.useDFS = true;
+      break;
 
       default:
       c.input += graphemes[i];

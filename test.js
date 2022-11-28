@@ -33,7 +33,7 @@ function Tests(since_id){
 */
     {
       name: "CHARACTERS",
-      text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
+      text: "💾10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
       mediaType: "image/png",
       checksum: "c3f630a42cc39990a6e38c574a93f6c79b3c5a8a"
     },
@@ -67,13 +67,13 @@ function Tests(since_id){
     },
     {
       name: "YOUONLYRUNONCE", // Check that an explicit RUN suppresses an implicit one.
-      text: '1PRINT"HELLO":!-512=&B000B\nRUN',
+      text: '🖬1PRINT"HELLO":!-512=&B000B\nRUN',
       mediaType: "image/png",
       checksum: "28222f638d2c0b97e7e03d0e54561ab7364bd445"
     },
     {
       name: "NOLINENOS", // Test no line numbers -> tokeniser.
-      text: "P.\"HELLO\";\nV.279;0;0;0;0;32\nP.\"WORLD\"",
+      text: "💾P.\"HELLO\";\nV.279;0;0;0;0;32\nP.\"WORLD\"",
       mediaType: "image/png",
       checksum: "5c3db47017774d43ad27c9916af332d471e273e6"
     },
@@ -81,7 +81,7 @@ function Tests(since_id){
       name: "TOKENS", // Test tokens -> tokeniser.
       text: "\xf1~\u0190\n\xef279;0;0;0;0;\n",
       mediaType: "image/png",
-      checksum: "27760d3701f31e398df07429364ef0ebcc8b2434"
+      checksum: "649072777ed9938fddaed9a57c27f07f2945c0fb"
     },
     {
       name: "MENTIONS", // Test mention and hashtag removal
@@ -97,7 +97,7 @@ function Tests(since_id){
     },
     {
       name: "TOKENISE_LONG", // Test tokenisation handles a long input
-      text: "0PRINT" + (":PRINT".repeat(125)),
+      text: "💾0PRINT" + (":PRINT".repeat(125)),
       mediaType: "image/gif",
       checksum: "b1099ab5729e3fdabb1aa12c05aae77f18e6ee83"
     },

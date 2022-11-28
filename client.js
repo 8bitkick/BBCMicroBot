@@ -111,8 +111,10 @@ var clientID = "Cli0";
             var IBP = 0x02E1; // input pointer
             var OBP = 0x02D8; // output pointer
 
-            var page = ( c.flags.includes("gxr.rom") ) ? "1c00" : "1900";
-            var end = parseInt(page,16) + tokenised.length;
+            var page = 0xE00;
+            if (c.flags.includes("gxr.rom")) page += 0x300;
+            if (c.useDFS) page += 0xB00;
+            var end = page + tokenised.length;
             var endLow = (end & 0xff).toString(16);
             var endHigh = ((end >>> 8) & 0xff).toString(16);
 
@@ -120,7 +122,7 @@ var clientID = "Cli0";
             var commands = "'"+
                             ["breakat 725000",
                             "c",
-                            "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
+                            "loadmem ../tmp/tweet.bas "+page.toString(16), // paste tokenised program into PAGE
                             "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
                             "writem 02e1 e4", // Advance pointer 4 bytes
                             "writem 0000 "+endLow, // LOWMEM
@@ -140,6 +142,7 @@ var clientID = "Cli0";
           }
 
           let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + " -commands " + commands;
+          if (!c.useDFS) beebjit_cmd += " -no-dfs";
           await exec(beebjit_cmd );
           console.log(beebjit_cmd);
         } else // JSbeeb
