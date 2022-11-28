@@ -23,7 +23,7 @@ function processInput(toot) {
       }
 
       var c = attributes['class'];
-      if (c !== undefined && c.includes('mention')) {
+      if (c !== undefined && c.match(/\b(?:mention|hashtag)\b/)) {
         ignore = 1;
         return;
       }
