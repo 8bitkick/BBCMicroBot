@@ -28,7 +28,7 @@ jobs:
     - run: sudo apt-get install -y ffmpeg
     - run: ln -s /usr/bin/ffmpeg .
     # Workaround for https://github.com/npm/cli/issues/2610
-    - run: git config --global url."https://github.com/".insteadOf git@github.com
+    - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test --unhandled-rejections=strict
