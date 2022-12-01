@@ -96,7 +96,8 @@ var clientID = "Cli0";
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
-          await beebjit(c, jsbeeb);
+          let response = await beebjit(c, jsbeeb);
+          if (response === null) setTimeout(requestTweet, POLL_DELAY);
 
         } else // JSbeeb
         {

@@ -58,8 +58,7 @@ try {
 } catch (e) {
   console.log("Tokenisation FAILED");
   console.log(e);
-  setTimeout(requestTweet, POLL_DELAY);
-  return;
+  return null;
 }
 
 let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ -cycles "+c.cycles+" "+c.flags+" -commands "+commands;
