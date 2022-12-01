@@ -21,7 +21,6 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "a02c1e9f18e3a86718067695c0e6e97ffdd5c6bd"
     },
-/* FIXME The timing seems to be off (due to beebjit commit 1565081621bc49db857390eb04a52be815d66add)
     {
       name: "FRAME_CAPTURE", // MODE 0-6
       text: "0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
@@ -30,7 +29,6 @@ function Tests(since_id){
       mediaType: "image/gif",
       checksum: "b0a979b0be31f48fc85b29635f55489857327f26"
     },
-*/
     {
       name: "CHARACTERS",
       text: "10 PRINT“&gt;&amp;&lt;&amp;lt;”'SPC39\"|\"\n20 VDU 23,1,0;0;0;0;\n", // Tests twitter HTML escapes for <,&,> and OS X auto ""
@@ -99,7 +97,7 @@ function Tests(since_id){
       name: "TOKENISE_LONG", // Test tokenisation handles a long input
       text: "0PRINT" + (":PRINT".repeat(125)),
       mediaType: "image/gif",
-      checksum: "b1099ab5729e3fdabb1aa12c05aae77f18e6ee83"
+      checksum: "930d0ab94529922c030d9797f2ec9a9c735a319c"
     },
       {name: null, text: null}
   ]
