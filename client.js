@@ -178,7 +178,6 @@ var clientID = "Cli0";
 
           // Summarize toot data
           let tootData = {
-    											 "v":3,  // Mastodon era
     											 "prog":c.input,
                            "mode":c.mode,
     											 "src": tweet.url,

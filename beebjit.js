@@ -68,8 +68,6 @@ async function beebjit(c, jsbeeb){
   let stdout      = await exec(beebjit_cmd );
   console.log(beebjit_cmd);
   let state       = await parseBeebjitState(stdout);
-
-  console.log(state);
   return state;
 
 

@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1265.0",
     "bad-words": "^3.0.3",
     "console-stamp": "^0.2.9",
     "dotenv": "^8.2.0",
