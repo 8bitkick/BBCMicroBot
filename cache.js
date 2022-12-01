@@ -24,13 +24,13 @@ async function cache(toot, beebState){
   }
 
   const params = {
-    Bucket: "link.bbcmic.ro",
+    Bucket: "bbcmic.ro",
     Key: 'state/'+tag, // File name you want to save as in S3
     Body: JSON.stringify(body)
   };
   // Uploading files to the bucket
   await s3.upload(params).promise();
-  console.log("Cache: link.bbcmic.ro/state/"+tag)
+  console.log("Cache: bbcmic.ro/state/"+tag)
 
 
   return tag;
