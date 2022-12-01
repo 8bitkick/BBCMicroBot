@@ -19,6 +19,8 @@ const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 const beebjit      = require('./beebjit');
 
+let   beebState    = null;
+
 var mastodon = TRY ? null : require(TEST ? './test' : './mastodon');
 
 var tweetServer = {
@@ -96,8 +98,8 @@ var clientID = "Cli0";
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
-          let response = await beebjit(c, jsbeeb);
-          if (response === null) setTimeout(requestTweet, POLL_DELAY);
+          beebState = await beebjit(c, jsbeeb);
+          if (beebState === null) setTimeout(requestTweet, POLL_DELAY);
 
         } else // JSbeeb
         {
@@ -172,7 +174,20 @@ var clientID = "Cli0";
           mastodon.noOutput(tweet);
         } else {
           var hasAudio = (audio_file !== null);
-          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,c.input,c.mode);
+
+          // Summarize toot data
+          let tootData = {
+    											 "v":3,  // Mastodon era
+    											 "prog":c.input,
+                           "mode":c.mode,
+    											 "src": tweet.url,
+          							 };
+
+          // Save state to cache
+          let tag = cache(tootData, beebState);
+
+          // Post a video toot
+          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
         }
 
         setTimeout(requestTweet, POLL_DELAY);
