@@ -18,7 +18,7 @@ const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 const beebjit      = require('./beebjit');
-const cache      = require('./cache');
+const cache        = (TEST) ? require('./cache') : null;
 
 let   beebState    = null;
 
