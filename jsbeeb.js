@@ -29,7 +29,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
   async function emulate(input,frame_path,audio_file,duration,capture_start) {
 
     var frameBuffer32 = new Uint32Array(1024 * 625);
-    var soundBuffer = new Float32Array(44100 * duration).fill(0); 
+    var soundBuffer = new Float32Array(44100 * duration).fill(0);
     var soundPoint = 0;
     var frame = 0;
     var soundChip = new SoundChip.SoundChip(44100);
@@ -167,7 +167,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         }
         return;
       }
-  
+
       // The following is from https://github.com/mattgodbolt/jsbeeb/blob/master/tests/test.js
       function runFor(cycles) {
         var left = cycles;
@@ -189,7 +189,7 @@ function (Cpu6502, Video, SoundChip, models, DdNoise, Cmos,  utils,fdc,tokeniser
         });
       }
 
-  
+
       function runUntilInput() {
         var idleAddr = processor.model.isMaster ? 0xe7e6 : 0xe581;
         var hit = false;
