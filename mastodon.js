@@ -10,8 +10,8 @@ const config = {
 	hashtag: process.env.HASHTAG,
 };
 
-const toot   = new Mastodon(config);
-const fs	   = require('fs');
+const mastodon = new Mastodon(config);
+const fs	     = require('fs');
 
 function post (path, params) {
 	log.info("Post",path,params)
@@ -30,16 +30,16 @@ async function videoReply(filename,mediaType,replyTo,text,toot,checksum,hasAudio
 
 	try {
 
-		let resp = await toot.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output - "+toot.spoiler_text });
+		let resp = await mastodon.post('media', { file: fs.createReadStream(filename), description:"BBC Micro Bot graphics output - "+toot.spoiler_text });
 		log.info(resp)
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
 		let params = { status:"I ran "+text+"'s program and got this.\nSource: https://bbcmic.ro/?t="+tag+" #bbcbasic", media_ids: [id],in_reply_to_id:replyTo};
 		params.visibility = "public";
 
-		let response = await toot.post('statuses', params);
+		let response = await mastodon.post('statuses', params);
 		log.info("Media post DONE ",JSON.stringify(response));
 
-		await toot.post('statuses/:id/favourite', { id: [toot.id]});
+		await mastodon.post('statuses/:id/favourite', { id: [toot.id]});
 		log.info("Favourited "+toot.id);
 
 
