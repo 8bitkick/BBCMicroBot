@@ -121,7 +121,8 @@ function Tests(since_id){
       'entities'                  : {'user_mentions': user_mentions},
       'bbcmicrobot_has_audio'     : (test.hasAudio == true),
       'bbcmicrobot_checksum'      : test.checksum,
-      'bbcmicrobot_media_type'    : test.mediaType
+      'bbcmicrobot_media_type'    : test.mediaType,
+      'url'                       : "https://www.bbcmicrobot.com/test.html"
     };
     this.queue.push(toot);
   }
@@ -155,7 +156,7 @@ function Tests(since_id){
     if (tweet.bbcmicrobot_has_audio != hasAudio) {
       throw new Error(id+' TEST - \u001b[31mFAILED\u001b[0m')
     }
-    if (mediaType == 'image/gif') { 
+    if (mediaType == 'image/gif') {
       exec('ffprobe -v 0 -select_streams a -show_streams '+filename).then(
         function(audioInfo) {
           var videoHasAudio = (audioInfo.length > 0);
