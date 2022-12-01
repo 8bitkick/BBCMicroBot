@@ -18,3 +18,5 @@ async function cache(toot, beebState){
 
 return "dummy"
 }
+
+module.exports = cache;
