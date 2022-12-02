@@ -18,7 +18,7 @@ const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
 const beebjit      = require('./beebjit');
-const cache        = (TEST) ? require('./cache') : null;
+const cache        = require('./cache');
 
 let   beebState    = null;
 
@@ -184,7 +184,7 @@ var clientID = "Cli0";
           							 };
 
           // Save state to cache
-          let tag = (TEST) ? await cache(tootData, beebState) : "test";
+          let tag = (TEST) ? "test" : await cache(tootData, beebState);
 
           // Post a video toot
           mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
