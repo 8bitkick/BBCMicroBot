@@ -1,0 +1,124 @@
+diff --git a/bbc.c b/bbc.c
+index 14255955..52e152cd 100644
+--- a/bbc.c
++++ b/bbc.c
+@@ -1160,6 +1160,110 @@ bbc_cpu_receive_message(struct bbc_struct* p_bbc,
+                   sizeof(struct bbc_message));
+ }
+ 
++/* FIXME: Don't just copy this! */
++struct video_struct {
++  uint8_t* p_bbc_mem;
++  uint8_t* p_shadow_mem;
++  int externally_clocked;
++  struct timing_struct* p_timing;
++  struct teletext_struct* p_teletext;
++  struct via_struct* p_system_via;
++  uint32_t timer_id;
++  void (*p_framebuffer_ready_callback)(void*, int, int);
++  void* p_framebuffer_ready_object;
++  int* p_fast_flag;
++
++  int log_timer;
++  int opt_do_show_frame_boundaries;
++  int opt_do_hack_legacy_quest_cap;
++  uint32_t log_count_horiz_total;
++  uint32_t log_count_hsync_width;
++  uint32_t log_count_vsync_width;
++
++  /* Rendering. */
++  struct render_struct* p_render;
++  int is_framing_changed_for_render;
++  int is_wall_time_vsync_hit;
++  uint64_t last_wall_time_vsync_hit_cycles;
++  int is_rendering_active;
++  int has_paint_timer_triggered;
++
++  /* Options. */
++  uint32_t frames_skip;
++  uint32_t frame_skip_counter;
++  int is_opt_always_clear_frame_buffer;
++
++  /* Timing. */
++  uint64_t wall_time;
++  uint64_t vsync_next_time;
++  uint64_t prev_system_ticks;
++  int timer_fire_mode;
++  uint64_t num_vsyncs;
++  uint64_t num_crtc_advances;
++  uint64_t paint_start_cycles;
++  uint64_t paint_cycles;
++  uint32_t paint_timer_id;
++
++  /* Video ULA state and derivatives. */
++  uint8_t video_ula_control;
++  uint8_t ula_palette[16];
++  uint32_t screen_wrap_add;
++  uint32_t clock_tick_multiplier;
++  int is_shadow_displayed;
++
++  /* 6845 registers and derivatives. */
++  uint8_t crtc_address_register;
++  uint8_t crtc_registers[k_video_crtc_num_registers];
++  int is_interlace;
++  int is_interlace_sync_and_video;
++  uint32_t scanline_stride;
++  uint32_t scanline_mask;
++  uint8_t hsync_pulse_width;
++  uint8_t vsync_pulse_width;
++  uint8_t half_r0;
++  int cursor_disabled;
++  int cursor_flashing;
++  uint32_t cursor_flash_mask;
++  uint8_t cursor_start_line;
++  int has_sane_framing_parameters;
++  int32_t frame_crtc_ticks;
++  uint32_t skew_dispen_index;
++  uint8_t cursor_skew;
++
++  /* 6845 state. */
++  uint64_t crtc_frames;
++  int is_odd_frame;
++  uint8_t horiz_counter;
++  uint8_t scanline_counter;
++  uint8_t vert_counter;
++  uint8_t vert_adjust_counter;
++  uint8_t vsync_scanline_counter;
++  uint8_t hsync_tick_counter;
++  uint32_t address_counter;
++  uint32_t address_counter_saved;
++  int is_vert_adjust_pending;
++  int is_in_vert_adjust;
++  int in_vsync;
++  int is_even_vsync;
++  int is_odd_vsync;
++  int in_hsync;
++  int in_dummy_raster;
++  int had_odd_vsync_this_row;
++  int had_even_vsync_this_row;
++  uint32_t display_enable_bits;
++  int has_hit_cursor_line_start;
++  int has_hit_cursor_line_end;
++  int is_end_of_main_latched;
++  int is_end_of_vert_adjust_latched;
++  int is_end_of_frame_latched;
++  uint32_t start_of_line_state_checks;
++  int is_first_frame_scanline;
++  int64_t last_vsync_raise_ticks;
++  int64_t last_vsync_lower_ticks;
++  int32_t cursor_skew_counter;
++  int dispen_shifts[4];
++};
++
+ static void
+ bbc_framebuffer_ready_callback(void* p,
+                                int do_full_render,
+@@ -1167,7 +1271,7 @@ bbc_framebuffer_ready_callback(void* p,
+   struct bbc_message message;
+ 
+   struct bbc_struct* p_bbc = (struct bbc_struct*) p;
+-  int do_wait_for_render = !p_bbc->fast_flag;
++  int do_wait_for_render = !p_bbc->fast_flag || p_bbc->p_video->has_paint_timer_triggered;
+ 
+   message.data[0] = k_message_vsync;
+   message.data[1] = do_full_render;
