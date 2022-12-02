@@ -64,7 +64,7 @@ async function beebjit(c, jsbeeb){
   ].join(";")+"'";
 
 
-  let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ -cycles "+(c.cycles+40000)+" "+c.flags+" -commands "+commands;
+  let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ -cycles "+(c.cycles*1.5)+" "+c.flags+" -commands "+commands;
   let stdout      = await exec(beebjit_cmd );
   console.log(beebjit_cmd);
   let state       = await parseBeebjitState(stdout);
