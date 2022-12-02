@@ -26,7 +26,8 @@ async function cache(toot, beebState){
   const params = {
     Bucket: "bbcmic.ro",
     Key: 'state/'+tag, // File name you want to save as in S3
-    Body: JSON.stringify(body)
+    Body: JSON.stringify(body),
+    ACL:'public-read' // Make public
   };
   // Uploading files to the bucket
   await s3.upload(params).promise();
