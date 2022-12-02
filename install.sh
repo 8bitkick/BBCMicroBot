@@ -15,11 +15,7 @@ fi
 pushd beebjit
 git fetch
 git reset --hard
-# https://github.com/scarybeasts/beebjit/issues/45 means we need to use
-# beebjit commit 9fcaa1096857e919f6872856c7bbc77f38e77027 or earlier.
-git checkout 9fcaa1096857e919f6872856c7bbc77f38e77027
-# Backport warning fix, which is error with -Werror
-git cherry-pick --no-commit c00f1b736582beb8362dfd5e5ecc33e192ab3040
+git checkout 162e3fb0b72bfd112fa580da5662f9b8bf5f453c
 # Crude fix for timing being wrong since beebjit commit
 # 1565081621bc49db857390eb04a52be815d66add.
 patch -p1 < ../beebjit-timing-fix.patch
