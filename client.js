@@ -184,7 +184,7 @@ var clientID = "Cli0";
           							 };
 
           // Save state to cache
-          let tag = (TEST) ? "test" : await cache(tootData, beebState);
+          let tag = (TEST || TRY) ? "test" : await cache(tootData, beebState);
 
           // Post a video toot
           mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
