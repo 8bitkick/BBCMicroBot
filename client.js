@@ -17,6 +17,10 @@ const https        = require('https');
 const cert_path    = "./certs/";
 const parser       = require('./parser');
 const gifsicle     = require('gifsicle');
+const beebjit      = require('./beebjit');
+const cache        = require('./cache');
+
+let   beebState    = null;
 
 var mastodon = TRY ? null : require(TEST ? './test' : './mastodon');
 
@@ -54,12 +58,12 @@ var clientID = "Cli0";
       'jsunzip': 'lib/jsunzip',
       'promise': 'lib/promise-6.0.0',
       'underscore': 'lib/underscore-min',
-      'emulator':'../../emulator'
+      'emulator':'../../jsbeeb'
     }
   });
 
   requirejs(['emulator'],
-  function (emulator) {
+  function (jsbeeb) {
     "use strict";
 
       async function run(tweet){
@@ -69,12 +73,14 @@ var clientID = "Cli0";
         var c = parser.parseTweet(tweet);
 
 				console.log("Parser output",c);
+
         // If rude or not basic, skip it
         if (!c.isBASIC) {
           console.log ("No BASIC detected");
           setTimeout(requestTweet, POLL_DELAY);
           return;
         }
+
         if (c.rude) {
           console.warn("BLOCKED @"+tweet.user.screen_name)
           await mastodon.block(tweet);
@@ -82,73 +88,27 @@ var clientID = "Cli0";
           return;
         }
 
-        var start   = new Date()
+        let start      = new Date()
+        let media_path = "./tmp/"+tweet.id;
 
-        var media_path = "./tmp/"+tweet.id;
-        // Emulate
+        // Emulate on Beebjit
         if (c.emulator == "beebjit") {
+
           var frame_path = "./tmp/beebjit_frame_";
           var audio_file = null;
           var pixel_format = "bgra";
           var emu_name = "beebjit";
 
-        // Run tweet on emulator
-          var tokenised;
-          try {
-            var basic = c.input;
-            var tmp = basic.replace(/\#\w+/g, "").trim(); // get rid of tags and white space
-            if (tmp.match(/^\d/) != null) {
-                // If there are line numbers remove a trailing explicit "RUN".
-                basic = basic.replace(/\n\s*RUN[\s\n]*$/, "");
-            }
+          beebState = await beebjit(c, jsbeeb);
+          if (beebState === null) setTimeout(requestTweet, POLL_DELAY);
 
-						console.log(basic)
-            tokenised = await emulator.tokenise(basic);
-            await fs.writeFileSync("./tmp/tweet.bas",tokenised,{encoding:"binary"});
-            await fs.writeFileSync("./tmp/keys.bin","RUN\r",{encoding:"binary"});
-
-            var keyboardBuffer = "03e0"; // BBC Micro OS 1.20
-            var IBP = 0x02E1; // input pointer
-            var OBP = 0x02D8; // output pointer
-
-            var page = ( c.flags.includes("gxr.rom") ) ? "1c00" : "1900";
-            var end = parseInt(page,16) + tokenised.length;
-            var endLow = (end & 0xff).toString(16);
-            var endHigh = ((end >>> 8) & 0xff).toString(16);
-
-            // beebjit debug commands
-            var commands = "'"+
-                            ["breakat 725000",
-                            "c",
-                            "loadmem ../tmp/tweet.bas "+page, // paste tokenised program into PAGE
-                            "loadmem ../tmp/keys.bin "+keyboardBuffer, // 0x03E0 OS 1.2
-                            "writem 02e1 e4", // Advance pointer 4 bytes
-                            "writem 0000 "+endLow, // LOWMEM
-                            "writem 0001 "+endHigh,
-                            "writem 0002 "+endLow, // VARTOP
-                            "writem 0003 "+endHigh,
-                            "writem 0012 "+endLow, // TOP
-                            "writem 0013 "+endHigh,
-                            "c"
-                        ].join(";")+"'";
-
-          } catch (e) {
-            console.log("Tokenisation FAILED");
-            console.log(e);
-            setTimeout(requestTweet, POLL_DELAY);
-            return;
-          }
-
-          let beebjit_cmd = "cd beebjit && ./beebjit -fast -headless -frames-dir ../tmp/ " + c.flags + " -commands " + commands;
-          await exec(beebjit_cmd );
-          console.log(beebjit_cmd);
         } else // JSbeeb
         {
           var frame_path = media_path + "frame";
-          var audio_file = media_path + "audiotrack.raw";
+          audio_file = media_path + "audiotrack.raw";
           var pixel_format = "rgba";
           var emu_name = "jsbeeb";
-          var frames  = await emulator.emulate(c.input,frame_path,audio_file,emulationDuration,startFrame);
+          var frames  = await jsbeeb.emulate(c.input,frame_path,audio_file,emulationDuration,startFrame);
           if (!fs.existsSync(audio_file)) audio_file = null;
         }
 
@@ -162,14 +122,14 @@ var clientID = "Cli0";
         console.log(emu_name+" DONE in %ds ",end/1000);
 
         // Count unique video frames
-	var shasum_check = (await exec("sha1sum client.js  | awk '{print $1}' | wc -l")); // should equal 1
-	var shasum = (shasum_check > 0) ? "sha1sum" : "shasum";
+	      var shasum_check = (await exec("sha1sum client.js  | awk '{print $1}' | wc -l")); // should equal 1
+	      var shasum = (shasum_check > 0) ? "sha1sum" : "shasum";
         var frames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | wc -l"));
         var uniqueFrames = (await exec(shasum+" "+frame_path+"*."+pixel_format+" | awk '{print $1}' | sort | uniq | wc -l"));
 
         console.log("Captured "+frames+" frames ("+uniqueFrames+" unique) "+frame_path);
 
-   	start = new Date();
+   	    start = new Date();
 
         if (frames == 0) {
           // NO VIDEO -> NOTHING
@@ -179,6 +139,7 @@ var clientID = "Cli0";
           var mediaFilename = media_path+'.png';
           var mediaType = 'image/png';
           var ffmpegCmd = './ffmpeg -hide_banner -y -f rawvideo -pixel_format '+pixel_format+' -video_size 640x512  -i '+frame_path+(frames-1)+'.'+pixel_format+' -vf "scale=1280:1024" '+mediaFilename
+
         } else {
           // ANIMATION OR STATIC IMAGE WITH SOUND -> GIF
           var mediaFilename = media_path+'.gif';
@@ -196,7 +157,9 @@ var clientID = "Cli0";
         } else {
           var checksum = '';
         }
+
         exec('rm -f '+frame_path+'*.'+pixel_format);
+
         if (audio_file !== null) {
           fs.unlinkSync(audio_file);
         }
@@ -212,7 +175,19 @@ var clientID = "Cli0";
           mastodon.noOutput(tweet);
         } else {
           var hasAudio = (audio_file !== null);
-          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,c.input,c.mode);
+
+          // Summarize toot data
+          let tootData = {
+    											 "prog":c.input,
+                           "mode":c.mode,
+    											 "src": tweet.url,
+          							 };
+
+          // Save state to cache
+          let tag = (TEST) ? "test" : await cache(tootData, beebState);
+
+          // Post a video toot
+          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
         }
 
         setTimeout(requestTweet, POLL_DELAY);
