@@ -8,12 +8,6 @@ function Tests(since_id){
 
   var tests = [
     {
-      name: "DONOTRUN", // Test that the "no entry" emoji is handled.
-      text: "⛔3 times is true: I 💚 the 80s =)",
-      mediaType: "",
-      checksum: ""
-    },
-    {
       name: "ROCKET_MODE", // Test that a slow program completes
       text: "🚀0 MODE 2:VDU5\n10 FOR X = 0 TO 1279 STEP8:FOR Y = 0 TO 1023 STEP 4:GCOL 0, RND(7):PLOT 69, X, Y:NEXT:NEXT\nREPEAT UNTIL FALSE",
       mediaType: "image/png",

@@ -57,7 +57,6 @@ function parseTweet(toot){
     compressed: false,
     input:      "",
 	  mode: 1,
-    isBASIC: true
   }
 
   for (let i = 0; i<graphemes.length; i++){
@@ -67,7 +66,6 @@ function parseTweet(toot){
       case "🚀": // Snapshot after three hours emulation time
       c.emulator = "beebjit";
       c.flags    = " -frame-cycles "+3*one_hour+" -opt video:border-chars=0";
-      c.isBASIC  = true;
 		  c.mode     = 2;
       c.cycles   = (3*one_hour+4000000000);
       break;
@@ -76,14 +74,8 @@ function parseTweet(toot){
       c.emulator = "beebjit";
       c.flags    = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150 -exit-on-max-frames";
       c.cycles   = ((3*one_hour)+8000000);
-      c.isBASIC  = true;
 		  c.mode     = 3;
       break;
-
-      case "⛔": // Do not run
-      c.isBASIC  = false;
-		  c.mode = 0;
-      return c;
 
       default:
       c.input += graphemes[i];
