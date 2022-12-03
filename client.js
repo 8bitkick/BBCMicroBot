@@ -74,13 +74,7 @@ var clientID = "Cli0";
 
 				console.log("Parser output",c);
 
-        // If rude or not basic, skip it
-        if (!c.isBASIC) {
-          console.log ("No BASIC detected");
-          setTimeout(requestTweet, POLL_DELAY);
-          return;
-        }
-
+        // If rude, block the user and do not run the program
         if (c.rude) {
           console.warn("BLOCKED @"+tweet.user.screen_name)
           await mastodon.block(tweet);
