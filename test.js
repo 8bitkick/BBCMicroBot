@@ -7,14 +7,12 @@ function Tests(since_id){
   console.log("TEST TWEETS QUEUED");
 
   var tests = [
-/* FIXME Now a hashtag is required to run, and the BASIC check is currently disabled.
     {
-      name: "NOBASIC", // Test a tweet without BASIC isn't run
-      text: "I love the 80s",
+      name: "DONOTRUN", // Test that the "no entry" emoji is handled.
+      text: "⛔3 times is true: I 💚 the 80s =)",
       mediaType: "",
       checksum: ""
     },
-*/
     {
       name: "ROCKET_MODE", // Test that a slow program completes
       text: "🚀0 MODE 2:VDU5\n10 FOR X = 0 TO 1279 STEP8:FOR Y = 0 TO 1023 STEP 4:GCOL 0, RND(7):PLOT 69, X, Y:NEXT:NEXT\nREPEAT UNTIL FALSE",
