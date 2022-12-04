@@ -15,10 +15,7 @@ fi
 pushd beebjit
 git fetch
 git reset --hard
-git checkout 162e3fb0b72bfd112fa580da5662f9b8bf5f453c
-# Crude fix for timing being wrong since beebjit commit
-# 1565081621bc49db857390eb04a52be815d66add.
-patch -p1 < ../beebjit-timing-fix.patch
+git checkout 69dd3a8fd8c1229017c71ab2ce1ea62dbd04b701
 # if scarybeasts used Makefiles we could save a compile & link every time...
 ./build_headless_opt.sh
 popd
