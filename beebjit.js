@@ -1,7 +1,7 @@
 const fs           = require('fs');
 
 const MemStart     = 0x0000;
-const MemLength    = 0x7fff; // 32K RAM
+const MemLength    = 0x8000; // 32K RAM
 
 function exec(cmd) {
   const exec = require('child_process').exec;
