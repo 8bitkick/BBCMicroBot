@@ -15,7 +15,9 @@ fi
 pushd beebjit
 git fetch
 git reset --hard
-git checkout 69dd3a8fd8c1229017c71ab2ce1ea62dbd04b701
+git checkout 327ab3d8caa2c1db8b7073535a28bb1174cf6644
+# Fix for https://github.com/scarybeasts/beebjit/issues/49
+patch -p1 < ../beebjit-clapper-recording-fix.patch
 # if scarybeasts used Makefiles we could save a compile & link every time...
 ./build_headless_opt.sh
 popd

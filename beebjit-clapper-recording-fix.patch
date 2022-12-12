@@ -1,0 +1,18 @@
+diff --git a/video.c b/video.c
+index cb39b722..3f1c819b 100644
+--- a/video.c
++++ b/video.c
+@@ -1259,12 +1259,12 @@ video_paint_timer_fired(void* p) {
+                timing_get_total_timer_ticks(p_video->p_timing));
+   }
+ 
++  p_video->has_paint_timer_triggered = 1;
+   if (!p_video->externally_clocked) {
+     /* For accurate mode, this triggers the start of painting, and paint will
+      * occur at the usual 50Hz virtual time.
+      */
+     if (timing_timer_is_running(p_timing, timer_id)) {
+-      p_video->has_paint_timer_triggered = 1;
+       video_wall_time_vsync_hit(p_video);
+       /* A bunch of unconsumed framing changes will have built up. Clear the
+        * the flag so the screen isn't immediately cleared after the first paint.
