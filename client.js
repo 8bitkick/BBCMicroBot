@@ -67,6 +67,12 @@ var clientID = "Cli0";
     "use strict";
 
       async function run(tweet){
+        // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
+        if (/\W/.test(tweet.id)) {
+          console.error("id contained unexpected character");
+          process.exit(1);
+        }
+
         console.log("");
         console.log("Running "+tweet.id+" from "+tweet.account.url);
 
@@ -104,12 +110,6 @@ var clientID = "Cli0";
           var emu_name = "jsbeeb";
           var frames  = await jsbeeb.emulate(c.input,frame_path,audio_file,emulationDuration,startFrame);
           if (!fs.existsSync(audio_file)) audio_file = null;
-        }
-
-        // Tweet ID will be used in tmp filenames passed into shell exec, so check it's safe.  For a real tweet it should be numeric while for a testcase it can contain alphanumerics.
-        if (/\W/.test(tweet.id)) {
-          console.error("id contained unexpected character");
-          process.exit(1);
         }
 
         var end     = new Date() - start
