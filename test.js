@@ -107,18 +107,11 @@ function Tests(since_id){
   this.queue = [];
   while (tests.length) {
     var test = tests.pop();
-    var user_mentions = test.user_mentions;
-    if (user_mentions === null) {user_mentions = ['bbcmicrobot'];}
     var toot = {
       'account'                   : {'url':'@test@localhost'},
-      'created_at'                : null,
       'user'                      : {'screen_name':"<TEST SERVER>"}, //
       'text'                      : test.text,
       'id'                        : test.name,
-      'in_reply_to_id'            : "1",
-      'truncated'                 : false,
-      'favorited'                 : false,
-      'entities'                  : {'user_mentions': user_mentions},
       'bbcmicrobot_has_audio'     : (test.hasAudio == true),
       'bbcmicrobot_checksum'      : test.checksum,
       'bbcmicrobot_media_type'    : test.mediaType,

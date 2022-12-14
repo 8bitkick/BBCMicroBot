@@ -228,8 +228,7 @@ var clientID = "Cli0";
           text: fs.readFileSync(try_file, 'utf8'),
           id: 'try',
           user: { screen_name: 'try' },
-          account: { username: 'try', url: 'https://localhost/@try' },
-          entities: {}
+          account: { username: 'try', url: 'https://localhost/@try' }
         };
         // Set up mastodon object to mock the methods that we use.
         mastodon = {};
