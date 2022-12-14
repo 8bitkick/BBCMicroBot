@@ -72,7 +72,7 @@ function parseTweet(toot){
 
       case "🎬": // Fast run 3 hours then 3 seconds time lapse
       c.emulator = "beebjit";
-      c.flags    = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150 -exit-on-max-frames";
+      c.flags    = "-opt video:paint-start-cycles="+(3*one_hour)+",video:border-chars=0 -frame-cycles 1 -max-frames 150";
       c.cycles   = ((3*one_hour)+8000000);
 		  c.mode     = 3;
       break;
