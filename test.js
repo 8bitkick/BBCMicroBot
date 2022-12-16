@@ -13,16 +13,12 @@ function Tests(since_id){
       mediaType: "image/png",
       checksum: "a02c1e9f18e3a86718067695c0e6e97ffdd5c6bd"
     },
-    /* Seems to tickle some sort of latent parallelism bug in the testsuite.
-     * FIXME: Get this to work so we have test coverage for the clapper emoji.
     {
       name: "LIKE_THE_CLAPPERS", // Test clapperboard emoji
       text: "🎬10MO.2:REP.F.A=0TO14:P.;A:F.D=1TO360:N.,:U.0",
       mediaType: "image/gif",
-      checksum: "14169b754380f76c413f6aeffb5692ebc8cba3e1"
-      //bad checksum:995bb2bb47cac244fb7e5b5d84cb37aaf1bf5b5e
+      checksum: "768e2a06a7a02b115f5e8efe5fa652810e051b43"
     },
-    */
     {
       name: "FRAME_CAPTURE", // MODE 0-6
       text: "0 MODE 2\n10 FOR C = 0 TO 7\n20 COLOUR C\n30 PRINT \"COLOUR \",C\n40 NEXT C\n"+
