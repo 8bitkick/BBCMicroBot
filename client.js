@@ -175,6 +175,7 @@ var clientID = "Cli0";
     											 "prog":c.input,
                            "mode":c.mode,
     											 "src": tweet.url,
+                           "title":c.tweet.spoiler_text || "Untitled"
           							 };
 
           // Save state to cache

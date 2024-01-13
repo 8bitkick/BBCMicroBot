@@ -1,6 +1,9 @@
+
 const BotGenesis = 1569394800; // First ever bot tweet 25 Sep 2019
 const AWS = require('aws-sdk');
+require('dotenv').config();
 const s3 = new AWS.S3();
+const cloudfront = new AWS.CloudFront();
 
 async function cache(toot, beebState){
 
@@ -25,16 +28,44 @@ async function cache(toot, beebState){
 
   const params = {
     Bucket: "bbcmic.ro",
-    Key: 'state/'+tag, // File name you want to save as in S3
+    Key: 'state/'+tag,
     Body: JSON.stringify(body),
-    ACL:'public-read' // Make public
+    ACL:'public-read', 
+    ContentType: 'application/json'
   };
   // Uploading files to the bucket
   await s3.upload(params).promise();
-  console.log("Cache: bbcmic.ro/state/"+tag)
+  console.log("Cache: bbcmic.ro/state/"+tag);
 
+  // load index.txt from S3, append tag, upload back to S3
+  let index = await s3.getObject({Bucket: "bbcmic.ro", Key: 'state/index.txt'}).promise();
+  index = index.Body.toString('utf-8');
+  index += tag+"\n";
+  params.Key = 'state/index.txt';
+  params.Body = index;
+  await s3.upload(params).promise();
+  
+  await invalidateCloudFront(params.Key);
 
   return tag;
+}
+
+async function invalidateCloudFront(fileKey) {
+  const distributionId = process.env.CLOUDFRONT;
+
+  const params = {
+    DistributionId: distributionId,
+    InvalidationBatch: {
+      CallerReference: Date.now().toString(),
+      Paths: {
+        Quantity: 1,
+        Items: [`/${fileKey}`]
+      }
+    }
+  };
+
+  await cloudfront.createInvalidation(params).promise();
+  console.log(`CloudFront invalidation created for ${fileKey}`);
 }
 
 module.exports = cache;
