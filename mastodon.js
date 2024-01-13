@@ -34,7 +34,7 @@ async function videoReply(filename,mediaType,replyTo,text,toot,checksum,hasAudio
 		log.info(resp)
 		let id = resp.data.id; // Source: https://bbcmic.ro/#"+progData
 		let params = { status:"I ran "+text+"'s program and got this.\nSource: https://bbcmic.ro/?t="+tag+" #bbcbasic", media_ids: [id],in_reply_to_id:replyTo};
-		params.visibility = "public";
+		params.visibility = "direct";
 
 		let response = await mastodon.post('statuses', params);
 		log.info("Media post DONE ",JSON.stringify(response));
