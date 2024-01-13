@@ -23,7 +23,8 @@ async function cache(toot, beebState){
     'toot':  toot.prog,
     'mode':  toot.mode,
     'src':   toot.src,
-    'state': beebState
+    'state': beebState,
+    'title': toot.title,
   }
 
   const params = {

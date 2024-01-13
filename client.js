@@ -170,7 +170,7 @@ var clientID = "Cli0";
         } else {
           var hasAudio = (audio_file !== null);
 
-          let title = c.tweet.spoiler_text || "Untitled";
+          let title = tweet.spoiler_text || "Untitled";
           // Summarize toot data
           let tootData = {
     											 "prog":c.input,
