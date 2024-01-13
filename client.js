@@ -170,12 +170,13 @@ var clientID = "Cli0";
         } else {
           var hasAudio = (audio_file !== null);
 
+          let title = c.tweet.spoiler_text || "Untitled";
           // Summarize toot data
           let tootData = {
     											 "prog":c.input,
                            "mode":c.mode,
     											 "src": tweet.url,
-                           "title":c.tweet.spoiler_text || "Untitled"
+                           "title": title
           							 };
 
           // Save state to cache
