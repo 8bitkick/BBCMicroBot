@@ -1,6 +1,6 @@
 # BBC Micro Bot User Guide
 
-This guide will outline how BBC Micro Bot works on Mastodon and tricks to reduce the size of your code to fit in a toot with the [Owlet Editor](https://bbcmic.ro). 
+This guide will outline how BBC Micro Bot works on Mastodon and provide some tricks to reduce the size of your code (so that it can fit in a toot) with the [Owlet Editor](https://bbcmic.ro). 
 
 ## Prerequisites 
 
@@ -8,15 +8,15 @@ Before reading below check this awesome [interactive BBC BASIC tutorial](https:/
 
 ## How to run your code
 
-When you include [#bbcmicrobot](https://mastodon.me.uk/@bbcmicrobot) in a toot the bot will run your toot as code on a BBC Micro emulator. Your code must fit within a single toot, limited it to 500 characters by its home instance.
+When you include [#bbcmicrobot](https://mastodon.me.uk/@bbcmicrobot) in a toot the bot will run your toot as code on a BBC Micro emulator. Your code must fit within a single toot, limited to 500 characters by its home instance.
 
 ### Default 
 
-Normally the bot runs your code for 30 seconds, and then takes 3 second video clip that it posts to Twitter. If that last 3 seconds is a static image the bot will reply with a PNG image instead.
+Normally the bot runs your code for 30 seconds, and then takes 3 second video clip that it posts to Mastodon. If that final 3 seconds is a static image, the bot will reply with a PNG image instead.
 
 ### Emoji commands
 
-You can add an emoji to the end of your toot to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulation only takes a few seconds. Although the emulation is fast the video capture at the end is real-time - the 🎬 is the same as leaving a real BBC Micro running for 3 hours and then afterwards taking a look at the screen for 3 seconds. 
+You can add an emoji to the end of your toot to send a command to the bot. These are not included in the program sent to the BBC Micro emulator, and should not be in your code in Owlet. Because the [emulator is very fast](https://github.com/scarybeasts/beebjit) a 3 hour emulation only takes a few seconds. Although the emulation is fast, the video capture at the end is real-time - the 🎬 is the same as leaving a real BBC Micro running for 3 hours and then afterwards taking a look at the screen for 3 seconds. 
 
 
 Bot execution modes
@@ -41,7 +41,7 @@ If your code waits for an external timer based event like VSYNC the video will a
 
 If you copy or modify someone's code you should either reply to the original toot so people can see the thread, or acknowledge the author in your toot. When you toot at the bot your code is public. You might find that other users are inspired to help reduce the size of your code, improve the design or remix it - you should take this as a compliment!
 
-BBC Micro Bot is a place to write fun code and help each other out doing it. Toots contains any bad words will be ignored and the user account blocked. This is automatic and on quite a strict filter. 
+BBC Micro Bot is a place to write fun code and help each other out doing it. Toots containing any bad words will be ignored and the user account blocked. This is automatic and on quite a strict filter. 
 
 # Writing code in a toot
 
@@ -49,7 +49,7 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 ## Reducing code size
 
-One of the fun and challenging aspects of the bot is you need to squeeze your code down in size - code golf! Techniques to do this have evolved over time, many pioneered by [Rheolism](https://www.twitter.com/rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
+One of the fun and challenging aspects of the bot is you need to squeeze your code down in size - code golf! Techniques to do this have evolved over time, many pioneered by [Rheolism][https://www.twitter.com/rheolism](https://botsin.space/@rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
 ```
 10 PRINT "HELLO WORLD"
@@ -59,7 +59,7 @@ One of the fun and challenging aspects of the bot is you need to squeeze your co
 
 ### Removing line numbers and spaces
 
-You do not need line numbers in your code. The numbers are automatically added in increments of 10 by the bot. As a guide Owlet will show you the line numbers in the gutter of the editor if you omit them from your code. Spaces are usually removable, but are required in some cases where a variable name is directly next to a BASIC keyword.
+You do not need line numbers in your code. The numbers are automatically added in increments of 10 by the bot. As a guide, Owlet will show you the line numbers in the gutter of the editor if you omit them from your code. Spaces are usually removable, but are required in some cases where a variable name is directly next to a BASIC keyword.
 
 ```
 PRINT"HELLO WORLD"
