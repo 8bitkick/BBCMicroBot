@@ -42,6 +42,16 @@ async function videoReply(filename,mediaType,replyTo,text,toot,checksum,hasAudio
 		await mastodon.post('statuses/:id/favourite', { id: [toot.id]});
 		log.info("Favourited "+toot.id);
 
+		let user = response.in_reply_to_account_id;
+
+		let relationship = await mastodon.get('accounts/relationship', {id: [user]});
+
+		if (relationship[0].following) {
+			// Repost toot resp
+			log.info("Reposting toot "+response.id);
+			await mastodon.post('statuses/:id/reblog', { id: [response.id]});
+		}
+		
 
 		//return {full:"https://bbcmic.ro/"+experimental+"#"+progData,key:short_url}
 		}
