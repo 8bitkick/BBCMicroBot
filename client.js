@@ -183,8 +183,7 @@ var clientID = "Cli0";
           let tag = (TEST || TRY) ? "test" : await cache(tootData, beebState);
 
           // Post a video toot
-          await mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
-          exec('rm '+mediaFilename);
+          mastodon.videoReply(mediaFilename,mediaType,tweet.id,"@"+tweet.account.acct,tweet,checksum,hasAudio,tag);
         }
 
         setTimeout(requestTweet, POLL_DELAY);
