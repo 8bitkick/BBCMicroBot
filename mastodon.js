@@ -13,6 +13,18 @@ const config = {
 const mastodon = new Mastodon(config);
 const fs = require('fs');
 
+function exec(cmd) {
+  const exec = require('child_process').exec;
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.warn(error);
+      }
+      resolve(stdout? stdout.trim() : stderr);
+    });
+  });
+}
+
 function post(path, params) {
 	log.info("Post", path, params)
 }
@@ -52,6 +64,8 @@ async function videoReply(filename, mediaType, replyTo, text, toot, checksum, ha
 			log.info("Reposting toot " + response.data.id);
 			await mastodon.post('statuses/' + response.data.id + '/reblog');
 		}
+
+		 exec('rm '+filename);
 
 		//return {full:"https://bbcmic.ro/"+experimental+"#"+progData,key:short_url}
 	}
