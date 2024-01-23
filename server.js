@@ -50,4 +50,4 @@ var listener = https.createServer(options, app).listen(PORT, function () {
 // Poll the twitter mentions
 
 tootFeed.update();
-setInterval(function(){ tootFeed.update(); }, 30000);
+setInterval(function(){ tootFeed.update(); }, 45000);
