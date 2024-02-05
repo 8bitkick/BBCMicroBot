@@ -3,10 +3,8 @@
 const TRY = (process.argv.indexOf("try") > -1)
 
 require('dotenv').config();
-const Filter       = require('bad-words');
-const customFilter = new Filter({ placeHolder: '*'});
-//customFilter.addWords('words','here');
 const Grapheme     = require('grapheme-splitter');
+const { isProfane } = require("no-profanity");
 var splitter = new Grapheme();
 const htmlparser2  = require('htmlparser2');
 
@@ -84,7 +82,7 @@ function parseTweet(toot){
   }
   toot.text = c.input;
   c.input = processInput(toot);
-  c.rude = (customFilter.clean(c.input) != c.input);
+    c.rude = isProfane(c.input);
 
   console.log("\n",c);
   return c;
