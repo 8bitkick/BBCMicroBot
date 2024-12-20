@@ -89,11 +89,13 @@ Note that some byte values must be ORed with 0x100 in order to map to a valid Un
 
 ### base2048 encoding [deprecated for Mastodon due to larger post length]
 
-[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readable. For this reason we no longer support base2048 on the Mastodon bot.
+[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 allowed an extra 100 characters of BBC BASIC code in a tweet, bringing the total to ~384 characters. However our Hello World tweet would no longer be human readable:
 
 ```
 ༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
 ```
+
+For this reason and because the Mastodon bot supports 512 characters we no longer support base2048.
 
 ## Advanced minification techniques
 
@@ -123,4 +125,4 @@ PRINT D?A
 NEXT
 ```
 
-In this example the first value returned would be 116, the ASCII value for the letter `t`. You can create a Twitter-friendly byte string to use in a `REM` from comma separated data with the [VDU to string tool](https://8bitkick.github.io/vdu/)
+In this example the first value returned would be 116, the ASCII value for the letter `t`. You can create a Mastodon-friendly byte string to use in a `REM` from comma separated data with the [VDU to string tool](https://8bitkick.github.io/vdu/)
