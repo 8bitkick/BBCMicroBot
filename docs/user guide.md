@@ -32,7 +32,7 @@ Bot execution modes
 
 ### Unexpected behavior with 🎬 mode animations 
 
-We use the beebjit `-fast` parameter to achive very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time. This means flashing colours in the palette, and `*FX 19` or `INKEY` based timing will not work well!
+We use the beebjit `-fast` parameter to achieve very fast emulation in the accelerated modes, the only downside being some unexpected 'relativistic' effects if your code relies on external timers. In this mode CPU time is accelerated several thousandfold and decoupled from timing of BBC Micro peripherals and timers which remain emulated in real-time. This means flashing colours in the palette, and `*FX 19` or `INKEY` based timing will not work well!
 
 If your code waits for an external timer based event like VSYNC the video will appear to freeze. It's recommended to use `FOR ... NEXT` loop based delays in code you intend to run with 🎬 mode for that reason. The emulator takes a screenshot every 40,000 emulated 6502 cycles (which is the same period as VSYNC) and so resulting animation will still look [pretty much the same on a real machine](https://twitter.com/bbcmicrobot/status/1356755101587697669?s=20).
 
@@ -49,7 +49,7 @@ The [Owlet Editor](https://bbcmic.ro) is designed specifically for creative codi
 
 ## Reducing code size
 
-One of the fun and challenging aspects of the bot is you need to squeeze your code down in size - code golf! Techniques to do this have evolved over time, many pioneered by [Rheolism](https://botsin.space/@rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
+One of the fun and challenging aspects of the bot is you need to squeeze your code down in size - code golf! Techniques to do this have evolved over time, many pioneered by [Rheolism](https://oldbytes.space/@rheolism). Here we outline some fundamental approaches, this is by no means comprehensive.
 
 ```
 10 PRINT "HELLO WORLD"
@@ -89,11 +89,13 @@ Note that some byte values must be ORed with 0x100 in order to map to a valid Un
 
 ### base2048 encoding [deprecated for Mastodon due to larger post length]
 
-[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 gives you an extra 100 characters of BBC BASIC code in a tweet, bringing it to ~384 characters in total. However our Hello World tweet will no longer be human readable. For this reason we no longer support base2048 on the Mastodon bot.
+[Base2048](https://github.com/qntm/base2048) is a Unicode encoding optimized for transmitting binary data through Twitter. Using base2048 allowed an extra 100 characters of BBC BASIC code in a tweet, bringing the total to ~384 characters. However our Hello World tweet would no longer be human readable:
 
 ```
 ༣Ȝǁঐ౭चؼ๗ԪʢࠁನȤ3
 ```
+
+For this reason and because the Mastodon bot supports 512 characters we no longer support base2048.
 
 ## Advanced minification techniques
 
@@ -123,4 +125,4 @@ PRINT D?A
 NEXT
 ```
 
-In this example the first value returned would be 116, the ASCII value for the letter `t`. You can create a Twitter-friendly byte string to use in a `REM` from comma separated data with the [VDU to string tool](https://8bitkick.github.io/vdu/)
+In this example the first value returned would be 116, the ASCII value for the letter `t`. You can create a Mastodon-friendly byte string to use in a `REM` from comma separated data with the [VDU to string tool](https://8bitkick.github.io/vdu/)
