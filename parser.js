@@ -79,7 +79,6 @@ function parseTweet(toot){
 
       default:
       c.input += graphemes[i];
-      var g = graphemes[i].codePointAt(0);
     }
   }
   toot.text = c.input;
